@@ -1,7 +1,8 @@
+import os
+import sys
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 from calibre import browser
 from collections import OrderedDict
-import time
 from datetime import datetime, timedelta, timezone
 
 # custom include to share code between recipes
@@ -11,8 +12,6 @@ try:
 except ImportError:
     # just for Pycharm to pick up for auto-complete
     from includes.recipes_shared import BasicNewsrackRecipe
-
-from calibre.web.feeds.news import BasicNewsRecipe
 
 _name = 'Philosophy Now'
 
@@ -36,7 +35,7 @@ class PhilosophyNow(BasicNewsRecipe, BasicNewsrackRecipe):
     ignore_duplicate_articles = {'url'}
 
     keep_only_tags = [classes('article_page')]
-    remove_tags = [dict(name='div', attrs={'id':'welcome_box'})]
+    remove_tags = [dict(name='div', attrs={'id': 'welcome_box'})]
 
     def parse_index(self):
         soup = self.index_to_soup('https://philosophynow.org/')
