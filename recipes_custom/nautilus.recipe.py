@@ -86,16 +86,16 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
 
-    # def get_cover_url(self):
-    #     soup = self.index_to_soup("https://www.presspassnow.com/nautilus/issues/")
-    #     div = soup.find("div", **classes("image-fade_in_back"))
-    #     if div:
-    #         self.cover_url = (
-    #             div.find("img", attrs={"srcset": True})["srcset"]
-    #             .split(",")[-1]
-    #             .split()[0]
-    #         )
-    #     return getattr(self, "cover_url", self.cover_url)
+    def get_cover_url(self):
+        soup = self.index_to_soup("https://nautil.us/shop/category/issues/")
+        div = soup.find("li", **classes("product"))
+        if div:
+            self.cover_url = (
+                div.find("img", attrs={"srcset": True})["srcset"]
+                .split(",")[0]
+                .split()[0]
+            )
+        return getattr(self, "cover_url", self.cover_url)
 
     def preprocess_html(self, soup):
         breadcrumb = soup.find("ul", attrs={"class": "breadcrumb"})
