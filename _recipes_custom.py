@@ -1,6 +1,6 @@
 from typing import List
 
-from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month
+from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days
 
 # Define the categories display order, optional
 categories_sort: List[str] = []
@@ -19,7 +19,7 @@ recipes: List[Recipe] = [
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
         ),
-        # enable_on=False,
+        enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
     ),
     Recipe(
@@ -30,7 +30,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Magazines",
         tags=["The Atlantic", "editorial", "commentary"],
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4) and every_x_days(1, 1, 60),
     ),
     Recipe(
         recipe="knowable-magazine",
@@ -41,6 +41,7 @@ recipes: List[Recipe] = [
         tags=["science", "Knowable"],
         cover_options=CoverOptions(logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"),
         # enable_on=False,
+        enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
     ),
     Recipe(
@@ -67,6 +68,7 @@ recipes: List[Recipe] = [
         #    logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
         # ),
         # enable_on=False,
+        enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
     ),
     Recipe(
@@ -137,7 +139,8 @@ recipes: List[Recipe] = [
         target_ext=[],
         category="Online Magazines",
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
-        and onlyat_hours(list(range(8, 14))),
+        and onlyat_hours(list(range(8, 14)))
+        and every_x_days(1, 1, 60),
         # enable_on=False,
         tags=["science"],
         cover_options=CoverOptions(
