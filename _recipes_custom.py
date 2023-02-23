@@ -1,6 +1,6 @@
 from typing import List
 
-from _recipe_utils import Recipe
+from _recipe_utils import Recipe, CoverOptions
 
 # Define the categories display order, optional
 categories_sort: List[str] = []
