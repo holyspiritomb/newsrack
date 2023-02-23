@@ -41,8 +41,11 @@ class PhilosophyNow(BasicNewsRecipe, BasicNewsrackRecipe):
         soup = self.index_to_soup('https://philosophynow.org/')
         div = soup.find('div', attrs={'id': 'aside_issue_cover'})
         url = div.find('a', href=True)['href']
-        issue_date = self.tag_to_string(div.find('div', attrs={'id': 'aside_issue_date'}))
-        self.title = f"{_name}: {issue_date}"
+        issue_date = soup.find('div', attrs={'id': 'aside_issue_date'})
+        self.log('Issue date found: ', self.tag_to_string(issue_date).strip())
+        cleaned_issue_date = self.tag_to_string(issue_date).strip()
+        self.title = f"{_name}: {cleaned_issue_date}"
+        self.log('Added title: ', self.title)
         for issue in div.findAll('div', attrs={'id': 'aside_issue_text'}):
             self.log('Downloading issue:', self.tag_to_string(issue).strip())
         cov_url = div.find('img', src=True)['src']
