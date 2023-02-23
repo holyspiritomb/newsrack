@@ -29,7 +29,6 @@ recipes: List[Recipe] = [
         category="Magazines",
         tags=["The Atlantic","Periodical"],
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
-        tags=["editorial", "commentary"],
     ),
     Recipe(
         recipe="knowable-magazine",
