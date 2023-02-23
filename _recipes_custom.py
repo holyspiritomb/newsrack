@@ -15,10 +15,11 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Online Magazines",
-        tags=["The Atlantic", "Periodical", "editorial", "commentary"],
+        tags=["The Atlantic", "editorial", "commentary"],
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
         ),
+        enable_on=False,
     ),
     Recipe(
         recipe="atlantic-magazine",
@@ -27,7 +28,7 @@ recipes: List[Recipe] = [
         target_ext=[],
         overwrite_cover=False,
         category="Magazines",
-        tags=["The Atlantic", "Periodical"],
+        tags=["The Atlantic", "editorial", "commentary"],
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
     ),
     Recipe(
@@ -36,8 +37,9 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Magazines",
-        tags=["Science", "Periodical", "Knowable"],
+        tags=["science", "Knowable"],
         cover_options=CoverOptions(logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"),
+        enable_on=False,
     ),
     Recipe(
         recipe="nature",
@@ -46,8 +48,9 @@ recipes: List[Recipe] = [
         target_ext=[],
         category="Magazines",
         overwrite_cover=False,
-        enable_on=onlyon_weekdays([2, 3, 4], 0),
-        tags=["Science", "Periodical", "Nature"],
+        enable_on=False,
+        # enable_on=onlyon_weekdays([2, 3, 4], 0),
+        tags=["science", "Nature"],
     ),
     Recipe(
         recipe="nautilus",
@@ -55,10 +58,12 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Online Magazines",
-        tags=["Science", "Periodical", "Nautilus"],
-        cover_options=CoverOptions(
-            logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
-        ),
+        tags=["science", "Nautilus"],
+        overwrite_cover=False,
+        # cover_options=CoverOptions(
+        #    logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
+        # ),
+        enable_on=False,
     ),
     Recipe(
         recipe="new-republic-magazine",
@@ -67,8 +72,10 @@ recipes: List[Recipe] = [
         target_ext=[],
         category="Magazines",
         overwrite_cover=False,
-        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
-        and onlyat_hours(list(range(8, 16))),
+        tags=["politics", "New Republic", "commentary"],
+        # enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+        # and onlyat_hours(list(range(8, 16))),
+        enable_on=False,
     ),
     Recipe(
         recipe="newyorker",
@@ -77,8 +84,9 @@ recipes: List[Recipe] = [
         target_ext=[],
         category="Magazines",
         overwrite_cover=False,
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
-        tags=["Editorial", "Commentary"],
+        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
+        enable_on=False,
+        tags=["editorial", "commentary"],
     ),
     Recipe(
         recipe="nytimes-books",
@@ -88,10 +96,12 @@ recipes: List[Recipe] = [
         category="Books",
         timeout=300,
         retry_attempts=0,
-        enable_on=onlyat_hours(list(range(18, 22))),
+        # enable_on=onlyat_hours(list(range(18, 22))),
+        enable_on=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
         ),
+        tags=["literature"],
     ),
     Recipe(
         recipe="poetry",
@@ -100,8 +110,9 @@ recipes: List[Recipe] = [
         target_ext=[],
         overwrite_cover=False,
         category="Books",
-        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
-        tags=["Literature", "Periodical", "Poetry"],
+        # enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        enable_on=False,
+        tags=["literature", "Poetry"],
     ),
     Recipe(
         recipe="philosophy-now",
@@ -111,7 +122,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Magazines",
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
-        tags=["Philosophy", "Periodical"],
+        tags=["philosophy", "commentary"],
     ),
     Recipe(
         recipe="quanta-magazine",
@@ -119,9 +130,10 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Online Magazines",
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
-        and onlyat_hours(list(range(8, 14))),
-        tags=["Science", "Periodical"],
+        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
+        # and onlyat_hours(list(range(8, 14))),
+        enable_on=False,
+        tags=["science"],
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/640px-Quanta_Magazine_Logo_05.2022.svg.png"
         ),
@@ -133,8 +145,9 @@ recipes: List[Recipe] = [
         target_ext=[],
         category="Magazines",
         overwrite_cover=False,
-        enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
-        tags=["Science", "Periodical"],
+        # enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
+        enable_on=False,
+        tags=["science"],
     ),
     Recipe(
         recipe="smithsonian-magazine",
@@ -142,10 +155,11 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Magazines",
-        enable_on=onlyon_days(list(range(16, 31)), -5)
-        and onlyat_hours(list(range(10, 19)), -5),
+        # enable_on=onlyon_days(list(range(16, 31)), -5)
+        # and onlyat_hours(list(range(10, 19)), -5),
+        enable_on=False,
         overwrite_cover=False,
-        tags=["Science", "Periodical"],
+        tags=["science"],
     ),
     Recipe(
         recipe="wired",
@@ -154,9 +168,10 @@ recipes: List[Recipe] = [
         target_ext=[],
         overwrite_cover=True,
         category="Online Magazines",
-        tags=["Science", "Periodical"],
-        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
-        and onlyat_hours(list(range(10, 18))),
+        tags=["science", "tech"],
+        # enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+        # and onlyat_hours(list(range(10, 18))),
+        enable_on=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
