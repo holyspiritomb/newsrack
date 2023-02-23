@@ -78,7 +78,7 @@ recipes: List[Recipe] = [
         category="Magazines",
         overwrite_cover=False,
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
-        tags=["editorial", "commentary"],
+        tags=["Editorial", "Commentary"],
     ),
     Recipe(
         recipe="nytimes-books",
@@ -101,7 +101,17 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Books",
         enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
-        tags=["literature", "arts"],
+        tags=["Literature", "Periodical", "Poetry"],
+    ),
+    Recipe(
+        recipe="philosophy-now",
+        slug="philosophy-now",
+        src_ext="mobi",
+        target_ext=[],
+        overwrite_cover=False,
+        category="Magazines",
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
+        tags=["Philosophy", "Periodical"],
     ),
     Recipe(
         recipe="quanta-magazine",
@@ -135,6 +145,7 @@ recipes: List[Recipe] = [
         enable_on=onlyon_days(list(range(16, 31)), -5)
         and onlyat_hours(list(range(10, 19)), -5),
         overwrite_cover=False,
+        tags=["Science", "Periodical"],
     ),
     Recipe(
         recipe="wired",
