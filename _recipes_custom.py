@@ -20,6 +20,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
         ),
         enable_on=False,
+        title_date_format="%Y %b %-d",
     ),
     Recipe(
         recipe="atlantic-magazine",
@@ -40,6 +41,7 @@ recipes: List[Recipe] = [
         tags=["science", "Knowable"],
         cover_options=CoverOptions(logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"),
         enable_on=False,
+        title_date_format="%Y %b %-d",
     ),
     Recipe(
         recipe="nature",
@@ -51,6 +53,7 @@ recipes: List[Recipe] = [
         enable_on=False,
         # enable_on=onlyon_weekdays([2, 3, 4], 0),
         tags=["science", "Nature"],
+        title_date_format="%Y %b %-d",
     ),
     Recipe(
         recipe="nautilus",
@@ -64,6 +67,7 @@ recipes: List[Recipe] = [
         #    logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
         # ),
         enable_on=False,
+        title_date_format="%Y %b %-d",
     ),
     Recipe(
         recipe="new-republic-magazine",
@@ -102,6 +106,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
         ),
         tags=["literature"],
+        title_date_format="%Y %b %-d",
     ),
     Recipe(
         recipe="poetry",
@@ -137,6 +142,7 @@ recipes: List[Recipe] = [
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/640px-Quanta_Magazine_Logo_05.2022.svg.png"
         ),
+        title_date_format="%Y %b %-d",
     ),
     Recipe(
         recipe="scientific-american",
