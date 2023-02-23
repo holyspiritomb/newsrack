@@ -1,6 +1,6 @@
 from typing import List
 
-from _recipe_utils import Recipe, CoverOptions
+from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month
 
 # Define the categories display order, optional
 categories_sort: List[str] = []
@@ -15,7 +15,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Online Magazines",
-        tags=["The Atlantic","Periodical","editorial", "commentary"],
+        tags=["The Atlantic", "Periodical", "editorial", "commentary"],
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
         ),
@@ -27,7 +27,7 @@ recipes: List[Recipe] = [
         target_ext=[],
         overwrite_cover=False,
         category="Magazines",
-        tags=["The Atlantic","Periodical"],
+        tags=["The Atlantic", "Periodical"],
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
     ),
     Recipe(
@@ -36,7 +36,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Magazines",
-        tags=["Science","Periodical"],
+        tags=["Science", "Periodical", "Knowable"],
         cover_options=CoverOptions(logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"),
     ),
     Recipe(
@@ -47,7 +47,7 @@ recipes: List[Recipe] = [
         category="Magazines",
         overwrite_cover=False,
         enable_on=onlyon_weekdays([2, 3, 4], 0),
-        tags=["Science","Periodical"],
+        tags=["Science", "Periodical", "Nature"],
     ),
     Recipe(
         recipe="nautilus",
@@ -55,7 +55,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Online Magazines",
-        tags=["Science","Periodical"],
+        tags=["Science", "Periodical", "Nautilus"],
         cover_options=CoverOptions(
             logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
         ),
@@ -111,7 +111,7 @@ recipes: List[Recipe] = [
         category="Online Magazines",
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
         and onlyat_hours(list(range(8, 14))),
-        tags=["Science","Periodical"],
+        tags=["Science", "Periodical"],
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/640px-Quanta_Magazine_Logo_05.2022.svg.png"
         ),
@@ -124,7 +124,7 @@ recipes: List[Recipe] = [
         category="Magazines",
         overwrite_cover=False,
         enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
-        tags=["Science","Periodical"],
+        tags=["Science", "Periodical"],
     ),
     Recipe(
         recipe="smithsonian-magazine",
@@ -143,7 +143,7 @@ recipes: List[Recipe] = [
         target_ext=[],
         overwrite_cover=True,
         category="Online Magazines",
-        tags=["Science","Periodical"],
+        tags=["Science", "Periodical"],
         enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
         and onlyat_hours(list(range(10, 18))),
         cover_options=CoverOptions(
