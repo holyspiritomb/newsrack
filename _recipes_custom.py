@@ -19,7 +19,7 @@ recipes: List[Recipe] = [
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
         ),
-        enable_on=False,
+        # enable_on=False,
         title_date_format="%Y %b %-d",
     ),
     Recipe(
@@ -40,7 +40,7 @@ recipes: List[Recipe] = [
         category="Magazines",
         tags=["science", "Knowable"],
         cover_options=CoverOptions(logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"),
-        enable_on=False,
+        # enable_on=False,
         title_date_format="%Y %b %-d",
     ),
     Recipe(
@@ -50,7 +50,7 @@ recipes: List[Recipe] = [
         target_ext=[],
         category="Magazines",
         overwrite_cover=False,
-        enable_on=False,
+        # enable_on=False,
         # enable_on=onlyon_weekdays([2, 3, 4], 0),
         tags=["science", "Nature"],
         title_date_format="%Y %b %-d",
@@ -66,7 +66,7 @@ recipes: List[Recipe] = [
         # cover_options=CoverOptions(
         #    logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
         # ),
-        enable_on=False,
+        # enable_on=False,
         title_date_format="%Y %b %-d",
     ),
     Recipe(
@@ -89,7 +89,7 @@ recipes: List[Recipe] = [
         category="Magazines",
         overwrite_cover=False,
         # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
-        enable_on=False,
+        # enable_on=False,
         tags=["editorial", "commentary"],
     ),
     Recipe(
@@ -101,7 +101,7 @@ recipes: List[Recipe] = [
         timeout=300,
         retry_attempts=0,
         # enable_on=onlyat_hours(list(range(18, 22))),
-        enable_on=False,
+        # enable_on=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
         ),
@@ -116,7 +116,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Books",
         # enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
-        enable_on=False,
+        # enable_on=False,
         tags=["literature", "Poetry"],
     ),
     Recipe(
@@ -126,7 +126,8 @@ recipes: List[Recipe] = [
         target_ext=[],
         overwrite_cover=False,
         category="Magazines",
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
+        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
+        enable_on=False,
         tags=["philosophy", "commentary"],
     ),
     Recipe(
@@ -137,7 +138,7 @@ recipes: List[Recipe] = [
         category="Online Magazines",
         # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
         # and onlyat_hours(list(range(8, 14))),
-        enable_on=False,
+        # enable_on=False,
         tags=["science"],
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/640px-Quanta_Magazine_Logo_05.2022.svg.png"
@@ -152,7 +153,7 @@ recipes: List[Recipe] = [
         category="Magazines",
         overwrite_cover=False,
         # enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
-        enable_on=False,
+        # enable_on=False,
         tags=["science"],
     ),
     Recipe(
@@ -163,7 +164,7 @@ recipes: List[Recipe] = [
         category="Magazines",
         # enable_on=onlyon_days(list(range(16, 31)), -5)
         # and onlyat_hours(list(range(10, 19)), -5),
-        enable_on=False,
+        # enable_on=False,
         overwrite_cover=False,
         tags=["science"],
     ),
@@ -177,7 +178,7 @@ recipes: List[Recipe] = [
         tags=["science", "tech"],
         # enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
         # and onlyat_hours(list(range(10, 18))),
-        enable_on=False,
+        # enable_on=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
