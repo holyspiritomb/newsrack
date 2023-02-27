@@ -15,9 +15,11 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Online Magazines",
-        tags=["The Atlantic", "editorial", "commentary"],
+        tags=["editorial", "commentary"],
         cover_options=CoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
         enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
@@ -29,8 +31,8 @@ recipes: List[Recipe] = [
         target_ext=[],
         overwrite_cover=False,
         category="Magazines",
-        tags=["The Atlantic", "editorial", "commentary"],
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4) and every_x_days(1, 1, 60),
+        tags=["editorial", "commentary"],
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
     ),
     Recipe(
         recipe="knowable-magazine",
@@ -38,8 +40,12 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Magazines",
-        tags=["science", "Knowable"],
-        cover_options=CoverOptions(logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"),
+        tags=["science"],
+        cover_options=CoverOptions(
+            logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
         # enable_on=False,
         enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
@@ -53,7 +59,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         # enable_on=False,
         enable_on=onlyon_weekdays([2, 3, 4], 0),
-        tags=["science", "Nature"],
+        tags=["science"],
         title_date_format="%Y %b %-d",
     ),
     Recipe(
@@ -62,12 +68,11 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=[],
         category="Online Magazines",
-        tags=["science", "Nautilus"],
+        tags=["science"],
         overwrite_cover=False,
         # cover_options=CoverOptions(
         #    logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
         # ),
-        # enable_on=False,
         enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
     ),
@@ -78,7 +83,7 @@ recipes: List[Recipe] = [
         target_ext=[],
         category="Magazines",
         overwrite_cover=False,
-        tags=["politics", "New Republic", "commentary"],
+        tags=["politics", "commentary"],
         enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
         and onlyat_hours(list(range(8, 16))),
         # enable_on=False,
@@ -93,6 +98,7 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
         # enable_on=False,
         tags=["editorial", "commentary"],
+        title_date_format="%Y %b %-d",
     ),
     Recipe(
         recipe="nytimes-books",
@@ -105,7 +111,9 @@ recipes: List[Recipe] = [
         enable_on=onlyat_hours(list(range(18, 22))),
         # enable_on=False,
         cover_options=CoverOptions(
-            logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
+            logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
         tags=["literature"],
         title_date_format="%Y %b %-d",
@@ -130,7 +138,7 @@ recipes: List[Recipe] = [
         category="Books",
         enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
         # enable_on=False,
-        tags=["literature", "Poetry"],
+        tags=["literature", "arts"],
     ),
     Recipe(
         recipe="quanta-magazine",
@@ -144,7 +152,9 @@ recipes: List[Recipe] = [
         # enable_on=False,
         tags=["science"],
         cover_options=CoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/640px-Quanta_Magazine_Logo_05.2022.svg.png"
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/640px-Quanta_Magazine_Logo_05.2022.svg.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
         title_date_format="%Y %b %-d",
     ),
@@ -157,7 +167,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
         # enable_on=False,
-        tags=["science"],
+        tags=["science", "tech"],
     ),
     Recipe(
         recipe="smithsonian-magazine",
@@ -172,19 +182,31 @@ recipes: List[Recipe] = [
         tags=["science", "history"],
     ),
     Recipe(
+        recipe="time-magazine",
+        slug="time-magazine",
+        src_ext="mobi",
+        target_ext=[],
+        overwrite_cover=False,
+        category="Magazines",
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
+        tags=["news", "politics"],
+    ),
+    Recipe(
         recipe="wired",
         slug="wired",
-        src_ext="mobi",
+        src_ext=["mobi", "epub"],
         target_ext=[],
         overwrite_cover=True,
         category="Online Magazines",
         tags=["science", "tech"],
         # enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
         # and onlyat_hours(list(range(10, 18))),
-        enable_on=onlyat_hours(list(range(10, 22))),
         # enable_on=False,
+        title_date_format="%b %Y",
         cover_options=CoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
     ),
     # Recipe(
