@@ -111,17 +111,6 @@ recipes: List[Recipe] = [
         title_date_format="%Y %b %-d",
     ),
     Recipe(
-        recipe="poetry",
-        slug="poetry-magazine",
-        src_ext="mobi",
-        target_ext=[],
-        overwrite_cover=False,
-        category="Books",
-        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
-        # enable_on=False,
-        tags=["literature", "Poetry"],
-    ),
-    Recipe(
         recipe="philosophy-now",
         slug="philosophy-now",
         src_ext="mobi",
@@ -131,6 +120,17 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
         # enable_on=False,
         tags=["philosophy", "commentary"],
+    ),
+    Recipe(
+        recipe="poetry",
+        slug="poetry-magazine",
+        src_ext="mobi",
+        target_ext=[],
+        overwrite_cover=False,
+        category="Books",
+        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        # enable_on=False,
+        tags=["literature", "Poetry"],
     ),
     Recipe(
         recipe="quanta-magazine",
@@ -169,7 +169,7 @@ recipes: List[Recipe] = [
         and onlyat_hours(list(range(10, 19)), -5),
         # enable_on=False,
         overwrite_cover=False,
-        tags=["science"],
+        tags=["science", "history"],
     ),
     Recipe(
         recipe="wired",
@@ -179,8 +179,9 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Online Magazines",
         tags=["science", "tech"],
-        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
-        and onlyat_hours(list(range(10, 18))),
+        # enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+        # and onlyat_hours(list(range(10, 18))),
+        enable_on=onlyat_hours(list(range(10, 22))),
         # enable_on=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
