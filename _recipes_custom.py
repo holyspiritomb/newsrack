@@ -194,7 +194,7 @@ recipes: List[Recipe] = [
     Recipe(
         recipe="wired",
         slug="wired",
-        src_ext=["mobi", "epub"],
+        src_ext=["epub"],
         target_ext=[],
         overwrite_cover=True,
         category="Online Magazines",
