@@ -124,7 +124,7 @@ recipes: List[Recipe] = [
         target_ext=["mobi", "epub"],
         overwrite_cover=False,
         category="Magazines",
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
+        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
         # enable_on=False,
         tags=["philosophy", "commentary", "bimonthly"],
     ),
