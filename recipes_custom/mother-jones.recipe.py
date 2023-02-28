@@ -16,25 +16,33 @@ except ImportError:
 
 from calibre.web.feeds.news import BasicNewsRecipe
 
+_name = "Mother Jones"
+
 
 class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
-    title          = 'Mother Jones'
+    title = _name
     language = 'en'
     __author__ = 'holyspiritomb'
     oldest_article = 14
     max_articles_per_feed = 200
     no_stylesheets = True
-    feeds          = [
+    feeds = [
         ('Mother Jones', 'http://feeds.feedburner.com/motherjones/feed'),
     ]
     timefmt = ' [%b %d, %Y]'
 
-    # soup = self.index_to_soup('https://www.motherjones.com/magazine')
-    # coverdiv = soup.find('div', attrs={'id': 'toc_cover'})
-    # cov_url = coverdiv.find('img', src=True)['src']
-    # self.cover_url = 'https://www.motherjones.com' + cov_url
+    def populate_article_metadata(self, article, __, _):
+        if (not self.pub_date) or article.utctime > self.pub_date:
+            self.pub_date = article.utctime
+            self.title = format_title(_name, article.utctime)
 
-
+    def get_cover_url(self):
+        soup = self.index_to_soup('https://www.motherjones.com/magazine')
+        coverdiv = soup.find('div', attrs={'id': 'toc_cover'})
+        cov_url = coverdiv.find('img', src=True)['src']
+        if cov_url:
+            self.cover_url = 'https://www.motherjones.com' + cov_url
+        return getattr(self, "cover_url", self.cover_url)
 
 
 calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
