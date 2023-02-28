@@ -51,6 +51,21 @@ recipes: List[Recipe] = [
         title_date_format="%Y %b %-d",
     ),
     Recipe(
+        recipe="Mother Jones",
+        name="Mother Jones",
+        slug="motherjones",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Magazines",
+        tags=["politics", "commentary"],
+        overwrite_cover=True,
+        cover_options=CoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mother_Jones_Logo_2019.svg/1024px-Mother_Jones_Logo_2019.svg.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
+    ),
+    Recipe(
         recipe="nature",
         slug="nature",
         src_ext="mobi",
@@ -194,7 +209,7 @@ recipes: List[Recipe] = [
         recipe="wired",
         slug="wired",
         src_ext="mobi",
-        target_ext=["mobi"],
+        target_ext=["epub"],
         overwrite_cover=True,
         category="Online Magazines",
         tags=["science", "tech", "monthly"],
