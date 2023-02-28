@@ -194,13 +194,13 @@ recipes: List[Recipe] = [
     Recipe(
         recipe="wired",
         slug="wired",
-        src_ext="epub",
-        target_ext=[],
+        src_ext="mobi",
+        target_ext=["epub"],
         overwrite_cover=True,
         category="Online Magazines",
         tags=["science", "tech"],
-        # enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
-        # and onlyat_hours(list(range(10, 18))),
+        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+        and onlyat_hours(list(range(10, 18))),
         # enable_on=False,
         title_date_format="%b %Y",
         cover_options=CoverOptions(
