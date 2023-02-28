@@ -1,3 +1,5 @@
+[![Build](https://github.com/holyspiritomb/newsrack/actions/workflows/build.yml/badge.svg)](https://github.com/holyspiritomb/newsrack/actions/workflows/build.yml)
+
 # newsrack
 
 Generate an online "newsrack" of periodicals for your ereader.
