@@ -35,7 +35,7 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
     ),
     Recipe(
-        recipe="forward",
+        recipe="the-forward",
         slug="the-forward",
         src_ext="mobi",
         target_ext=["epub"],
