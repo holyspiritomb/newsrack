@@ -23,6 +23,9 @@ recipes: List[Recipe] = [
         ),
         enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="atlantic-magazine",
@@ -41,6 +44,12 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="News",
         tags=["editorial", "commentary", "news"],
+        overwrite_cover=True,
+        cover_options=CoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/The_Forward_logo_2022.svg/1024px-The_Forward_logo_2022.svg.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
     ),
     Recipe(
         recipe="knowable-magazine",
