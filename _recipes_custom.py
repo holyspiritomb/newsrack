@@ -68,9 +68,8 @@ recipes: List[Recipe] = [
         title_date_format="%Y %b %-d",
     ),
     Recipe(
-        recipe="Mother Jones",
-        name="Mother Jones",
-        slug="motherjones",
+        recipe="mother-jones",
+        slug="mother-jones",
         src_ext="mobi",
         target_ext=["epub"],
         category="Magazines",
