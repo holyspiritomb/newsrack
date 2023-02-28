@@ -35,6 +35,14 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
     ),
     Recipe(
+        recipe="forward",
+        slug="the-forward",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="News",
+        tags=["editorial", "commentary", "news"],
+    ),
+    Recipe(
         recipe="knowable-magazine",
         slug="knowable-magazine",
         src_ext="mobi",
@@ -58,7 +66,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Magazines",
         tags=["politics", "commentary"],
-        overwrite_cover=True,
+        overwrite_cover=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mother_Jones_Logo_2019.svg/1024px-Mother_Jones_Logo_2019.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
