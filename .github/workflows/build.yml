@@ -1,9 +1,9 @@
 name: "Build"
 
 on:
-  push:
-    branches:
-      - '**'
+  # push:
+  #   branches:
+  #    - '**'
   schedule:
     # Customise: Cron interval
     - cron: "0 7,13,19 * * *"
