@@ -23,7 +23,9 @@ class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
     title = _name
     language = 'en'
     __author__ = 'holyspiritomb'
-    description = '''Mother Jones is an American '''
+    description = '''Mother Jones is a nonprofit magazine and news outlet that delivers original award-winning reporting on the urgent issues of our day, from politics and climate change to education and the food we eat. We investigate stories that are in the public's interest. From revelatory scoops to deep-dive investigations, Mother Jones inspires 9 million monthly readers of our print, digital, and online journalism.
+    Generated from https://www.motherjones.com/feed
+    '''
     oldest_article = 14
     max_articles_per_feed = 200
     no_stylesheets = True
