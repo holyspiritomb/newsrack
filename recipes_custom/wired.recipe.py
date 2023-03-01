@@ -157,6 +157,8 @@ class WiredMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
                 )
             )
         return [(_name, articles)]
+    # Cover image
+    # https://covers.conde.io/images_covers/cover_wired_600.jpg
 
     # Wired changes the content it delivers based on cookies, so the
     # following ensures that we send no cookies
