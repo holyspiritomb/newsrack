@@ -38,6 +38,24 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
     ),
     Recipe(
+        recipe="duolingo-blog",
+        slug="duolingo-blog",
+        src_ext="mobi",
+        target_ext=["epub"],
+        overwrite_cover=True,
+        category="Blogs",
+        tags=["science", "linguistics"],
+        title_date_format="%Y %b %-d",
+        cover_options=CoverOptions(
+            logo_path_or_url="https://i.imgur.com/ScfaQZb.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
+    ),
+    Recipe(
         recipe="the-forward",
         slug="the-forward",
         src_ext="mobi",
