@@ -10,6 +10,24 @@ categories_sort: List[str] = []
 
 recipes: List[Recipe] = [
     Recipe(
+        recipe="ars-technica",
+        slug="ars-technica",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="News",
+        tags=["science", "tech", "commentary"],
+        cover_options=CoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ars_Technica_logo_(2016).svg/1024px-Ars_Technica_logo_(2016).svg.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
+        enable_on=every_x_days(1, 1, 60),
+        title_date_format="%Y %b %-d",
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
+    ),
+    Recipe(
         recipe="atlantic",
         slug="the-atlantic",
         src_ext="mobi",
