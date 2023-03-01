@@ -23,9 +23,15 @@ class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
     title = _name
     language = 'en'
     __author__ = 'holyspiritomb'
+    description = '''Mother Jones is an American '''
     oldest_article = 14
     max_articles_per_feed = 200
     no_stylesheets = True
+    publication_type = 'magazine'
+    scale_news_images = (800, 1200)
+    conversion_options = {
+        'tags': 'Progressive, Politics'
+    }
     feeds = [
         ('Mother Jones', 'http://feeds.feedburner.com/motherjones/feed'),
     ]

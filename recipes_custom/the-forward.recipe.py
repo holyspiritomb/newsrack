@@ -31,7 +31,7 @@ class TheForward(BasicNewsRecipe, BasicNewsrackRecipe):
     publication_type = 'newspaper'
     scale_news_images = (800, 1200)
     conversion_options = {
-        'tags': 'Jewish'
+        'tags': 'Jewish, Progressive'
     }
 
     feeds = [
@@ -39,3 +39,12 @@ class TheForward(BasicNewsRecipe, BasicNewsrackRecipe):
         ('The Forward - Opinions', 'https://forward.com/opinion/feed/'),
         ('The Forward - Culture', 'https://forward.com/culture/feed/'),
     ]
+    timefmt = ' [%b %d, %Y]'
+
+    def populate_article_metadata(self, article, __, _):
+        if (not self.pub_date) or article.utctime > self.pub_date:
+            self.pub_date = article.utctime
+            self.title = format_title(_name, article.utctime)
+
+
+calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
