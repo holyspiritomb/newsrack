@@ -39,7 +39,7 @@ class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
     def get_cover_url(self):
         soup = self.index_to_soup('https://www.motherjones.com/magazine')
         coverdiv = soup.find('div', attrs={'id': 'toc_cover'})
-        cov_url = coverdiv.find('img', src=True)['src']
+        cov_url = coverdiv.find('img', src=True)['src'].split()[0]
         if cov_url:
             self.cover_url = 'https://www.motherjones.com' + cov_url
         return getattr(self, "cover_url", self.cover_url)
