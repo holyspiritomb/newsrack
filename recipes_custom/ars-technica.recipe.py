@@ -43,7 +43,7 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     }
     extra_css             = '''
     body {font-family: Lato, Roboto, Arial,sans-serif}
-    .heading{font-family: Lato, Roboto, Arial,,sans-serif}
+    .heading{font-family: Lato, Roboto, Arial,sans-serif}
     .byline{font-weight: bold; line-height: 1em; font-size: 0.625em; text-decoration: none}
     img{display: block}
     .caption-text{font-size:small; font-style:italic}
