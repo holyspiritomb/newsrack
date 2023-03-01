@@ -81,6 +81,7 @@ recipes: List[Recipe] = [
         category="News",
         tags=["editorial", "commentary", "news"],
         overwrite_cover=True,
+        title_date_format="%Y %b %-d",
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/The_Forward_logo_2022.svg/1024px-The_Forward_logo_2022.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -271,6 +272,22 @@ recipes: List[Recipe] = [
         title_date_format="%b %Y",
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
+    ),
+    Recipe(
+        recipe="wired-daily",
+        slug="wired-daily",
+        src_ext="mobi",
+        target_ext=["epub"],
+        overwrite_cover=True,
+        category="News",
+        tags=["science", "tech", "daily"],
+        enable_on=every_x_days(1, 1, 60),
+        title_date_format="%Y %b %-d",
+        cover_options=CoverOptions(
+            logo_path_or_url="https://www.wired.com/images/logos/wired.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
