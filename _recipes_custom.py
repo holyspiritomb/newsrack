@@ -120,6 +120,21 @@ recipes: List[Recipe] = [
         ),
     ),
     Recipe(
+        recipe="the-nation",
+        slug="the-nation",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Magazines",
+        tags=["politics", "commentary"],
+        overwrite_cover=False,
+        title_date_format="%Y %b %-d",
+        cover_options=CoverOptions(
+            logo_path_or_url="",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
+    ),
+    Recipe(
         recipe="nature",
         slug="nature",
         src_ext="mobi",
