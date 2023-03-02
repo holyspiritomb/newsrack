@@ -46,6 +46,7 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
     masthead_url = (
         "https://static.scientificamerican.com/sciam/assets/Image/newsletter/salogo.png"
     )
+    
     remove_empty_feeds = True
 
     remove_attributes = ["width", "height"]
@@ -61,6 +62,9 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
             ]
         ),
     ]
+    conversion_options = {
+        'tags' : 'Periodical, Science',
+    }
     remove_tags = [
         dict(id=["seeAlsoLinks"]),
         dict(alt="author-avatar"),

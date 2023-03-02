@@ -16,6 +16,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="News",
         tags=["science", "tech", "commentary"],
+        overwrite_cover=True,
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ars_Technica_logo_(2016).svg/1024px-Ars_Technica_logo_(2016).svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -32,6 +33,7 @@ recipes: List[Recipe] = [
         slug="the-atlantic",
         src_ext="mobi",
         target_ext=["epub"],
+        overwrite_cover=True,
         category="Online Magazines",
         tags=["editorial", "commentary"],
         cover_options=CoverOptions(
@@ -101,6 +103,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Magazines",
         tags=["science"],
+        overwrite_cover=True,
         cover_options=CoverOptions(
             logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -109,6 +112,9 @@ recipes: List[Recipe] = [
         # enable_on=False,
         enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="mother-jones",
@@ -124,6 +130,9 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="the-nation",
@@ -139,6 +148,9 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="national-geographic",
@@ -237,6 +249,9 @@ recipes: List[Recipe] = [
         ),
         tags=["literature"],
         title_date_format="%Y %b %-d",
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="philosophy-now",
@@ -249,6 +264,9 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
         # enable_on=False,
         tags=["philosophy", "commentary", "bimonthly"],
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="poetry",
@@ -261,6 +279,9 @@ recipes: List[Recipe] = [
         enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
         # enable_on=False,
         tags=["literature", "arts", "monthly"],
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="quanta-magazine",
@@ -279,6 +300,9 @@ recipes: List[Recipe] = [
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
         title_date_format="%Y %b %-d",
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="scientific-american",
@@ -291,6 +315,9 @@ recipes: List[Recipe] = [
         enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
         # enable_on=False,
         tags=["science", "tech", "monthly"],
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="smithsonian-magazine",
@@ -304,6 +331,9 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         title_date_format="%b %Y",
         tags=["science", "history", "monthly"],
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="time-magazine",
@@ -315,6 +345,9 @@ recipes: List[Recipe] = [
         title_date_format="%Y %b %-d",
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
         tags=["news", "politics", "weekly"],
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="wired",
@@ -332,6 +365,9 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="wired-daily",
@@ -348,6 +384,9 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     # Recipe(
     #     recipe="example",
