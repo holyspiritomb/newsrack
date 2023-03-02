@@ -131,9 +131,9 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     ]
 
     def get_cover_url(self):
-        soup = self.index_to_soup(
+        soupdex = self.index_to_soup(
             'https://www.newscientist.com/issue/current/')
-        div = soup.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
+        div = soupdex.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
         cover_item = div.find('a', attrs={'class': 'ThisWeeksMagazineHero__ImageLink'})
         if cover_item:
             cover_url = cover_item["href"]
@@ -155,4 +155,4 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     def populate_article_metadata(self, article, __, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
-            self.title = format_title(_name, article.utctime)
+            # self.title = format_title(_name, article.utctime)
