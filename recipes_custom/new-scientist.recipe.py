@@ -140,13 +140,13 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         if cover_item:
             cover_url = cover_item["href"].split()[0]
         # Configure series and issue number
-        issue_nr = div.find('p', attrs={'class': 'ThisWeeksMagazineHero__MagInfoDescription'}).strip()
-        if issue_nr:
-            if issue_nr.string is not None:
-                non_decimal = re.compile(r'[^\d.]+')
-                nr = non_decimal.sub('', issue_nr.string)
-                self.conversion_options.update({'series': 'New Scientist'})
-                self.conversion_options.update({'series_index': nr})
+        # issue_nr = div.find('p', attrs={'class': 'ThisWeeksMagazineHero__MagInfoDescription'})
+        # if issue_nr:
+        #     if issue_nr.string is not None:
+        #         non_decimal = re.compile(r'[^\d.]+')
+        #         nr = non_decimal.sub('', issue_nr.string)
+        #         self.conversion_options.update({'series': 'New Scientist'})
+        #         self.conversion_options.update({'series_index': nr})
         issue_date = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'}).strip()
         if issue_date:
             self.pub_date = datetime.strptime(issue_date, "%d %B %Y")
