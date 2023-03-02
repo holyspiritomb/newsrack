@@ -146,7 +146,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                 nr = non_decimal.sub('', issue_nr.string)
                 self.conversion_options.update({'series': 'New Scientist'})
                 self.conversion_options.update({'series_index': nr})
-        issue_date = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'})
+        issue_date = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'}).strip()
         if issue_date:
             self.pub_date = datetime.strptime(issue_date, "%d %B %Y")
             self.title = _name + issue_date
