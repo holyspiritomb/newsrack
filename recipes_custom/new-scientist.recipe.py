@@ -13,6 +13,7 @@
 01-19-2012: Added GrayScale Image conversion and Duplicant article removals
 12-31-2015: Major rewrite due to massive changes in site structure
 01-27-2016: Added support for series index and minor cleanup
+03-02-2023: Modified for newsrack usage
 '''
 
 __license__ = 'GNU General Public License v3 - http://www.gnu.org/copyleft/gpl.html'
@@ -53,7 +54,7 @@ _name = "New Scientist"
 class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     title = _name
     description = 'Science news and science articles from New Scientist.'
-    masthead_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png"
+    masthead_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png'
     language = 'en'
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
@@ -132,26 +133,33 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     ]
 
     def get_cover_url(self):
-        cover_url = None
         soup = self.index_to_soup(
             'https://www.newscientist.com/issue/current/')
         div = soup.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
         cover_item = div.find('a', attrs={'class': 'ThisWeeksMagazineHero__ImageLink'})
         if cover_item:
-            cover_url = cover_item["href"].split()[0]
+            cover_url = cover_item["href"]
         # Configure series and issue number
-        # issue_nr = div.find('p', attrs={'class': 'ThisWeeksMagazineHero__MagInfoDescription'})
-        # if issue_nr:
-        #     if issue_nr.string is not None:
-        #         non_decimal = re.compile(r'[^\d.]+')
-        #         nr = non_decimal.sub('', issue_nr.string)
-        #         self.conversion_options.update({'series': 'New Scientist'})
-        #         self.conversion_options.update({'series_index': nr})
-        issue_date = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'}).strip()
-        if issue_date:
-            self.pub_date = datetime.strptime(issue_date, "%d %B %Y")
-            self.title = _name + issue_date
+        issue_nr = div.find('p', attrs={'class': 'ThisWeeksMagazineHero__MagInfoDescription'})
+        if issue_nr:
+            if issue_nr.string is not None:
+                non_decimal = re.compile(r'[^\d.]+')
+                nr = non_decimal.sub('', issue_nr.string)
+                self.conversion_options.update({'series': 'New Scientist'})
+                self.conversion_options.update({'series_index': nr})
         return cover_url
+
+    def get_publication_date(self):
+        soup = self.index_to_soup(
+            'https://www.newscientist.com/issue/current/')
+        div = soup.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
+        issue_dt = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'})
+        if issue_dt:
+            issue_date = issue_dt.string
+            pub_date = datetime.strptime(issue_date, "%d %B %Y")
+            self.title = _name + issue_date
+            self.pub_date = pub_date
+        return pub_date
 
     def populate_article_metadata(self, article, __, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
