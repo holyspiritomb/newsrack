@@ -137,6 +137,11 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         cover_item = div.find('a', attrs={'class': 'ThisWeeksMagazineHero__ImageLink'})
         if cover_item:
             cover_url = cover_item["href"]
+        issue_dt = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'})
+        if issue_dt:
+            issue_date = issue_dt.string
+            pub_date = datetime.strptime(issue_date, "%d %B %Y")
+            self.title = format_title(_name, pub_date)
         # Configure series and issue number
         issue_nr = div.find('p', attrs={'class': 'ThisWeeksMagazineHero__MagInfoDescription'})
         if issue_nr:
@@ -147,28 +152,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                 self.conversion_options.update({'series_index': nr})
         return cover_url
 
-    # def get_publication_date(self):
-    #     soup = self.index_to_soup(
-    #         'https://www.newscientist.com/issue/current/')
-    #     div = soup.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
-    #     issue_dt = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'})
-    #     if issue_dt:
-    #         issue_date = issue_dt.string
-    #         pub_date = datetime.strptime(issue_date, "%d %B %Y")
-    #         self.title = _name + issue_date
-    #         self.pub_date = pub_date
-    #     return pub_date
-
     def populate_article_metadata(self, article, __, _):
-        soup = self.index_to_soup(
-            'https://www.newscientist.com/issue/current/')
-        div = soup.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
-        issue_dt = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'})
-        if issue_dt:
-            issue_date = issue_dt.string
-            pub_date = datetime.strptime(issue_date, "%d %B %Y")
-            self.pub_date = pub_date
-            self.title = format_title(_name, pub_date)
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
