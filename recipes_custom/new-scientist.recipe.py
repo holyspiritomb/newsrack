@@ -147,7 +147,19 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                 self.conversion_options.update({'series_index': nr})
         return cover_url
 
-    def get_publication_date(self):
+    # def get_publication_date(self):
+    #     soup = self.index_to_soup(
+    #         'https://www.newscientist.com/issue/current/')
+    #     div = soup.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
+    #     issue_dt = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'})
+    #     if issue_dt:
+    #         issue_date = issue_dt.string
+    #         pub_date = datetime.strptime(issue_date, "%d %B %Y")
+    #         self.title = _name + issue_date
+    #         self.pub_date = pub_date
+    #     return pub_date
+
+    def populate_article_metadata(self, article, __, _):
         soup = self.index_to_soup(
             'https://www.newscientist.com/issue/current/')
         div = soup.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
@@ -155,11 +167,8 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         if issue_dt:
             issue_date = issue_dt.string
             pub_date = datetime.strptime(issue_date, "%d %B %Y")
-            self.title = _name + issue_date
-            # self.pub_date = pub_date
-        return pub_date
-
-    # def populate_article_metadata(self, article, __, _):
-    #     if (not self.pub_date) or article.utctime > self.pub_date:
-    #         self.pub_date = article.utctime
-    #         self.title = format_title(_name, article.utctime)
+            self.pub_date = pub_date
+            self.title = format_title(_name, pub_date)
+        if (not self.pub_date) or article.utctime > self.pub_date:
+            self.pub_date = article.utctime
+            self.title = format_title(_name, article.utctime)
