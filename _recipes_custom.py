@@ -21,7 +21,7 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
-        enable_on=every_x_days(1, 1, 60),
+        enable_on=every_x_days(1, 1, 360),
         title_date_format="%Y %b %-d",
         conv_options={
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
@@ -54,6 +54,9 @@ recipes: List[Recipe] = [
         category="Magazines",
         tags=["editorial", "commentary"],
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="duolingo-blog",
@@ -87,6 +90,9 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="knowable-magazine",
@@ -135,6 +141,25 @@ recipes: List[Recipe] = [
         ),
     ),
     Recipe(
+        recipe="national-geographic",
+        slug="national-geographic",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Online Magazines",
+        tags=["daily", "history", "science"],
+        overwrite_cover=True,
+        title_date_format="%Y %b %-d",
+        enable_on=every_x_days(1, 1, 360),
+        cover_options=CoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
+    ),
+    Recipe(
         recipe="nature",
         slug="nature",
         src_ext="mobi",
@@ -142,9 +167,12 @@ recipes: List[Recipe] = [
         category="Magazines",
         overwrite_cover=False,
         # enable_on=False,
-        enable_on=onlyon_weekdays([2, 3, 4], 0),
-        tags=["science"],
+        enable_on=onlyon_weekdays([2, 3, 4], 0) and every_x_days(1, 1, 60),
+        tags=["science", "weekly"],
         title_date_format="%Y %b %-d",
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="nautilus",
@@ -152,13 +180,16 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="Online Magazines",
-        tags=["science"],
+        tags=["science", "weekly"],
         overwrite_cover=False,
         # cover_options=CoverOptions(
         #    logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
         # ),
         enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="new-republic-magazine",
@@ -170,6 +201,9 @@ recipes: List[Recipe] = [
         tags=["politics", "commentary"],
         enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
         and onlyat_hours(list(range(8, 16))),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="newyorker",
@@ -182,6 +216,9 @@ recipes: List[Recipe] = [
         # enable_on=False,
         tags=["editorial", "commentary", "weekly"],
         title_date_format="%Y %b %-d",
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
     ),
     Recipe(
         recipe="nytimes-books",
@@ -208,7 +245,8 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Magazines",
-        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
+        title_date_format="%b %Y",
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
         # enable_on=False,
         tags=["philosophy", "commentary", "bimonthly"],
     ),
@@ -219,6 +257,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Books",
+        title_date_format="%b %Y",
         enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
         # enable_on=False,
         tags=["literature", "arts", "monthly"],
@@ -248,6 +287,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Magazines",
         overwrite_cover=False,
+        title_date_format="%b %Y",
         enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
         # enable_on=False,
         tags=["science", "tech", "monthly"],
@@ -262,7 +302,8 @@ recipes: List[Recipe] = [
         and onlyat_hours(list(range(10, 19)), -5),
         # enable_on=False,
         overwrite_cover=False,
-        tags=["science", "history"],
+        title_date_format="%b %Y",
+        tags=["science", "history", "monthly"],
     ),
     Recipe(
         recipe="time-magazine",
@@ -271,6 +312,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Magazines",
+        title_date_format="%Y %b %-d",
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
         tags=["news", "politics", "weekly"],
     ),
