@@ -71,8 +71,6 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     resolve_internal_links = True
     conversion_options = {
         'tags' : 'Science, News, Periodical',
-        'series': 'New Scientist',
-        'series_index': 0,
     }
     extra_css = """
                                  body{font-family: "Lato", "Roboto", sans-serif}
@@ -161,7 +159,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
             self.pub_date = pub_date
         return pub_date
 
-    def populate_article_metadata(self, article, __, _):
-        if (not self.pub_date) or article.utctime > self.pub_date:
-            self.pub_date = article.utctime
-            self.title = format_title(_name, article.utctime)
+    # def populate_article_metadata(self, article, __, _):
+    #     if (not self.pub_date) or article.utctime > self.pub_date:
+    #         self.pub_date = article.utctime
+    #         self.title = format_title(_name, article.utctime)
