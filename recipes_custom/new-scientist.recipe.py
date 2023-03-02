@@ -140,7 +140,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         if cover_item:
             cover_url = cover_item["href"].split()[0]
         # Configure series and issue number
-        issue_nr = div.find('p', attrs={'class': 'ThisWeeksMagazineHero__MagInfoDescription'})
+        issue_nr = div.find('p', attrs={'class': 'ThisWeeksMagazineHero__MagInfoDescription'}).strip()
         if issue_nr:
             if issue_nr.string is not None:
                 non_decimal = re.compile(r'[^\d.]+')
