@@ -218,6 +218,24 @@ recipes: List[Recipe] = [
         }
     ),
     Recipe(
+        recipe="new-scientist",
+        slug="new-scientist",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Magazines",
+        tags=["weekly", "science"],
+        overwrite_cover=False,
+        title_date_format="%Y %b %-d",
+        # cover_options=CoverOptions(
+        #     logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png",
+        #     title_font_path="static/ReadexPro-SemiBold.ttf",
+        #     datestamp_font_path="static/ReadexPro-Light.ttf"
+        # ),
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
+    ),
+    Recipe(
         recipe="newyorker",
         slug="newyorker",
         src_ext="mobi",
