@@ -53,6 +53,7 @@ _name = "New Scientist"
 class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     title = _name
     description = 'Science news and science articles from New Scientist.'
+    masthead_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png"
     language = 'en'
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
@@ -137,7 +138,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         div = soup.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
         cover_item = div.find('a', attrs={'class': 'ThisWeeksMagazineHero__ImageLink'})
         if cover_item:
-            cover_url = cover_item['href']
+            cover_url = cover_item["href"].split()[0]
         # Configure series and issue number
         issue_nr = div.find('p', attrs={'class': 'ThisWeeksMagazineHero__MagInfoDescription'})
         if issue_nr:
