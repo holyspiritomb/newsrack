@@ -137,7 +137,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         div = soup.find('div', attrs={'class': 'ThisWeeksMagazineHero__CoverInfo'})
         cover_item = div.find('a', attrs={'class': 'ThisWeeksMagazineHero__ImageLink'})
         if cover_item:
-            cover_url = self.image_url_processor(None, cover_item['href'])
+            cover_url = cover_item['href']
         # Configure series and issue number
         issue_nr = div.find('p', attrs={'class': 'ThisWeeksMagazineHero__MagInfoDescription'})
         if issue_nr:
