@@ -84,11 +84,11 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                                 """
 
     keep_only_tags = [
-        classes('article-header article__content')
+        classes('ArticleHeader ArticleContent')
     ]
 
     remove_tags = [
-        classes('social__button-container')
+        classes('ArticleHeader__SocialWrapper ReadMore')
     ]
 
     def preprocess_html(self, soup):
@@ -153,6 +153,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         return cover_url
 
     def populate_article_metadata(self, article, __, _):
+
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             # self.title = format_title(_name, article.utctime)
