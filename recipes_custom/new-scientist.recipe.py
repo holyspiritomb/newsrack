@@ -156,7 +156,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
             issue_date = issue_dt.string
             pub_date = datetime.strptime(issue_date, "%d %B %Y")
             self.title = _name + issue_date
-            self.pub_date = pub_date
+            # self.pub_date = pub_date
         return pub_date
 
     # def populate_article_metadata(self, article, __, _):
