@@ -83,6 +83,9 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     feeds = [
         (_name, "https://knowablemagazine.org/rss"),
     ]
+    conversion_options = {
+        'tags' : 'Science, Periodical',
+    }
 
     def populate_article_metadata(self, article, __, _):
         if (not self.pub_date) or article.utctime > self.pub_date:

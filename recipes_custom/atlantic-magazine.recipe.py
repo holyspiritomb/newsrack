@@ -165,6 +165,9 @@ class TheAtlanticMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     blockquote { font-size: 1.25rem; margin-left: 0; text-align: center; }
     div.related-content { margin-left: 0.5rem; color: #444; font-style: italic; }
     """
+    conversion_options = {
+        'tags' : 'Politics, News, Periodical',
+    }
 
     def get_browser(self):
         br = BasicNewsRecipe.get_browser(self)

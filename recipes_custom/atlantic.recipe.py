@@ -180,18 +180,21 @@ class TheAtlantic(BasicNewsrackRecipe, BasicNewsRecipe):
     /* for raw_html in Photo */
     div.img img { display: block; max-width: 100%; height: auto; }
     """
+    conversion_options = {
+        'tags' : 'Politics, News, Periodical',
+    }
 
     feeds = [
         ("All", "https://www.theatlantic.com/feed/all/"),
         ("Best Of", "https://www.theatlantic.com/feed/best-of/"),
         ("Politics", "https://www.theatlantic.com/feed/channel/politics/"),
-        ("Business", "https://www.theatlantic.com/feed/channel/business/"),
+        # ("Business", "https://www.theatlantic.com/feed/channel/business/"),
         ("Culture", "https://www.theatlantic.com/feed/channel/entertainment/"),
         ("Global", "https://www.theatlantic.com/feed/channel/international/"),
         ("Technology", "https://www.theatlantic.com/feed/channel/technology/"),
         ("U.S.", "https://www.theatlantic.com/feed/channel/national/"),
         ("Healthc", "https://www.theatlantic.com/feed/channel/health/"),
-        ("Video", "https://www.theatlantic.com/feed/channel/video/"),
+        # ("Video", "https://www.theatlantic.com/feed/channel/video/"),
         ("Sexes", "https://www.theatlantic.com/feed/channel/sexes/"),
         ("Education", "https://www.theatlantic.com/feed/channel/education/"),
         ("Science", "https://www.theatlantic.com/feed/channel/science/"),
