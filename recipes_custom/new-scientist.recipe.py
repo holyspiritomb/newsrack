@@ -6,7 +6,7 @@
 # Copyright:    2008-2016, AprilHare, Darko Miletic <darko.miletic at gmail.com>
 ##
 # Written:      2008
-# Last Edited:  Jan 2016
+# Last Edited:  2023
 ##
 
 '''
@@ -53,7 +53,7 @@ _name = "New Scientist"
 
 class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     title = _name
-    description = 'Science news and science articles from New Scientist.'
+    description = 'Science news and science articles from New Scientist. Only free articles without video.'
     masthead_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png'
     language = 'en'
     publisher = 'Reed Business Information Ltd.'
@@ -67,8 +67,10 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     remove_empty_feeds = True
     ignore_duplicate_articles = {'url'}
     compress_news_images = False
+    publication_type = 'magazine'
     scale_news_images = True
     resolve_internal_links = True
+    reverse_article_order = True
     conversion_options = {
         'tags' : 'Science, News, Periodical',
     }
@@ -84,14 +86,19 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                                 """
 
     keep_only_tags = [
-        classes('ArticleHeader ArticleContent')
+        classes('ArticleHeader ArticleContent Barrier')
     ]
 
     remove_tags = [
-        classes('ArticleHeader__SocialWrapper ReadMore')
+        classes('ArticleHeader__SocialWrapper ReadMore ArticleImageCaption__Icon AdvertWrapper ArticleTopics RelatedContentWrapper'),
+        dict(attrs={'alt': ['Calendar icon']})
     ]
 
     def preprocess_html(self, soup):
+        if soup.find(name="section", id="subscription-barrier"):
+            self.abort_article("Aborted because subscription required")
+        if soup.find('meta', {'property': 'og:type', 'content': 'video'}):
+            self.abort_article("Aborted because video")
         for img in soup.findAll('img', attrs={'data-src': True}):
             img['src'] = img['data-src']
         for img in soup.findAll('img', attrs={'data-srcset': True}):
@@ -119,8 +126,6 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         return br
 
     feeds = [
-        ('News', 'https://www.newscientist.com/section/news/feed/'),
-        ('Features', 'https://www.newscientist.com/section/features/feed/'),
         ('Physics', 'https://www.newscientist.com/subject/physics/feed/'),
         ('Technology', 'https://www.newscientist.com/subject/technology/feed/'),
         ('Space', 'https://www.newscientist.com/subject/space/feed/'),
@@ -128,6 +133,8 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         ('Earth', 'https://www.newscientist.com/subject/earth/feed/'),
         ('Health', 'https://www.newscientist.com/subject/health/feed/'),
         ('Humans', 'https://www.newscientist.com/subject/humans/feed/'),
+        ('Features', 'https://www.newscientist.com/section/features/feed/'),
+        ('News', 'https://www.newscientist.com/section/news/feed/'),
     ]
 
     def get_cover_url(self):
