@@ -232,7 +232,7 @@ recipes: List[Recipe] = [
         #     datestamp_font_path="static/ReadexPro-Light.ttf"
         # ),
         conv_options={
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--tags='Science,News,Periodical'", "--authors='newsrack'"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--tags='Science,News,Periodical'", "--authors=newsrack"],
         }
     ),
     Recipe(
