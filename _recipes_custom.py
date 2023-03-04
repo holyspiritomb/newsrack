@@ -22,7 +22,7 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
-        enable_on=every_x_days(1, 1, 360),
+        enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
         conv_options={
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
@@ -92,6 +92,7 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
+        enable_on=every_x_days(1, 1, 60),
         conv_options={
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
         }
@@ -125,6 +126,7 @@ recipes: List[Recipe] = [
         tags=["politics", "commentary"],
         overwrite_cover=True,
         title_date_format="%Y %b %-d",
+        enable_on=every_x_days(1, 1, 60),
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mother_Jones_Logo_2019.svg/1024px-Mother_Jones_Logo_2019.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -161,7 +163,9 @@ recipes: List[Recipe] = [
         tags=["daily", "history", "science"],
         overwrite_cover=True,
         title_date_format="%Y %b %-d",
-        enable_on=every_x_days(1, 1, 360),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -179,9 +183,10 @@ recipes: List[Recipe] = [
         category="Magazines",
         overwrite_cover=False,
         # enable_on=False,
-        enable_on=onlyon_weekdays([2, 3, 4], 0) and every_x_days(1, 1, 60),
+        enable_on=onlyon_weekdays([2, 3, 4], 0),
         tags=["science", "weekly"],
         title_date_format="%Y %b %-d",
+        timeout=720,
         conv_options={
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
         }
@@ -193,11 +198,15 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Online Magazines",
         tags=["science", "weekly"],
-        overwrite_cover=False,
-        # cover_options=CoverOptions(
-        #    logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
-        # ),
-        enable_on=every_x_days(1, 1, 60),
+        overwrite_cover=True,
+        cover_options=CoverOptions(
+            logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
         title_date_format="%Y %b %-d",
         conv_options={
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
@@ -226,6 +235,7 @@ recipes: List[Recipe] = [
         tags=["weekly", "science"],
         overwrite_cover=False,
         title_date_format="%Y %b %-d",
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
         # cover_options=CoverOptions(
         #     logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png",
         #     title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -259,7 +269,6 @@ recipes: List[Recipe] = [
         timeout=300,
         retry_attempts=0,
         enable_on=onlyat_hours(list(range(18, 22))),
-        # enable_on=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -279,7 +288,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Magazines",
         title_date_format="%b %Y",
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
+        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(14, -4),
         # enable_on=False,
         tags=["philosophy", "commentary", "bimonthly"],
         conv_options={
@@ -295,7 +304,6 @@ recipes: List[Recipe] = [
         category="Books",
         title_date_format="%b %Y",
         enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
-        # enable_on=False,
         tags=["literature", "arts", "monthly"],
         conv_options={
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
@@ -330,7 +338,8 @@ recipes: List[Recipe] = [
         category="Magazines",
         overwrite_cover=False,
         title_date_format="%b %Y",
-        enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
+        enable_on=onlyon_days(list(range(15, 31)), -5)
+        and onlyat_hours(list(range(10, 18))),  # middle of the month?
         # enable_on=False,
         tags=["science", "tech", "monthly"],
         conv_options={
@@ -361,7 +370,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Magazines",
         title_date_format="%Y %b %-d",
-        enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -5),
         tags=["news", "politics", "weekly"],
         conv_options={
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
@@ -395,7 +404,9 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="News",
         tags=["science", "tech", "daily"],
-        enable_on=every_x_days(1, 1, 60),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
         title_date_format="%Y %b %-d",
         cover_options=CoverOptions(
             logo_path_or_url="https://www.wired.com/images/logos/wired.png",
