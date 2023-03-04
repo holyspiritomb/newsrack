@@ -76,7 +76,6 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
         ("Sociology", "https://nautil.us/topics/sociology/feed/"),
         ("Technology", "https://nautil.us/topics/technology/feed/"),
         ("Zoology", "https://nautil.us/topics/zoology/feed/"),
-        ("General", "https://nautil.us/topics/general/feed/"),
     ]
 
     def populate_article_metadata(self, article, __, _):
