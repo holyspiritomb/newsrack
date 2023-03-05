@@ -363,6 +363,24 @@ recipes: List[Recipe] = [
         }
     ),
     Recipe(
+        recipe="teen-vogue",
+        slug="teen-vogue",
+        src_ext="mobi",
+        target_ext=["epub"],
+        overwrite_cover=True,
+        category="Online Magazines",
+        title_date_format="%Y %b %-d",
+        cover_options=CoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Teen_Vogue_logo.svg/1024px-Teen_Vogue_logo.svg.png",
+            title_font_path="static/ReadexPro-SemiBold.ttf",
+            datestamp_font_path="static/ReadexPro-Light.ttf"
+        ),
+        tags=["news", "politics", "online"],
+        conv_options={
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+        }
+    ),
+    Recipe(
         recipe="time-magazine",
         slug="time-magazine",
         src_ext="mobi",
