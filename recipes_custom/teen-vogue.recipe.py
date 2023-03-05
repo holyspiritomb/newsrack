@@ -89,9 +89,9 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         if days_old > self.oldest_article:
             self.log.warn("this article is older than we want")
             self.abort_article("aborted article")
-        # if not self.pub_date or post_date > self.pub_date:
-            # self.pub_date = post_date
-            # self.title = format_title(_name, post_date)
+        if not self.pub_date or post_date > self.pub_date:
+            self.pub_date = post_date
+            self.title = format_title(_name, post_date)
         # authors = [b.text for b in soup.find_all(attrs={"class": "byline__name-link"})]
         category = soup.find("a", attrs={'class': 'rubric__link'}).text
         # authors_div = soup.new_tag("div", attrs={"class": "author"})
