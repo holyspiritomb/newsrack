@@ -33,7 +33,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     publication_type = 'magazine'
     language = "en"
 
-    # oldest_article = 14 # only works for rss feeds
+    oldest_article = 14
     max_articles_per_feed = 50
 
     use_embedded_content = False
@@ -80,13 +80,18 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         self.log.warn("preprocess_raw_html: is this is where i figure out how to abort processing of articles that are too old?")
         soup = BeautifulSoup(raw_html)
         pub_date_meta = soup.find(
-            name="meta", attrs={"property": "article:published_time"}
+            name="meta", attrs={"property": "article:modified_time"}
         )
         post_date = datetime.strptime(pub_date_meta["content"], "%Y-%m-%dT%H:%M:%S.%fZ")
-        if not self.pub_date or post_date > self.pub_date:
-            self.pub_date = post_date
-            self.title = format_title(_name, post_date)
-        self.log(post_date)
+        article_age = datetime.utcnow() - post_date
+        days_old = article_age.days
+        self.log(f"article at {url} is {days_old} days old")
+        if days_old > self.oldest_article:
+            self.log.warn("this article is older than we want")
+            self.abort_article("aborted article")
+        # if not self.pub_date or post_date > self.pub_date:
+            # self.pub_date = post_date
+            # self.title = format_title(_name, post_date)
         # authors = [b.text for b in soup.find_all(attrs={"class": "byline__name-link"})]
         category = soup.find("a", attrs={'class': 'rubric__link'}).text
         # authors_div = soup.new_tag("div", attrs={"class": "author"})
@@ -106,7 +111,6 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         return str(soup)
 
     def preprocess_html(self, soup):
-        self.log.warn("preprocess_html: is this is where i figure out how to abort processing of articles that are too old?")
         for img in soup.find_all("img", attrs={"srcset": True}):
             img["src"] = self._urlize(
                 img["srcset"].strip().split(",")[-1].strip().split(" ")[0]
@@ -127,9 +131,6 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
             aside["class"] = aside.get("class", []) + ["custom-aside"]
         return soup
 
-    def populate_article_metadata(self, article, __, _):
-        self.log.warn("populate article metadata: is this is where i figure out how to abort processing of articles that are too old?")
-
     def parse_tv_index_page(self, current_url, seen):
         self.log("running parse_tv_index function on", current_url)
         soup = self.index_to_soup(current_url)
@@ -140,7 +141,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
                 self.log(url)
                 sect = a.parent.find("a", attrs={'class': 'rubric__link'})
                 subsection = self.tag_to_string(sect)
-                self.log(section, subsection)
+                self.log(f"{section} > {subsection}")
                 title = self.tag_to_string(a.find("h3"))
                 self.log(title)
                 description = None
@@ -164,10 +165,15 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         sectioned_feeds = OrderedDict()
         articles = []
         seen = set()
-        for pagenum in range(1, 8):
+        for pagenum in range(1, 6):
             articles.extend(
                 self.parse_tv_index_page(
                     f"{self.BASE_URL}/news-politics?page={pagenum}", seen
+                )
+            )
+            articles.extend(
+                self.parse_tv_index_page(
+                    f"{self.BASE_URL}/entertainment?page={pagenum}", seen
                 )
             )
             articles.extend(
@@ -188,6 +194,11 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
             articles.extend(
                 self.parse_tv_index_page(
                     f"{self.BASE_URL}/wellness/voices?page={pagenum}", seen
+                )
+            )
+            articles.extend(
+                self.parse_tv_index_page(
+                    f"{self.BASE_URL}/wellness?page={pagenum}", seen
                 )
             )
         for article in articles:
