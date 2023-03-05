@@ -171,6 +171,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
                     f"{self.BASE_URL}/news-politics?page={pagenum}", seen
                 )
             )
+        for pagenum in range(1, 2):
             articles.extend(
                 self.parse_tv_index_page(
                     f"{self.BASE_URL}/entertainment?page={pagenum}", seen
