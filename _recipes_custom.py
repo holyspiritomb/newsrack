@@ -8,6 +8,12 @@ categories_sort: List[str] = []
 # Define your custom recipes list here
 # Example: https://github.com/ping/newsrack-fork-test/blob/custom/_recipes_custom.py
 
+# @Recipe(
+    # conv_options={
+        # "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+    # }
+# )
+
 recipes: List[Recipe] = [
     Recipe(
         recipe="ars-technica",
@@ -41,7 +47,6 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
-        enable_on=every_x_days(1, 1, 60),
         title_date_format="%Y %b %-d",
         conv_options={
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
@@ -55,7 +60,9 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Magazines",
         tags=["editorial", "commentary"],
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4)
+        and onlyon_days(list(range(32 - 14, 32)), -4),
+        title_date_format="%Y %b",
         conv_options={
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
         }
