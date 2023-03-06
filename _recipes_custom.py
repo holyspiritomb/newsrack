@@ -55,7 +55,7 @@ recipes: List[Recipe] = [
         enable_on=every_x_days(1, 1, 60),
     ),
     CustomOptionsRecipe(
-        recipe="atlantic",
+        recipe="atlantic-custom",
         slug="the-atlantic",
         src_ext="mobi",
         target_ext=["epub"],
@@ -69,7 +69,7 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomMonthlyRecipe(
-        recipe="atlantic-magazine",
+        recipe="atlantic-magazine-custom",
         slug="atlantic-magazine",
         src_ext="mobi",
         target_ext=["epub"],
@@ -109,7 +109,7 @@ recipes: List[Recipe] = [
         enable_on=every_x_days(1, 1, 60),
     ),
     CustomOptionsRecipe(
-        recipe="knowable-magazine",
+        recipe="knowable-magazine-custom",
         slug="knowable-magazine",
         src_ext="mobi",
         target_ext=["epub"],
@@ -171,7 +171,7 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
-        recipe="nature",
+        recipe="nature-custom",
         slug="nature",
         src_ext="mobi",
         target_ext=["epub"],
@@ -183,7 +183,7 @@ recipes: List[Recipe] = [
         timeout=300,
     ),
     CustomOptionsRecipe(
-        recipe="nautilus",
+        recipe="nautilus-custom",
         slug="nautilus",
         src_ext="mobi",
         target_ext=["epub"],
@@ -229,7 +229,7 @@ recipes: List[Recipe] = [
         }
     ),
     CustomOptionsRecipe(
-        recipe="newyorker",
+        recipe="newyorker-custom",
         slug="newyorker",
         src_ext="mobi",
         target_ext=["epub"],
@@ -240,7 +240,7 @@ recipes: List[Recipe] = [
         tags=["editorial", "commentary", "weekly"],
     ),
     CustomOptionsRecipe(
-        recipe="nytimes-books",
+        recipe="nytimes-books-custom",
         slug="nytimes-books",
         src_ext="mobi",
         target_ext=["epub"],
@@ -267,7 +267,7 @@ recipes: List[Recipe] = [
         tags=["philosophy", "commentary", "bimonthly"],
     ),
     CustomMonthlyRecipe(
-        recipe="poetry",
+        recipe="poetry-custom",
         slug="poetry-magazine",
         src_ext="mobi",
         target_ext=["epub"],
@@ -278,7 +278,7 @@ recipes: List[Recipe] = [
         tags=["literature", "arts", "monthly"],
     ),
     CustomOptionsRecipe(
-        recipe="quanta-magazine",
+        recipe="quanta-magazine-custom",
         slug="quanta-magazine",
         src_ext="mobi",
         target_ext=["epub"],
@@ -295,7 +295,7 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomMonthlyRecipe(
-        recipe="scientific-american",
+        recipe="scientific-american-custom",
         slug="scientific-american",
         src_ext="mobi",
         target_ext=["epub"],
@@ -308,7 +308,7 @@ recipes: List[Recipe] = [
         tags=["science", "tech", "monthly"],
     ),
     CustomMonthlyRecipe(
-        recipe="smithsonian-magazine",
+        recipe="smithsonian-magazine-custom",
         slug="smithsonian-magazine",
         src_ext="mobi",
         target_ext=["epub"],
@@ -335,7 +335,7 @@ recipes: List[Recipe] = [
         tags=["news", "politics", "online"],
     ),
     CustomOptionsRecipe(
-        recipe="time-magazine",
+        recipe="time-magazine-custom",
         slug="time-magazine",
         src_ext="mobi",
         target_ext=["epub"],
@@ -345,7 +345,7 @@ recipes: List[Recipe] = [
         tags=["news", "politics", "weekly"],
     ),
     CustomMonthlyRecipe(
-        recipe="wired",
+        recipe="wired-custom",
         slug="wired",
         src_ext="mobi",
         target_ext=["epub"],
