@@ -14,7 +14,7 @@ categories_sort: List[str] = ["News", "Science", "Blogs", "Arts", "Magazines", "
 class CustomConvOptions(Recipe):
     def __post_init__(self):
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack"],
         }
 
 
@@ -24,7 +24,7 @@ class CustomOptionsRecipe(Recipe):
     def __post_init__(self):
         self.title_date_format = "%Y %b %-d"
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack"],
         }
 
 
@@ -32,9 +32,9 @@ class CustomOptionsRecipe(Recipe):
 class CustomMonthlyRecipe(Recipe):
     # Use a different title date format and output profile from default
     def __post_init__(self):
-        self.title_date_format = "%Y %b"
+        self.title_date_format = "%b %Y"
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack"],
         }
 
 
@@ -52,7 +52,7 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
-        enable_on=every_x_days(1, 1, 60),
+        enable_on=onlyat_hours(list(range(10, 19)), 0),
     ),
     CustomOptionsRecipe(
         recipe="atlantic-custom",
@@ -62,6 +62,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="News",
         tags=["editorial", "commentary"],
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), 0),
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -106,7 +107,6 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
-        enable_on=every_x_days(1, 1, 60),
     ),
     CustomOptionsRecipe(
         recipe="knowable-magazine-custom",
@@ -121,8 +121,7 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
-        # enable_on=False,
-        enable_on=every_x_days(1, 1, 60),
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -5),
     ),
     CustomOptionsRecipe(
         recipe="mother-jones",
@@ -132,7 +131,7 @@ recipes: List[Recipe] = [
         category="Politics",
         tags=["politics", "commentary"],
         overwrite_cover=True,
-        enable_on=every_x_days(1, 1, 60),
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -5),
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mother_Jones_Logo_2019.svg/1024px-Mother_Jones_Logo_2019.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -147,6 +146,7 @@ recipes: List[Recipe] = [
         category="Politics",
         tags=["politics", "commentary"],
         overwrite_cover=False,
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -5),
         cover_options=CoverOptions(
             logo_path_or_url="",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -161,9 +161,7 @@ recipes: List[Recipe] = [
         category="Magazines",
         tags=["daily", "history", "science"],
         overwrite_cover=True,
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
-        ),
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -5),
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -180,7 +178,6 @@ recipes: List[Recipe] = [
         # enable_on=False,
         enable_on=onlyon_weekdays([2, 3, 4], 0),
         tags=["science", "weekly"],
-        timeout=300,
     ),
     CustomOptionsRecipe(
         recipe="nautilus-custom",
@@ -195,9 +192,7 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        enable_on=onlyon_weekdays([2, 3, 4, 5], 0),
     ),
     CustomOptionsRecipe(
         recipe="new-republic-magazine",
@@ -245,9 +240,9 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="Arts",
-        timeout=300,
+        timeout=180,
         retry_attempts=0,
-        enable_on=onlyat_hours(list(range(18, 22))),
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -5),
         cover_options=CoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -262,8 +257,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Magazines",
-        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(14, -4),
-        # enable_on=False,
+        enable_on=first_n_days_of_month(4, -6) or last_n_days_of_month(4, -4),
         tags=["philosophy", "commentary", "bimonthly"],
     ),
     CustomMonthlyRecipe(
@@ -274,7 +268,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Arts",
         title_date_format="%b %Y",
-        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        enable_on=first_n_days_of_month(4, -6) or last_n_days_of_month(4, -5),
         tags=["literature", "arts", "monthly"],
     ),
     CustomOptionsRecipe(
@@ -301,9 +295,8 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Science",
         overwrite_cover=False,
-        title_date_format="%b %Y",
         enable_on=onlyon_days(list(range(15, 31)), -5)
-        and onlyat_hours(list(range(10, 18))),  # middle of the month?
+        and onlyat_hours(list(range(10, 20))),  # middle of the month?
         # enable_on=False,
         tags=["science", "tech", "monthly"],
     ),
@@ -315,9 +308,7 @@ recipes: List[Recipe] = [
         category="Magazines",
         enable_on=onlyon_days(list(range(16, 31)), -5)
         and onlyat_hours(list(range(10, 19)), -5),
-        # enable_on=False,
         overwrite_cover=False,
-        title_date_format="%b %Y",
         tags=["science", "history", "monthly"],
     ),
     CustomOptionsRecipe(
@@ -332,7 +323,7 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
-        tags=["news", "politics", "online"],
+        tags=["news", "politics"],
     ),
     CustomOptionsRecipe(
         recipe="time-magazine-custom",
@@ -352,8 +343,8 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Science",
         tags=["science", "tech", "monthly"],
-        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
-        and onlyat_hours(list(range(10, 18))),
+        enable_on=(first_n_days_of_month(4) or last_n_days_of_month(4))
+        and onlyat_hours(list(range(10, 20))),
         title_date_format="%b %Y",
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png",
@@ -370,7 +361,7 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science", "tech", "daily"],
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+            last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CoverOptions(
             logo_path_or_url="https://www.wired.com/images/logos/wired.png",

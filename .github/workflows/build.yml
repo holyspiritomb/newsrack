@@ -6,7 +6,7 @@ on:
   #    - '**'
   schedule:
     # Customise: Cron interval
-    - cron: "0 7,13,19 * * *"
+    - cron: "0,9,18 * * *"
   workflow_dispatch:
     inputs:
       regenerate:
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.ref_name == github.event.repository.default_branch
     # Customise: Total job run time limit
-    timeout-minutes: 60
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v3
         with:
