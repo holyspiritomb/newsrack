@@ -6,7 +6,7 @@ on:
   #    - '**'
   schedule:
     # Customise: Cron interval
-    - cron: "0,9,18 * * *"
+    - cron: "0 0,9,18 * * *"
   workflow_dispatch:
     inputs:
       regenerate:
