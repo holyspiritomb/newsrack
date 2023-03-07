@@ -4,7 +4,7 @@ from typing import List
 from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days
 
 # Define the categories display order, optional
-categories_sort: List[str] = ["Science", "Arts", "Politics", "News", "Magazines", ""]
+categories_sort: List[str] = ["News", "Science", "Blogs", "Arts", "Magazines", "Politics"]
 
 # Define your custom recipes list here
 # Example: https://github.com/ping/newsrack-fork-test/blob/custom/_recipes_custom.py
@@ -74,7 +74,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=False,
-        category="Magazines",
+        category="News",
         tags=["editorial", "commentary"],
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4)
         and onlyon_days(list(range(32 - 14, 32)), -4),
@@ -113,7 +113,7 @@ recipes: List[Recipe] = [
         slug="knowable-magazine",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Magazines",
+        category="Science",
         tags=["science"],
         overwrite_cover=True,
         cover_options=CoverOptions(
@@ -129,7 +129,7 @@ recipes: List[Recipe] = [
         slug="mother-jones",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Magazines",
+        category="Politics",
         tags=["politics", "commentary"],
         overwrite_cover=True,
         enable_on=every_x_days(1, 1, 60),
@@ -144,7 +144,7 @@ recipes: List[Recipe] = [
         slug="the-nation",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Magazines",
+        category="Politics",
         tags=["politics", "commentary"],
         overwrite_cover=False,
         cover_options=CoverOptions(
@@ -158,7 +158,7 @@ recipes: List[Recipe] = [
         slug="national-geographic",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Online Magazines",
+        category="Magazines",
         tags=["daily", "history", "science"],
         overwrite_cover=True,
         enable_on=lambda recipe: every_x_days(
@@ -175,7 +175,7 @@ recipes: List[Recipe] = [
         slug="nature",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Magazines",
+        category="Science",
         overwrite_cover=False,
         # enable_on=False,
         enable_on=onlyon_weekdays([2, 3, 4], 0),
@@ -187,7 +187,7 @@ recipes: List[Recipe] = [
         slug="nautilus",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Online Magazines",
+        category="Science",
         tags=["science", "weekly"],
         overwrite_cover=True,
         cover_options=CoverOptions(
@@ -204,7 +204,7 @@ recipes: List[Recipe] = [
         slug="new-republic-magazine",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Magazines",
+        category="Politics",
         overwrite_cover=False,
         tags=["politics", "commentary"],
         enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
@@ -215,7 +215,7 @@ recipes: List[Recipe] = [
         slug="new-scientist",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Magazines",
+        category="Science",
         tags=["weekly", "science"],
         overwrite_cover=False,
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
@@ -225,7 +225,7 @@ recipes: List[Recipe] = [
         #     datestamp_font_path="static/ReadexPro-Light.ttf"
         # ),
         conv_options={
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--tags='Science,News,Periodical'", "--authors=newsrack"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--tags='Science,News,Periodical'"],
         }
     ),
     CustomOptionsRecipe(
@@ -233,7 +233,7 @@ recipes: List[Recipe] = [
         slug="newyorker",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Magazines",
+        category="Arts",
         overwrite_cover=False,
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
         # enable_on=False,
@@ -244,7 +244,7 @@ recipes: List[Recipe] = [
         slug="nytimes-books",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Books",
+        category="Arts",
         timeout=300,
         retry_attempts=0,
         enable_on=onlyat_hours(list(range(18, 22))),
@@ -272,7 +272,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=False,
-        category="Books",
+        category="Arts",
         title_date_format="%b %Y",
         enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
         tags=["literature", "arts", "monthly"],
@@ -282,7 +282,7 @@ recipes: List[Recipe] = [
         slug="quanta-magazine",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Online Magazines",
+        category="Science",
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
         and onlyat_hours(list(range(8, 14)))
         and every_x_days(1, 1, 60),
@@ -299,7 +299,7 @@ recipes: List[Recipe] = [
         slug="scientific-american",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Magazines",
+        category="Science",
         overwrite_cover=False,
         title_date_format="%b %Y",
         enable_on=onlyon_days(list(range(15, 31)), -5)
@@ -326,7 +326,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=True,
-        category="Online Magazines",
+        category="Magazines",
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Teen_Vogue_logo.svg/1024px-Teen_Vogue_logo.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -350,7 +350,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=True,
-        category="Online Magazines",
+        category="Science",
         tags=["science", "tech", "monthly"],
         enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
         and onlyat_hours(list(range(10, 18))),
@@ -367,7 +367,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=True,
-        category="News",
+        category="Science",
         tags=["science", "tech", "daily"],
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=60
