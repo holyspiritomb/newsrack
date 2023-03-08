@@ -192,7 +192,7 @@ recipes: List[Recipe] = [
             title_font_path="static/ReadexPro-SemiBold.ttf",
             datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
-        enable_on=onlyon_weekdays([2, 3, 4, 5], 0),
+        enable_on=onlyon_weekdays([2, 4, 5], 0),
     ),
     CustomOptionsRecipe(
         recipe="new-republic-magazine",
@@ -202,7 +202,7 @@ recipes: List[Recipe] = [
         category="Politics",
         overwrite_cover=False,
         tags=["politics", "commentary"],
-        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+        enable_on=(first_n_days_of_month(5) or last_n_days_of_month(5))
         and onlyat_hours(list(range(8, 16))),
     ),
     CustomOptionsRecipe(
