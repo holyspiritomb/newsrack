@@ -318,6 +318,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=True,
         category="Magazines",
+        enable_on=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Teen_Vogue_logo.svg/1024px-Teen_Vogue_logo.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
