@@ -102,6 +102,7 @@ recipes: List[Recipe] = [
         category="News",
         tags=["editorial", "commentary", "news"],
         overwrite_cover=True,
+        enable_on=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/The_Forward_logo_2022.svg/1024px-The_Forward_logo_2022.svg.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
@@ -230,7 +231,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Arts",
         overwrite_cover=False,
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
+        enable_on=onlyon_weekdays([1, 3, 5], -5),
         # enable_on=False,
         tags=["editorial", "commentary", "weekly"],
     ),
@@ -277,7 +278,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="Science",
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
+        enable_on=onlyon_weekdays([0, 2, 4], -5)
         and onlyat_hours(list(range(8, 14)))
         and every_x_days(1, 1, 60),
         # enable_on=False,
