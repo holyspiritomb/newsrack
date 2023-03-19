@@ -11,10 +11,10 @@ Features:
 Uses [calibre](https://calibre-ebook.com/) + [recipes](https://manual.calibre-ebook.com/news_recipe.html), [GitHub Actions](.github/workflows/build.yml), and hosted
 on [GitHub Pages](https://pages.github.com/).
 
-![eInk Kindle Screenshot](https://user-images.githubusercontent.com/104607/221388326-f3f80593-18e9-4f48-9e80-340a00dce10f.png)
-![Mobile Screenshot](https://user-images.githubusercontent.com/104607/221388328-b1fc17f6-2f60-4691-9a8d-177ced28f5a4.jpg)
+![eInk Kindle Screenshot](https://user-images.githubusercontent.com/104607/226074902-b4a672ff-8fb0-4f2e-8307-b1ec736792e5.png)
+![Mobile Screenshot](https://user-images.githubusercontent.com/104607/226074930-45289aec-0d56-48a2-a02e-deeca497851f.jpg)
 
-<a href="https://www.buymeacoffee.com/ping"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=ping&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff" /></a>
+[![Buy me a coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ping&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/ping)
 
 ## Running Your Own Instance
 
@@ -233,13 +233,14 @@ In alphabetical order:
 8. [MIT Press Reader](https://thereader.mitpress.mit.edu/)
 9. [MIT Technology Review](https://www.technologyreview.com/)
 10. [Nautilus](https://nautil.us/)
-11. [Politico](https://www.politico.com/)
-12. [ProPublica](https://www.propublica.org/)
-13. [Quanta Magazine](https://www.quantamagazine.org/)
-14. [Rest of World](https://restofworld.org)
-15. [The Third Pole](https://www.thethirdpole.net/)
-16. [Vox](https://www.vox.com/)
-17. [Wired](https://www.wired.com/magazine/)
+11. [Noema](https://www.noemamag.com/)
+12. [Politico](https://www.politico.com/)
+13. [ProPublica](https://www.propublica.org/)
+14. [Quanta Magazine](https://www.quantamagazine.org/)
+15. [Rest of World](https://restofworld.org)
+16. [The Third Pole](https://www.thethirdpole.net/)
+17. [Vox](https://www.vox.com/)
+18. [Wired](https://www.wired.com/magazine/)
 
 </details>
 

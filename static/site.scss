@@ -9,7 +9,7 @@ https://opensource.org/licenses/GPL-3.0
 
 body {
     font-size: 10pt;    /* Use pt instead of px because px is odd on the Kindle browser */
-    font-family: sans-serif;
+    font-family: system-ui, sans-serif;
     margin-left: 1em;
     margin-right: 1em;
     color: $base-color;
@@ -74,13 +74,16 @@ h1 {
 }
 #search-button {
     font-size: 0.8em;
+    font-weight: 600;
     display: inline-block;
     padding: 0.25em 1em;
     min-width: 4em;
     cursor: pointer;
+    border-color: $base-disabled-color;
+
     &:hover {
         background-color: grayscale(darken($base-bg-color, 3%));
-        border-color: $base-disabled-color;
+        border-color: $base-color;
     }
 }
 #search-info {
@@ -167,13 +170,18 @@ h2.category {
         font-size: 1em;
         text-transform: none;
 
+        .title {
+            font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
+            font-size: 1.1em;
+        }
+
         &:target .title {
             border-bottom: 1px dotted $base-disabled-color;
         }
 
         .pub-date {
             display: block;
-            margin-top: 0.2em;
+            margin-top: 0.3em;
             font-size: 0.8em;
             color: $base-disabled-color;
 
@@ -314,9 +322,10 @@ footer {
         }
     }
     #search-button {
+        border-color: $dark-base-disabled-color;
         &:hover {
             background-color: lighten($dark-base-bg-color, 3%);
-            border-color: $dark-base-disabled-color;
+            border-color: $dark-base-color;
         }
     }
 
@@ -473,6 +482,7 @@ body.nonkindle {
                 .pub-date {
                     padding-bottom: 0.1em;
                     margin-bottom: 0.2em;
+                    margin-top: 0.5em;
                 }
             }
         }
