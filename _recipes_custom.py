@@ -24,7 +24,7 @@ class CustomOptionsRecipe(Recipe):
     def __post_init__(self):
         self.title_date_format = "%Y %b %-d"
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'"],
         }
 
 
@@ -248,7 +248,8 @@ recipes: List[Recipe] = [
         category="Arts",
         timeout=180,
         retry_attempts=0,
-        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -4),
+        # enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -4),
+        enable_on=False,
         cover_options=CoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png",
             title_font_path="static/ReadexPro-SemiBold.ttf",
