@@ -68,7 +68,7 @@ class NYTimesBooks(BasicNewsrackRecipe, BasicNewsRecipe):
         font-size: 0.8rem;
     }
 
-    .headline { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .headline { font-size: 1.8rem; margin-bottom: 0.4rem; font-family: sans-serif; }
     .sub-headline { font-size: 1.2rem; font-style: italic; margin-bottom: 1rem; }
     .article-meta { margin-bottom: 1rem; }
     .article-meta .author { font-weight: bold; color: #444; }
@@ -79,6 +79,7 @@ class NYTimesBooks(BasicNewsrackRecipe, BasicNewsRecipe):
         box-sizing: border-box; }
     .article-img .caption { font-size: 0.8rem; }
     div.summary { font-size: 1.2rem; margin: 1rem 0; }
+    p {font-family: sans-serif;}
     """
 
     feeds = [

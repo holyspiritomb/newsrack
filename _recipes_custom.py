@@ -14,7 +14,7 @@ categories_sort: List[str] = ["News", "Science", "Blogs", "Arts", "Magazines", "
 class CustomConvOptions(Recipe):
     def __post_init__(self):
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'"],
         }
 
 
@@ -33,10 +33,10 @@ class CustomCoverOptions(CoverOptions):
     def __post_init__(self):
         self.cover_height = 1448
         self.cover_width = 1072
-        self.datestamp_font_size = 80
+        self.title_font_path = "static/ReadexPro-SemiBold.ttf"
         self.title_font_size = 96
         self.datestamp_font_path = "static/ReadexPro-Light.ttf"
-        self.title_font_path = "static/ReadexPro-SemiBold.ttf"
+        self.datestamp_font_size = 80
 
 
 @dataclass
@@ -45,7 +45,7 @@ class CustomMonthlyRecipe(Recipe):
     def __post_init__(self):
         self.title_date_format = "%b %Y"
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'"],
         }
 
 
