@@ -165,7 +165,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         sectioned_feeds = OrderedDict()
         articles = []
         seen = set()
-        for pagenum in range(1, 3):
+        for pagenum in range(1, 4):
             articles.extend(
                 self.parse_tv_index_page(
                     f"{self.BASE_URL}/news-politics?page={pagenum}", seen
