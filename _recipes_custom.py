@@ -301,6 +301,17 @@ recipes: List[Recipe] = [
         tags=["science", "history", "monthly"],
     ),
     CustomOptionsRecipe(
+        recipe="strange-horizons",
+        slug="strange-horizons  ",
+        src_ext="mobi",
+        target_ext=["epub"],
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="http://strangehorizons.com/wordpress/wp-content/themes/strangehorizons/images/sh-logo.jpg"
+        ),
+        category="Arts",
+        tags=["literature", "arts", "weekly"],
+    ),
+    CustomOptionsRecipe(
         recipe="teen-vogue",
         slug="teen-vogue",
         src_ext="mobi",
