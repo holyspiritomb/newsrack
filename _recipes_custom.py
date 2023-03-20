@@ -234,7 +234,7 @@ recipes: List[Recipe] = [
         category="Arts",
         timeout=300,
         retry_attempts=0,
-        enable_on=onlyat_hours(list(range(18, 22))),
+        enable_on=onlyat_hours(list(range(18, 22)),-4),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
         ),
@@ -302,9 +302,10 @@ recipes: List[Recipe] = [
     ),
     CustomOptionsRecipe(
         recipe="strange-horizons",
-        slug="strange-horizons  ",
+        slug="strange-horizons",
         src_ext="mobi",
         target_ext=["epub"],
+        enable_on=onlyon_weekdays([4, 5, 6], -5),
         cover_options=CustomCoverOptions(
             logo_path_or_url="http://strangehorizons.com/wordpress/wp-content/themes/strangehorizons/images/sh-logo.jpg"
         ),
