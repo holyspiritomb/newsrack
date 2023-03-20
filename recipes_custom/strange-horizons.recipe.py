@@ -32,6 +32,7 @@ class StrangeHorizons(BasicNewsrackRecipe, BasicNewsRecipe):
     remove_tags = [
         dict(name="div", attrs={"class": "single-title-header row"}),
         dict(name="div", attrs={"class": "podcast-title"}),
+        dict(name="button", attrs={"onclick": "showWarning_enUS()"}),
     ]
 
     # Styles to apply to each article
@@ -44,6 +45,7 @@ class StrangeHorizons(BasicNewsrackRecipe, BasicNewsRecipe):
     h1 { font-size: 160%; }
     h2 { font-size: 110%; }
     h3 { font-size: 85%; }
+    div#content-warning-enUS[style]{display:block !important;}
     h4 { font-size: 80%; }
     p { font-size: 90%; margin: 1em 1em 1em 15px; }
     p.author-bio { font-size: 75%; font-style: italic; margin: 1em 1em 1em 15px; }
