@@ -37,7 +37,8 @@ class PhilosophyNow(BasicNewsRecipe, BasicNewsrackRecipe):
     keep_only_tags = [classes('article_page')]
     remove_tags = [dict(name='div', attrs={'id': 'welcome_box'})]
     conversion_options = {
-        'tags' : 'Philosophy, Periodical',
+        'tags' : 'Philosophy, Philosophy Now, Periodical',
+        'authors' : 'newsrack',
     }
 
     def parse_index(self):

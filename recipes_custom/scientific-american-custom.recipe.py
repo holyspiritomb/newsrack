@@ -35,8 +35,7 @@ _name = "Scientific American"
 class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     description = (
-        "Popular Science. Monthly magazine. Should be downloaded around the middle of each month. "
-        "https://www.scientificamerican.com/"
+        "Popular science monthly magazine. https://www.scientificamerican.com/"
     )
     category = "science"
     __author__ = "Kovid Goyal"
@@ -46,6 +45,10 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
     masthead_url = (
         "https://static.scientificamerican.com/sciam/assets/Image/newsletter/salogo.png"
     )
+    conversion_options = {
+        'tags' : 'Scientific American, Science, Periodical',
+        'authors' : 'newsrack',
+    }
     
     remove_empty_feeds = True
 

@@ -28,12 +28,13 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "ping"
     description = (
-        "Knowable Magazine explores the real-world significance of scholarly work "
-        "through a journalistic lens. We report on the current state of play across "
-        "a wide variety of fields — from agriculture to high-energy physics; "
-        "biochemistry to water security; the origins of the universe to psychology. "
-        "https://knowablemagazine.org/"
+        """Knowable Magazine explores the real-world significance of scholarly work through a journalistic lens. We report on the current state of play across a wide variety of fields — from agriculture to high-energy physics; biochemistry to water security; the origins of the universe to psychology.
+        https://knowablemagazine.org/"""
     )
+    conversion_options = {
+        'tags' : 'Science, Knowable Magazine, Periodical',
+        'authors' : 'newsrack',
+    }
     masthead_url = "https://knowablemagazine.org/pb-assets/knowable-assets/images/logo-1586554394067.svg"
     language = "en"
     encoding = "utf-8"
@@ -84,7 +85,7 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
         (_name, "https://knowablemagazine.org/rss"),
     ]
     conversion_options = {
-        'tags' : 'Science, Periodical',
+        'tags' : 'Science, Periodical, Knowable Magazine',
     }
 
     def populate_article_metadata(self, article, __, _):

@@ -32,13 +32,12 @@ class WiredMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
         "Darko Miletic, update by Howard Cornett, Zach Lapidus, Michael Marotta"
     )
     description = (
-        "Wired is a full-color monthly American magazine, "
-        "published in both print and online editions, that "
-        "reports on how emerging technologies affect culture, "
-        "the economy and politics. "
-        "Monthly edition, best run at the start of every month."
-        " https://www.wired.com/magazine/"
+        '''Wired is a full-color monthly American magazine, published in both print and online editions, that reports on how emerging technologies affect culture, the economy and politics. Monthly edition, best run at the start of every month. https://www.wired.com/magazine/'''
     )
+    conversion_options = {
+        'tags' : 'Science, Technology, Wired Magazine, Periodical',
+        'authors' : 'newsrack',
+    }
     publisher = "Conde Nast"
     category = "news, IT, computers, technology"
     encoding = "utf-8"

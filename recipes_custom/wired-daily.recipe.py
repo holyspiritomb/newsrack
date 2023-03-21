@@ -31,7 +31,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = 'Darko Miletic, PatStapleton(update 2020-05-24), modified for newsrack by holyspiritomb'
     description = (
-        '''Wired is a full-color monthly American magazine, published in both print and online editions, that reports on how emerging technologies affect culture, the economy and politics. Daily edition that scrapes from the website.'''
+        '''Wired is a full-color monthly American magazine, published in both print and online editions, that reports on how emerging technologies affect culture, the economy and politics. Daily edition that scrapes from the website. https://www.wired.com/'''
     )
     masthead_url = 'https://www.wired.com/images/logos/apple-touch-icon.png'
     cover_url = 'https://www.wired.com/images/logos/wired.png'
@@ -55,7 +55,8 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         ul li{display: inline}
     """
     conversion_options = {
-        'tags' : 'Science, Technology, Periodical',
+        'tags' : 'Science, Technology, Wired Daily, Periodical',
+        'authors' : 'newsrack',
     }
 
     remove_tags = [

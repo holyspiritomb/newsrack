@@ -23,6 +23,10 @@ class SmithsonianMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     __author__ = "ping"
 
     description = "This magazine chronicles the arts, environment, sciences and popular culture of the times. It is edited for modern, well-rounded individuals with diverse, general interests. https://www.smithsonianmag.com/"  # noqa
+    conversion_options = {
+        'tags' : 'Smithsonian Magazine, Science, Geography, Pop Culture, Arts, Periodical',
+        'authors' : 'newsrack',
+    }
     masthead_url = "https://www.smithsonianmag.com/static/smithsonianmag/img/smithsonian_magazine_logo_black.46435ad4efd4.svg"
     language = "en"
     category = "news"

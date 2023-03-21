@@ -3,8 +3,7 @@
 import os
 import sys
 from collections import OrderedDict
-from datetime import datetime, timezone
-from urllib.parse import urlparse
+from datetime import datetime
 from calibre.web.feeds.news import BasicNewsRecipe
 
 # custom include to share code between recipes
@@ -17,17 +16,23 @@ except ImportError:
 
 _name = "Strange Horizons"
 
+
 class StrangeHorizons(BasicNewsrackRecipe, BasicNewsRecipe):
     # Recipe metadata
     title = _name
-    description = "A magazine of speculative fiction and related nonfiction. Best downloaded on weekends"
+    description = "A magazine of speculative fiction and related nonfiction. http://strangehorizons.com"
     publication_type = "magazine"
     language = "en"
     __author__ = "Peter Fidelman, based on work by Jim DeVona"
     __version__ = "2.0"
+    conversion_options = {
+        'tags' : 'Literature, Arts, Strange Horizons, Periodical',
+        'authors' : 'newsrack',
+    }
 
     # Cruft filters to apply to each article found by parse_index
     keep_only_tags = [dict(name="div", attrs={"class": "post"})]
+    remove_attributes = ['style']
     remove_tags_after = [dict(name="br", attrs={"class": "clear_both"})]
     remove_tags = [
         dict(name="div", attrs={"class": "single-title-header row"}),

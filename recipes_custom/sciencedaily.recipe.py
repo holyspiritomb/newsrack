@@ -12,15 +12,12 @@ class ScienceDaily(BasicNewsRecipe):
     title = u'ScienceDaily'
     __author__ = u'Darko Miletic'
     title                 = 'ScienceDaily'
-    description           = ('ScienceDaily is one of the Internet\'s most popular '
-                             'science news web sites. Since starting in 1995, the '
-                             'award-winning site has earned the loyalty of students, '
-                             'researchers, healthcare professionals, government '
-                             'agencies, educators and the general public around the '
-                             'world. Now with more than 6 million monthly visitors '
-                             'worldwide, ScienceDaily generates nearly 20 million '
-                             'page views a month and is steadily growing in its '
-                             'global audience.')
+    description           = ('''ScienceDaily is one of the Internet's most popular science news web sites. Since starting in 1995, the award-winning site has earned the loyalty of students, researchers, healthcare professionals, government agencies, educators and the general public around the world. Now with more than 6 million monthly visitors worldwide, ScienceDaily generates nearly 20 million page views a month and is steadily growing in its global audience.
+                             https://www.sciencedaily.com/''')
+    conversion_options = {
+        'tags' : 'Science, Science Daily, Periodical',
+        'authors' : 'newsrack',
+    }
     category              = 'medicin, healthcare'
     oldest_article        = 7
     max_articles_per_feed = 50

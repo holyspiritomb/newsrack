@@ -30,9 +30,13 @@ class NYTimesBooks(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     language = "en"
     description = (
-        "The latest book reviews, best sellers, news and features from "
-        "The NY TImes critics and reporters. https://www.nytimes.com/section/books"
+        '''The latest book reviews, best sellers, news and features from The NY TImes critics and reporters.
+        https://www.nytimes.com/section/books'''
     )
+    conversion_options = {
+        'tags' : 'New York Times Books, Arts, Literature, Periodical',
+        'authors' : 'newsrack',
+    }
     __author__ = "ping"
     publication_type = "newspaper"
     oldest_article = 7  # days

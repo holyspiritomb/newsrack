@@ -181,7 +181,7 @@ class TheAtlantic(BasicNewsrackRecipe, BasicNewsRecipe):
     div.img img { display: block; max-width: 100%; height: auto; }
     """
     conversion_options = {
-        'tags' : 'Politics, News, Periodical',
+        'tags' : 'Politics, News, Periodical, The Atlantic',
     }
 
     feeds = [

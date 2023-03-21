@@ -166,7 +166,7 @@ class TheAtlanticMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     div.related-content { margin-left: 0.5rem; color: #444; font-style: italic; }
     """
     conversion_options = {
-        'tags' : 'Politics, News, Periodical',
+        'tags' : 'Politics, News, Periodical, The Atlantic Magazine',
     }
 
     def get_browser(self):

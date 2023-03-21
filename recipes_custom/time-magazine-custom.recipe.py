@@ -29,6 +29,10 @@ class TimeMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     description = "Weekly US magazine. https://time.com/magazine/"
     language = "en"
     masthead_url = "https://time.com/img/logo.png"
+    conversion_options = {
+        'tags' : 'Time Magazine, Politics, News, Periodical',
+        'authors' : 'newsrack',
+    }
     oldest_article = 14
     auto_cleanup = False
     reverse_article_order = False

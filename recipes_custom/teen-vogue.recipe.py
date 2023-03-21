@@ -28,7 +28,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "holyspiritomb"
     description = (
-        '''Teen magazine about fashion, culture, politics. https://www.teenvogue.com/feed/rss'''
+        '''Teen magazine about fashion, culture, politics. https://www.teenvogue.com/'''
     )
     publication_type = 'magazine'
     language = "en"
@@ -41,6 +41,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     ignore_duplicate_articles = {"url"}
     # remove_javascript = True
     resolve_internal_links = True
+    reverse_
     # use_embedded_content = False
     publisher = "Conde Nast"
     masthead_url = "https://www.teenvogue.com/verso/static/teen-vogue/assets/logo.ba28e9df68104824291913727893bf4aaf22e564.svg"
@@ -60,7 +61,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     ]
 
     conversion_options = {
-        'tags' : 'Young adult, Teen Vogue, Periodical, Politics',
+        'tags' : 'Young adult, Teen Vogue, Periodical, Pop Culture, Politics',
         'authors' : 'newsrack',
     }
     # feeds = [

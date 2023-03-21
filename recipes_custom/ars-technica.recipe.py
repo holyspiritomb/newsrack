@@ -39,7 +39,7 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     use_embedded_content = False
     remove_empty_feeds = True
     conversion_options = {
-        'tags': 'Technology, Science, Periodical',
+        'tags': 'Technology, Science, Periodical, Ars Technica',
     }
     extra_css             = '''
     body {font-family: Lato, Roboto, Arial,sans-serif}

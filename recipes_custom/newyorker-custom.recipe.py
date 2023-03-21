@@ -41,6 +41,10 @@ class NewYorker(BasicNewsrackRecipe, BasicNewsRecipe):
     description = (
         "Articles of the week's New Yorker magazine https://www.newyorker.com/magazine"
     )
+    conversion_options = {
+        'tags' : 'New Yorker, Politics, Arts, Periodical',
+        'authors' : 'newsrack',
+    }
 
     url_list = []
     language = "en"

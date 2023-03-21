@@ -31,7 +31,7 @@ def classes(classes):
 class Thenation(BasicNewsRecipe, BasicNewsrackRecipe):
     title = _name
     __author__ = 'Darko Miletic, holyspiritomb'
-    description = 'Unconventional Wisdom Since 1865'
+    description = 'Unconventional Wisdom Since 1865 http://www.thenation.com/'
     publisher = 'The Nation'
     category = 'news, politics, USA'
     oldest_article = 120
@@ -52,7 +52,8 @@ class Thenation(BasicNewsRecipe, BasicNewsrackRecipe):
 
     conversion_options = {
         'comment': description,
-        'tags': 'Politics, Periodical',
+        'tags': 'Politics, The Nation, Periodical',
+        'authors': 'newsrack',
         'publisher': publisher,
         'language': language
     }

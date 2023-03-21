@@ -25,8 +25,13 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
     oldest_article = 45  # days
     max_articles_per_feed = 50
     description = (
-        '''Nautilus is a different kind of science magazine. Our stories take you into the depths of science and spotlight its ripples in our lives and cultures. We believe any subject in science, no matter how complex, can be explained with clarity and vitality. https://nautil.us/'''
+        '''Nautilus is a different kind of science magazine. Our stories take you into the depths of science and spotlight its ripples in our lives and cultures. We believe any subject in science, no matter how complex, can be explained with clarity and vitality.
+        https://nautil.us/'''
     )
+    conversion_options = {
+        'tags' : 'Science, Nautilus, Periodical',
+        'authors' : 'newsrack',
+    }
     use_embedded_content = False
     masthead_url = "https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
     remove_attributes = ["height", "width"]

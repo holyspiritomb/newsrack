@@ -116,7 +116,7 @@ class NatGeo(BasicNewsRecipe, BasicNewsrackRecipe):
     remove_javascript = False
     oldest_article = 2
     conversion_options = {
-        'tags' : 'Science, History, Geography, Periodical',
+        'tags' : 'Science, History, Geography, Periodical, National Geographic',
     }
 
     def parse_index(self):

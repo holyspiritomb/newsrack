@@ -48,9 +48,13 @@ class NewRepublicMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     oldest_article = 62  # days
     max_articles_per_feed = 30
     description = (
-        "Founded in 1914, The New Republic is a media organization dedicated to addressing "
-        "today’s most critical issues. https://newrepublic.com/magazine"
+        '''Founded in 1914, The New Republic is a media organization dedicated to addressing today’s most critical issues.
+        https://newrepublic.com/magazine'''
     )
+    conversion_options = {
+        'tags' : 'New Republic, Politics, Leftist, Periodical',
+        'authors' : 'newsrack',
+    }
     publication_type = "magazine"
     use_embedded_content = False
     masthead_url = "https://images.newrepublic.com/f5acdc0030e3212e601040dd24d5c2c0c684b15f.png?w=1024&q=65&dpi=1&fit=crop&crop=faces&h=512"

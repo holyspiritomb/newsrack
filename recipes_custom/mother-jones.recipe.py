@@ -32,7 +32,7 @@ class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
     publication_type = 'magazine'
     scale_news_images = (800, 1200)
     conversion_options = {
-        'tags': 'Progressive, Politics, Periodical'
+        'tags': 'Progressive, Politics, Periodical, Mother Jones'
     }
     feeds = [
         ('Mother Jones', 'http://feeds.feedburner.com/motherjones/feed'),

@@ -37,19 +37,17 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "Jose Ortiz"
     description = (
-        "Nature is a weekly international multidisciplinary scientific journal"
-        " publishing peer-reviewed research in all fields of science and"
-        " technology on the basis of its originality, importance,"
-        " interdisciplinary interest, timeliness, accessibility, elegance and"
-        " surprising conclusions.  Nature also provides rapid, authoritative,"
-        " insightful and arresting news and interpretation of topical and coming"
-        " trends affecting science, scientists and the wider public."
-        " https://www.nature.com/nature/current-issue/"
+        '''Nature is a weekly international multidisciplinary scientific journal publishing peer-reviewed research in all fields of science and technology on the basis of its originality, importance, interdisciplinary interest, timeliness, accessibility, elegance and surprising conclusions.  Nature also provides rapid, authoritative, insightful and arresting news and interpretation of topical and coming trends affecting science, scientists and the wider public.
+         https://www.nature.com/nature/current-issue/'''
     )
     language = "en"
     encoding = "utf-8"
     masthead_url = "https://media.springernature.com/full/nature-cms/uploads/product/nature/header-86f1267ea01eccd46b530284be10585e.svg"
 
+    conversion_options = {
+        'tags' : 'Science, Nature, Periodical',
+        'authors' : 'newsrack',
+    }
     scale_news_images = (800, 1200)
 
     keep_only_tags = [dict(name="article")]

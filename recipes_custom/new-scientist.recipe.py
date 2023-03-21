@@ -53,7 +53,7 @@ _name = "New Scientist"
 
 class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     title = _name
-    description = 'Science news and science articles from New Scientist. Only free articles without video.'
+    description = '''Science news and science articles from New Scientist. https://www.newscientist.com/'''
     masthead_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png'
     language = 'en'
     publisher = 'Reed Business Information Ltd.'
@@ -72,7 +72,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     resolve_internal_links = True
     reverse_article_order = True
     conversion_options = {
-        'tags' : 'Science, News, Periodical',
+        'tags' : 'Science, News, New Scientist, Periodical',
     }
     extra_css = """
                                  body{font-family: "Lato", "Roboto", sans-serif}

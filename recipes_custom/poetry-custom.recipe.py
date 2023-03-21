@@ -23,13 +23,17 @@ _issue_url = ""
 _name = "Poetry"
 
 
-class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
+class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "ping"
     description = (
-        "Founded in Chicago by Harriet Monroe in 1912, Poetry is the oldest monthly "
-        "devoted to verse in the English-speaking world. https://www.poetryfoundation.org/poetrymagazine"
+        '''Founded in Chicago by Harriet Monroe in 1912, Poetry is the oldest monthly devoted to verse in the English-speaking world.
+        https://www.poetryfoundation.org/poetrymagazine'''
     )
+    conversion_options = {
+        'tags' : 'Poetry, Poetry Magazine, Literature, Periodical',
+        'authors' : 'newsrack',
+    }
     publication_type = "magazine"
     language = "en"
     encoding = "utf-8"
