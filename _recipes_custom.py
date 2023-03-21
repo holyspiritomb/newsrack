@@ -14,7 +14,7 @@ categories_sort: List[str] = ["News", "Science", "Blogs", "Arts", "Magazines", "
 class CustomConvOptions(Recipe):
     def __post_init__(self):
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher=https://holyspiritomb.github.io/newsrack/"],
         }
 
 
@@ -320,6 +320,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Magazines",
         # enable_on=False,
+        enable_on=onlyon_weekdays([4, 5, 6], -4) and onlyat_hours(list(range(10, 22)), -4),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Teen_Vogue_logo.svg/1024px-Teen_Vogue_logo.svg.png"
         ),
