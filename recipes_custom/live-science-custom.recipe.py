@@ -39,7 +39,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
 
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
-            self.title = format_title(_name, article.utctime)
+            # self.title = format_title(_name, article.utctime)
 
 
 calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'

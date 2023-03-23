@@ -70,6 +70,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     remove_attributes = ['srcset']
     handle_gzip = True
 
+    # https://www.wired.com/about/rss-feeds/
     feeds = [
         (u'Top Stories', u'https://www.wired.com/feed/rss'),
         (u'AI', u'https://www.wired.com/feed/tag/ai/latest/rss'),

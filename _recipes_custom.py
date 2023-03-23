@@ -126,7 +126,7 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -4),
     ),
     CustomOptionsRecipe(
-        recipe="live-science",
+        recipe="live-science-custom",
         slug="live-science",
         src_ext="mobi",
         target_ext=["epub"],
@@ -159,10 +159,8 @@ recipes: List[Recipe] = [
         tags=["politics", "commentary"],
         overwrite_cover=False,
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 22)), -4),
-        cover_options=CoverOptions(
-            logo_path_or_url="",
-            title_font_path="static/ReadexPro-SemiBold.ttf",
-            datestamp_font_path="static/ReadexPro-Light.ttf"
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Nation_logo.svg/1024px-The_Nation_logo.svg.png",
         ),
     ),
     CustomOptionsRecipe(
@@ -224,9 +222,6 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png"
         ),
-        conv_options={
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--tags='Science,News,Periodical'"],
-        }
     ),
     CustomOptionsRecipe(
         recipe="newyorker-custom",
@@ -281,13 +276,24 @@ recipes: List[Recipe] = [
         category="Science",
         enable_on=onlyon_weekdays([0, 2, 4], -5)
         and onlyat_hours(list(range(8, 14)), -4),
-        # enable_on=False,
-        tags=["science"],
-        cover_options=CoverOptions(
+        tags=["science", "weekly"],
+        cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/640px-Quanta_Magazine_Logo_05.2022.svg.png",
-            title_font_path="static/ReadexPro-SemiBold.ttf",
-            datestamp_font_path="static/ReadexPro-Light.ttf"
         ),
+    ),
+    CustomMonthlyRecipe(
+        recipe="sciencedaily-custom",
+        slug="sciencedaily",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Science",
+        overwrite_cover=True,
+        tags=["science", "tech", "daily"],
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://www.sciencedaily.com/images/sd-logo.png",
+        ),
+        # enable_on=onlyat_hours(list(range(6, 14)), -4),
+        enable_on=False,
     ),
     CustomMonthlyRecipe(
         recipe="scientific-american-custom",
@@ -298,7 +304,6 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         enable_on=onlyon_days(list(range(15, 31)), -5)
         and onlyat_hours(list(range(10, 20)), -4),  # middle of the month?
-        # enable_on=False,
         tags=["science", "tech", "monthly"],
     ),
     CustomMonthlyRecipe(
@@ -317,7 +322,7 @@ recipes: List[Recipe] = [
         slug="strange-horizons",
         src_ext="mobi",
         target_ext=["epub"],
-        enable_on=onlyon_weekdays([4, 5, 6], -5),
+        enable_on=onlyon_weekdays([5, 6], -5),
         cover_options=CustomCoverOptions(
             logo_path_or_url="http://strangehorizons.com/wordpress/wp-content/themes/strangehorizons/images/sh-logo.jpg"
         ),
@@ -375,7 +380,7 @@ recipes: List[Recipe] = [
         #     last_run=recipe.last_run, days=1, drift=0
         # ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://www.wired.com/images/logos/wired.png"
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
     ),
     # Recipe(
