@@ -1,5 +1,13 @@
 // Define your own custom site css here
 //
 body {
-    font-family: system-ui, sans-serif;
+  font-family: 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+}
+
+.books {
+  li {
+    .title {
+      font-family: 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+    }
+  }
 }
