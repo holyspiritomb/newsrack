@@ -33,5 +33,5 @@ class ScienceDaily(BasicNewsRecipe):
         ('Technology News', 'https://www.sciencedaily.com/rss/top/technology.xml'),
         ('Environment News', 'https://www.sciencedaily.com/rss/top/environment.xml'),
         ('Society News', 'https://www.sciencedaily.com/rss/top/society.xml'),
-        ('Strange &amp; Offbeat News', 'https://www.sciencedaily.com/rss/strange_offbeat.xml'),
+        ('Strange and Offbeat News', 'https://www.sciencedaily.com/rss/strange_offbeat.xml'),
     ]

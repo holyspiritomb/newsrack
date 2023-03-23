@@ -126,6 +126,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         return br
 
     feeds = [
+        ('Features', 'https://www.newscientist.com/section/features/feed/'),
         ('Physics', 'https://www.newscientist.com/subject/physics/feed/'),
         ('Technology', 'https://www.newscientist.com/subject/technology/feed/'),
         ('Space', 'https://www.newscientist.com/subject/space/feed/'),
@@ -133,7 +134,6 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         ('Earth', 'https://www.newscientist.com/subject/earth/feed/'),
         ('Health', 'https://www.newscientist.com/subject/health/feed/'),
         ('Humans', 'https://www.newscientist.com/subject/humans/feed/'),
-        ('Features', 'https://www.newscientist.com/section/features/feed/'),
         ('News', 'https://www.newscientist.com/section/news/feed/'),
     ]
 
@@ -144,6 +144,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         cover_item = div.find('a', attrs={'class': 'ThisWeeksMagazineHero__ImageLink'})
         if cover_item:
             cover_url = cover_item["href"]
+            self.log(cover_url)
         issue_dt = div.find('h3', attrs={'class': 'ThisWeeksMagazineHero__MagInfoHeading'})
         if issue_dt:
             issue_date = issue_dt.string
@@ -163,4 +164,4 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
 
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
-            # self.title = format_title(_name, article.utctime)
+            self.title = format_title(_name, article.utctime)

@@ -126,6 +126,18 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -4),
     ),
     CustomOptionsRecipe(
+        recipe="live-science",
+        slug="live-science",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Science",
+        tags=["science"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Live_Science_logo.svg/1024px-Live_Science_logo.svg.png"
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="mother-jones",
         slug="mother-jones",
         src_ext="mobi",

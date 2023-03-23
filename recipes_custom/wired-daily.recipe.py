@@ -37,7 +37,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     cover_url = 'https://www.wired.com/images/logos/wired.png'
     publisher = 'Conde Nast'
     category = 'news, IT, computers, technology'
-    oldest_article = 2
+    oldest_article = 1
     max_articles_per_feed = 200
     no_stylesheets = True
     encoding = 'utf-8'
@@ -72,6 +72,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
 
     feeds = [
         (u'Top Stories', u'https://www.wired.com/feed/rss'),
+        (u'AI', u'https://www.wired.com/feed/tag/ai/latest/rss'),
         (u'Business', u'https://www.wired.com/feed/category/business/latest/rss'),
         (u'Culture', u'https://www.wired.com/feed/category/culture/latest/rss'),
         (u'Gear', u'https://www.wired.com/feed/category/gear/latest/rss'),
