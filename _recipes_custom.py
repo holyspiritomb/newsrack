@@ -287,10 +287,10 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="Science",
-        # overwrite_cover=True,
+        overwrite_cover=True,
         tags=["science", "tech", "daily"],
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://www.sciencedaily.com/images/sd-logo.png",
+            logo_path_or_url="https://i.imgur.com/nQ1lgZZ.png",
         ),
     ),
     CustomMonthlyRecipe(
