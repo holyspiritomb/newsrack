@@ -21,28 +21,26 @@ from calibre.web.feeds.news import BasicNewsRecipe
 
 _name = "Science Daily"
 class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
-    title = u'ScienceDaily'
+    title = _name
     __author__ = u'Darko Miletic'
-    title                 = _name
-    description           = ('''ScienceDaily is one of the Internet's most popular science news web sites. Since starting in 1995, the award-winning site has earned the loyalty of students, researchers, healthcare professionals, government agencies, educators and the general public around the world. Now with more than 6 million monthly visitors worldwide, ScienceDaily generates nearly 20 million page views a month and is steadily growing in its global audience.
+    title = _name
+    description = ('''ScienceDaily is one of the Internet's most popular science news web sites. Since starting in 1995, the award-winning site has earned the loyalty of students, researchers, healthcare professionals, government agencies, educators and the general public around the world. Now with more than 6 million monthly visitors worldwide, ScienceDaily generates nearly 20 million page views a month and is steadily growing in its global audience.
                              https://www.sciencedaily.com/''')
     conversion_options = {
         'tags' : 'Science, Science Daily, Periodical',
         'authors' : 'newsrack',
     }
     masthead_url = 'https://www.sciencedaily.com/images/sd-logo.png'
-    category              = 'medicin, healthcare'
-    oldest_article        = 14
+    oldest_article = 14
     max_articles_per_feed = 50
-    auto_cleanup          = True
+    auto_cleanup = True
     use_embedded_content = False
-    language              = 'en'
-    encoding              = 'utf-8'
+    language = 'en'
+    encoding = 'utf-8'
 
     # Feed are found here: https://www.sciencedaily.com/newsfeeds.htm
     feeds = [
 
-        ('Top Science News', 'https://www.sciencedaily.com/rss/top/science.xml'),
         ('Health and Medicine', 'https://www.sciencedaily.com/rss/health_medicine.xml'),
         ('Mind and Brain', 'https://www.sciencedaily.com/rss/mind_brain.xml'),
         ('Space and Time', 'https://www.sciencedaily.com/rss/space_time.xml'),
@@ -54,6 +52,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         ('Fossils and Ruins', 'https://www.sciencedaily.com/rss/fossils_ruins.xml'),
         ('Society News', 'https://www.sciencedaily.com/rss/science_society.xml'),
         ('Strange and Offbeat News', 'https://www.sciencedaily.com/rss/strange_offbeat.xml'),
+        ('Top Science News', 'https://www.sciencedaily.com/rss/top/science.xml'),
         ('Top News', 'https://www.sciencedaily.com/rss/top.xml'),
     ]
 
