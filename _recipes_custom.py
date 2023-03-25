@@ -282,14 +282,13 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomMonthlyRecipe(
-        recipe="sciencedaily-custom",
-        slug="sciencedaily",
+        recipe="science-daily",
+        slug="science-daily",
         src_ext="mobi",
         target_ext=["epub"],
         category="Science",
         # overwrite_cover=True,
         tags=["science", "tech", "daily"],
-        enable_on=False,
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://www.sciencedaily.com/images/sd-logo.png",
         ),
