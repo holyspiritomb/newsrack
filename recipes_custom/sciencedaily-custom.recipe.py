@@ -38,7 +38,6 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     language              = 'en'
     encoding              = 'utf-8'
-    ignore_duplicate_articles = {'url'}
 
     # Feed are found here: https://www.sciencedaily.com/newsfeeds.htm
     feeds = [
