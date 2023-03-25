@@ -32,7 +32,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     }
     masthead_url = 'https://www.sciencedaily.com/images/sd-logo.png'
     category              = 'medicin, healthcare'
-    oldest_article        = 7
+    oldest_article        = 14
     max_articles_per_feed = 50
     auto_cleanup          = True
     use_embedded_content = False
@@ -41,7 +41,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
 
     # Feed are found here: https://www.sciencedaily.com/newsfeeds.htm
     feeds = [
-        ('Top News', 'https://www.sciencedaily.com/rss/top.xml'),
+
         ('Top Science News', 'https://www.sciencedaily.com/rss/top/science.xml'),
         ('Health and Medicine', 'https://www.sciencedaily.com/rss/health_medicine.xml'),
         ('Mind and Brain', 'https://www.sciencedaily.com/rss/mind_brain.xml'),
@@ -54,6 +54,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         ('Fossils and Ruins', 'https://www.sciencedaily.com/rss/fossils_ruins.xml'),
         ('Society News', 'https://www.sciencedaily.com/rss/science_society.xml'),
         ('Strange and Offbeat News', 'https://www.sciencedaily.com/rss/strange_offbeat.xml'),
+        ('Top News', 'https://www.sciencedaily.com/rss/top.xml'),
     ]
 
     def populate_article_metadata(self, article, __, _):
