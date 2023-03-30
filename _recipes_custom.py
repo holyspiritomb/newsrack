@@ -61,7 +61,9 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ars_Technica_logo_(2016).svg/1024px-Ars_Technica_logo_(2016).svg.png"
         ),
-        enable_on=onlyat_hours(list(range(10, 22)), -4),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
     ),
     CustomOptionsRecipe(
         recipe="atlantic",
@@ -71,7 +73,9 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="News",
         tags=["editorial", "commentary"],
-        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 19)), -4),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
         ),
@@ -95,6 +99,9 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Blogs",
         tags=["science", "linguistics"],
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://i.imgur.com/ScfaQZb.png"
         ),
@@ -107,7 +114,9 @@ recipes: List[Recipe] = [
         category="News",
         tags=["editorial", "commentary", "news"],
         overwrite_cover=True,
-        enable_on=True,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=-4
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/The_Forward_logo_2022.svg/1024px-The_Forward_logo_2022.svg.png"
         ),
@@ -133,6 +142,9 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science"],
         overwrite_cover=True,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Live_Science_logo.svg/1024px-Live_Science_logo.svg.png"
         ),
@@ -157,7 +169,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Politics",
         tags=["politics", "commentary"],
-        overwrite_cover=False,
+        overwrite_cover=True,
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 22)), -4),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Nation_logo.svg/1024px-The_Nation_logo.svg.png",
@@ -171,7 +183,9 @@ recipes: List[Recipe] = [
         category="Magazines",
         tags=["daily", "history", "science"],
         overwrite_cover=True,
-        enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png"
         ),
@@ -240,7 +254,9 @@ recipes: List[Recipe] = [
         category="Arts",
         timeout=300,
         retry_attempts=0,
-        enable_on=onlyat_hours(list(range(8, 22)),-4),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=-60
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
         ),
@@ -287,6 +303,9 @@ recipes: List[Recipe] = [
         category="Science",
         overwrite_cover=True,
         tags=["science", "tech", "daily"],
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://i.imgur.com/nQ1lgZZ.png",
         ),
@@ -331,8 +350,9 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=True,
         category="Magazines",
-        # enable_on=False,
-        enable_on=onlyon_weekdays([4, 5, 6], -4),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Teen_Vogue_logo.svg/1024px-Teen_Vogue_logo.svg.png"
         ),
@@ -345,7 +365,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Magazines",
-        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(6, 22)), -4),
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 18)), -4),
         tags=["news", "politics", "weekly"],
     ),
     CustomMonthlyRecipe(
@@ -370,9 +390,9 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Science",
         tags=["science", "tech", "daily"],
-        # enable_on=lambda recipe: every_x_days(
-        #     last_run=recipe.last_run, days=1, drift=0
-        # ),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
