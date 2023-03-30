@@ -22,15 +22,25 @@
 # NASA [YearMonthDate Time].lrf
 ##
 '''
-Custom User Profile to download RSS News Feeds and Articles from Wired.com
+Custom User Profile to download RSS News Feeds and Articles
 '''
 import re
+# custom include to share code between recipes
+sys.path.append(os.environ["recipes_includes"])
+try:
+    from recipes_shared import BasicNewsrackRecipe, format_title
+except ImportError:
+    # just for Pycharm to pick up for auto-complete
+    from includes.recipes_shared import BasicNewsrackRecipe, format_title
 from calibre.web.feeds.news import BasicNewsRecipe
 
 
-class NASA(BasicNewsRecipe):
+_name = 'NASA'
 
-    title = 'NASA'
+
+class NASA(BasicNewsrackRecipe, BasicNewsRecipe):
+
+    title = _name
     timefmt = ' [%Y%b%d  %H%M]'
     language = 'en'
 
