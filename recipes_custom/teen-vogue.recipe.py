@@ -41,7 +41,6 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     ignore_duplicate_articles = {"url"}
     # remove_javascript = True
     resolve_internal_links = True
-    reverse_
     # use_embedded_content = False
     publisher = "Conde Nast"
     masthead_url = "https://www.teenvogue.com/verso/static/teen-vogue/assets/logo.ba28e9df68104824291913727893bf4aaf22e564.svg"
