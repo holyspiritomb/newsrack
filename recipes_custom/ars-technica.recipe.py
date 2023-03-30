@@ -58,7 +58,7 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     ]
 
     remove_tags = [
-        classes('site-header video corner-info article-expander left-column related-stories'),
+        classes('site-header video corner-info article-expander left-column related-stories ad_xrail ad_xrail_top ad_xrail_last'),
         dict(name=['object', 'link', 'embed', 'iframe', 'meta']),
         dict(id=['social-left', 'article-footer-wrap']),
         dict(name='nav', attrs={'class': 'subheading'}),
