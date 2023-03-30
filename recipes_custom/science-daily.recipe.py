@@ -16,10 +16,14 @@ except ImportError:
     # just for Pycharm to pick up for auto-complete
     from includes.recipes_shared import BasicNewsrackRecipe, format_title
 
+from datetime import datetime
 from calibre import browser
-from calibre.web.feeds.news import BasicNewsRecipe
+from calibre.web.feeds.news import BasicNewsRecipe, classes
+from calibre.utils.date import utcnow, parse_date
 
 _name = "Science Daily"
+
+
 class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = u'Darko Miletic'
@@ -31,17 +35,19 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     }
     masthead_url = "https://i.imgur.com/nQ1lgZZ.png"
     oldest_article = 7
-    max_articles_per_feed = 50
+    max_articles_per_feed = 100
     auto_cleanup = True
     use_embedded_content = False
     language = 'en'
     encoding = 'utf-8'
     delay = 5
+    publication_type = 'newsportal'
+    ignore_duplicate_articles = {'url'}
 
     # Feed are found here: https://www.sciencedaily.com/newsfeeds.htm
     feeds = [
-        ('Top Science News', 'https://www.sciencedaily.com/rss/top/science.xml'),
-        ('Top News', 'https://www.sciencedaily.com/rss/top.xml'),
+        (u'Top Science News', u'https://www.sciencedaily.com/rss/top/science.xml'),
+        (u'Top News', u'https://www.sciencedaily.com/rss/top.xml'),
         # ('Health and Medicine', 'https://www.sciencedaily.com/rss/health_medicine.xml'),
         # ('Mind and Brain', 'https://www.sciencedaily.com/rss/mind_brain.xml'),
         # ('Space and Time', 'https://www.sciencedaily.com/rss/space_time.xml'),
