@@ -4,19 +4,21 @@ newrepublic.com
 import json
 import os
 import sys
-from datetime import datetime
 from functools import cmp_to_key
+from datetime import datetime
 from urllib.parse import urljoin, urlencode, urlsplit
+from calibre.web.feeds.news import BasicNewsRecipe
+from calibre.utils.date import utcnow, parse_date
+
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
 try:
-    from recipes_shared import BasicNewsrackRecipe
+    from recipes_shared import BasicNewsrackRecipe, format_title
 except ImportError:
     # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import BasicNewsrackRecipe
+    from includes.recipes_shared import BasicNewsrackRecipe, format_title
 
-from calibre.web.feeds.news import BasicNewsRecipe
 
 _name = "The New Republic Magazine"
 
@@ -253,7 +255,7 @@ fragment ArticlePageFields on Article {
         br = self.get_browser()
         res = br.open_novisit("https://newrepublic.com/api/content/magazine")
         magazine = json.loads(res.read().decode("utf-8"))["data"]
-        self.pub_date = datetime.fromisoformat(magazine["metaData"]["publishedAt"])
+        self.pub_date = parse_date(magazine["metaData"]["publishedAt"], assume_utc=False)
         self.log.debug(f'Found issue: {magazine["metaData"]["issueTag"]["text"]}')
         self.title = f'{_name}: {magazine["metaData"]["issueTag"]["text"]}'
         self.cover_url = self._urlize(magazine["metaData"]["image"]["src"])
