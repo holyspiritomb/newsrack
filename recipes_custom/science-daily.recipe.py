@@ -40,16 +40,19 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     encoding = 'utf-8'
     delay = 5
     publication_type = 'newsportal'
-    ignore_duplicate_articles = {'url'}
-    auto_cleanup_keep = '//*[@id="journal_references"]|//*[@id="story_source"]|//*[@id="date_posted"]|//*[@id="source"]|//*[@id="abstract"]'
+    ignore_duplicate_articles = {}
+    # auto_cleanup_keep = '//*[@id="journal_references"]|//*[@id="story_source"]|//*[@id="date_posted"]|//*[@id="source"]|//*[@id="abstract"]'
     # remove_tags = ""
-    auto_cleanup = True
+    auto_cleanup = False
 
     # Feed are found here: https://www.sciencedaily.com/newsfeeds.htm
     feeds = [
         #(u'Top Science News', u'https://www.sciencedaily.com/rss/top/science.xml'),
         (u'Top News', u'https://www.sciencedaily.com/rss/top.xml'),
-        (u'Health and Medicine', u'https://www.sciencedaily.com/rss/health_medicine.xml'),
+        (u'Top Health', u'https://www.sciencedaily.com/rss/top/health.xml'),
+        (u'Top Technology', u'https://www.sciencedaily.com/rss/top/technology.xml'),
+        (u'Top Society', u'https://www.sciencedaily.com/rss/top/society.xml'),
+        (u'Top Environment', u'https://www.sciencedaily.com/rss/top/environment.xml'),
         # ('Mind and Brain', 'https://www.sciencedaily.com/rss/mind_brain.xml'),
         # ('Space and Time', 'https://www.sciencedaily.com/rss/space_time.xml'),
         # ('Matter and Energy', 'https://www.sciencedaily.com/rss/matter_energy.xml'),
@@ -65,6 +68,8 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     def populate_article_metadata(self, article, __, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
+            self.log(article.title)
+            self.log(article.utctime)
             self.title = format_title(_name, article.utctime)
 
     def get_browser(self, *args, **kwargs):

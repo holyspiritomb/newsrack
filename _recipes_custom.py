@@ -318,7 +318,7 @@ recipes: List[Recipe] = [
         category="Science",
         overwrite_cover=False,
         enable_on=onlyon_days(list(range(15, 31)), -5)
-        and onlyat_hours(list(range(2, 20)), -4),  # middle of the month?
+        and onlyat_hours(list(range(8, 20)), -4),  # middle of the month?
         tags=["science", "tech", "monthly"],
     ),
     CustomMonthlyRecipe(
