@@ -14,11 +14,7 @@ from datetime import datetime, timezone
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-try:
-    from recipes_shared import BasicNewsrackRecipe
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import BasicNewsrackRecipe
+from recipes_shared import BasicNewsrackRecipe
 
 from calibre import browser
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
@@ -41,8 +37,6 @@ class NewYorker(BasicNewsrackRecipe, BasicNewsRecipe):
     description = (
         "Articles of the week's New Yorker magazine https://www.newyorker.com/magazine"
     )
-
-    url_list = []
     language = "en"
     __author__ = "Kovid Goyal"
     encoding = "utf-8"
