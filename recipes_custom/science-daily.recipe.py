@@ -7,6 +7,9 @@ sciencedaily.com
 
 import os
 import sys
+from calibre import browser
+from calibre.web.feeds.news import BasicNewsRecipe, classes
+from calibre.utils.date import utcnow, parse_date
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -16,10 +19,6 @@ except ImportError:
     # just for Pycharm to pick up for auto-complete
     from includes.recipes_shared import BasicNewsrackRecipe, format_title
 
-from datetime import datetime
-from calibre import browser
-from calibre.web.feeds.news import BasicNewsRecipe, classes
-from calibre.utils.date import utcnow, parse_date
 
 _name = "Science Daily"
 
@@ -40,17 +39,12 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     language = 'en'
     encoding = 'utf-8'
     delay = 3
-    publication_type = 'newsportal'
+    publication_type = 'newspaper'
     auto_cleanup = False
     resolve_internal_links = False
     recursions = 0
-
-    # auto_cleanup_keep = '//*[@id="journal_references"]|//*[@id="story_source"]|//*[@id="date_posted"]|//*[@id="source"]|//*[@id="abstract"]|//p[@id="first"]|//*[@id="story_text"]|//*[@id="text"]|//h1[@id="headline"]'
-    # keep_only_tags = [
-        # dict(id=["journal_references", "story_source", "date_posted", "source", "text", "abstract", "first", "story_text", "headline"]),
-    # ]
     remove_tags = [
-        classes("logo sharing hr-logo clearfix fullstory"),
+        classes("logo sharing hr-logo fullstory"),
         dict(id='related_releases'),
         dict(id='related_topics'),
         dict(id='share_top'),
@@ -58,6 +52,9 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(id='div-gpt-ad-story_bottom'),
         dict(id='div-gpt-ad-story_middle'),
         dict(id='div-gpt-ad-story_top'),
+        dict(id='citation_mla'),
+        dict(id='citation_chicago'),
+        dict(name='ul', attrs={'role': 'tablist'}),
         dict(name='dt', attrs={'class': 'no-print'}),
         dict(name='dd', attrs={'class': 'no-print'}),
         dict(name='div', attrs={'class': 'mobile-top-rectangle'}),
@@ -69,26 +66,31 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
 
     ]
     remove_tags_after = [
-        dict(name='div', attrs={'id': 'journal_references'}),
+        dict(name='div', attrs={'id': 'citations'}),
 
     ]
 
-    auto_cleanup = False
     extra_css = """
+        dd,dt,
         #abstract,
         #date_posted,
         #source,
-        #journal_references{
+        #citations,
+        #journal_references
+        {
             font-size:0.8rem;
         }
         h1#headline{
             font-size:1.75rem;
+            text-align:left;
         }
         h2{
-        font-size:1.5rem
+            text-align:left;
+            font-size:1.5rem
         }
         p#first{
             font-size:1.25rem;
+            text-align:left;
         }
         #text > p{
             font-size: 1rem;
