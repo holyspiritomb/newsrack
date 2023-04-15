@@ -40,24 +40,36 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     remove_empty_feeds = True
     ignore_duplicate_articles = {"url"}
     # remove_javascript = True
-    resolve_internal_links = True
+    resolve_internal_links = False
     # use_embedded_content = False
     publisher = "Conde Nast"
     masthead_url = "https://www.teenvogue.com/verso/static/teen-vogue/assets/logo.ba28e9df68104824291913727893bf4aaf22e564.svg"
     no_stylesheets = True
     keep_only_tags = [
         classes("article__content-header content-header lead-asset article__body"),
+        dict(name="div",attrs={"data-testid": "BodyWrapper"}),
+        dict(name="h1", attrs={"data-testid": "ContentHeaderHed"}),
+        dict(name="div",attrs={"data-testid": "ContentHeaderAccreditation"}),
+        dict(name="time",attrs={"data-testid": "ContentHeaderPublishDate"}),
     ]
+    # remove_tags_before = [
+        # dict(name="div",attrs={"data-testid": "ContentHeaderTitleBlockWrapper"})
+    # ]
     remove_tags = [
-        classes(
-            "related-cne-video-component tags-component callout--related-list iframe-embed podcast_storyboard"
-            " inset-left-component ad consumer-marketing-component social-icons lead-asset__content__clip"
-            "consumer-marketing-unit consumer-marketing-unit--article-mid-content"
-        ),
-        dict(name=["meta", "link"]),
-        dict(id=["sharing", "social", "article-tags", "sidebar"]),
-        dict(attrs={"data-testid": ["ContentHeaderRubric", "GenericCallout"]}),
+        classes("body__inline-barrier social-icons persistent-aside ad"),
+        dict(attrs={"aria-hidden": "true"}),
+        dict(attrs={"data-testid": ["PaywallInlineBarrierWrapper"]})
+    #     classes(
+    #         "related-cne-video-component tags-component callout--related-list iframe-embed podcast_storyboard"
+    #         " inset-left-component ad consumer-marketing-component social-icons lead-asset__content__clip"
+    #         "consumer-marketing-unit consumer-marketing-unit--article-mid-content"
+    #     ),
+    #     dict(name=["meta", "link"]),
+    #     dict(id=["sharing", "social", "article-tags", "sidebar"]),
+    #     dict(attrs={"data-testid": ["ContentHeaderRubric", "GenericCallout"]}),
     ]
+
+
 
     conversion_options = {
         'tags' : 'Young adult, Teen Vogue, Periodical, Pop Culture, Politics',
@@ -93,29 +105,51 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
             self.pub_date = post_date
             self.title = format_title(_name, post_date)
         # authors = [b.text for b in soup.find_all(attrs={"class": "byline__name-link"})]
-        category = soup.find("a", attrs={'class': 'rubric__link'}).text
+        # category = soup.find("a", attrs={'class': 'rubric__link'}).text
         # authors_div = soup.new_tag("div", attrs={"class": "author"})
         # authors_div.append(", ".join(authors))
-        category_div = soup.new_tag("div", attrs={"class": "category"})
-        category_div.append(category)
+        # category_div = soup.new_tag("div", attrs={"class": "category"})
+        # category_div.append(category)
+        # article_original_link = soup.new_tag("a", attrs={"href":url, "id": "sourcelink"})
         # pub_div = soup.new_tag("div", attrs={"class": "published-dt"})
         # pub_div.append(f"{post_date:%B %d, %Y %H:%H %p}")
-        meta_div = soup.new_tag("div", attrs={"class": "article-meta"})
-        # meta_div.append(authors_div)
+        # meta_div = soup.new_tag("div", attrs={"class": "article-meta"})
+        # meta_div.append(article_original_link)
         # meta_div.append(pub_div)
         header = soup.find(
-            attrs={"data-testid": "ContentHeaderAccreditation"}
+            attrs={"data-testid": "ContentHeaderHed"}
         ) or soup.find("h1")
-        header.insert_after(meta_div)
-        soup.find("h1").insert_before(category_div)
+        header.wrap(soup.new_tag("a", attrs={"data-src":url,"id":"original_link"}))
+        # header.insert_after(meta_div)
+        # soup.find("h1").insert_before(category_div)
         return str(soup)
 
+    def postprocess_html(self, soup, first_fetch):
+        for a in soup.find_all("a", attrs={"data-src": True}):
+            a["href"] = a["data-src"]
+            del a["data-src"]
+        return soup
+
     def preprocess_html(self, soup):
+        for a in soup.find_all("a", attrs={"data-event-click": True}):
+            del a["data-event-click"]
+            del a["rel"]
+            del a["target"]
+            del a["data-offer-url"]
         for img in soup.find_all("img", attrs={"srcset": True}):
             img["src"] = self._urlize(
                 img["srcset"].strip().split(",")[-1].strip().split(" ")[0]
             )
             del img["srcset"]
+        for srcmedia in soup.find_all("source", attrs={"srcset": True,"media": "(max-width: 767px)"}):
+            headerimgsrc = self._urlize(
+                srcmedia["srcset"].strip().split(",")[-1].strip().split(" ")[0]
+            )
+            srcmedia.insert_before(soup.new_tag(name="img",attrs={"src": headerimgsrc, "class": "article-picture"}))
+        for srcmed in soup.find_all("source", attrs={"srcset": True}):
+            srcmed.decompose()
+        for articlepicture in soup.find_all("img", class_="article-picture"):
+            articlepicture.wrap(soup.new_tag("div"))
         for picture in soup.find_all("picture"):
             # take <img> tag out of <noscript> into <picture>
             noscript = picture.find(name="noscript")
@@ -129,6 +163,10 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         for aside in soup.find_all("aside"):
             # tag aside with custom css class
             aside["class"] = aside.get("class", []) + ["custom-aside"]
+        for div in soup.find_all("div", class_="body__inner-container"):
+            div.unwrap()
+        for div in soup.find_all("div", attrs={"data-test": "aspect-ratio-container"}):
+            div.unwrap()
         return soup
 
     def parse_tv_index_page(self, current_url, seen):
