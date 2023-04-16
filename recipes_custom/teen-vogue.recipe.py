@@ -47,10 +47,11 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     no_stylesheets = True
     keep_only_tags = [
         classes("article__content-header content-header lead-asset article__body"),
-        dict(name="div",attrs={"data-testid": "BodyWrapper"}),
+        dict(name="div", attrs={"data-testid": "BodyWrapper"}),
+        dict(name="figure", attrs={"class": "asset-embed"}),
         dict(name="h1", attrs={"data-testid": "ContentHeaderHed"}),
-        dict(name="div",attrs={"data-testid": "ContentHeaderAccreditation"}),
-        dict(name="time",attrs={"data-testid": "ContentHeaderPublishDate"}),
+        dict(name="div", attrs={"data-testid": "ContentHeaderAccreditation"}),
+        dict(name="time", attrs={"data-testid": "ContentHeaderPublishDate"}),
     ]
     # remove_tags_before = [
         # dict(name="div",attrs={"data-testid": "ContentHeaderTitleBlockWrapper"})
@@ -119,7 +120,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         header = soup.find(
             attrs={"data-testid": "ContentHeaderHed"}
         ) or soup.find("h1")
-        header.wrap(soup.new_tag("a", attrs={"data-src":url,"id":"original_link"}))
+        header.wrap(soup.new_tag("a", attrs={"data-src": url,"id": "original_link"}))
         # header.insert_after(meta_div)
         # soup.find("h1").insert_before(category_div)
         return str(soup)
@@ -141,11 +142,11 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
                 img["srcset"].strip().split(",")[-1].strip().split(" ")[0]
             )
             del img["srcset"]
-        for srcmedia in soup.find_all("source", attrs={"srcset": True,"media": "(max-width: 767px)"}):
+        for srcmedia in soup.find_all("source", attrs={"srcset": True, "media": "(max-width: 767px)"}):
             headerimgsrc = self._urlize(
                 srcmedia["srcset"].strip().split(",")[-1].strip().split(" ")[0]
             )
-            srcmedia.insert_before(soup.new_tag(name="img",attrs={"src": headerimgsrc, "class": "article-picture"}))
+            srcmedia.insert_before(soup.new_tag(name="img", attrs={"src": headerimgsrc, "class": "article-picture"}))
         for srcmed in soup.find_all("source", attrs={"srcset": True}):
             srcmed.decompose()
         for articlepicture in soup.find_all("img", class_="article-picture"):
