@@ -58,8 +58,8 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     language = 'en'
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
-    oldest_article = 7
-    max_articles_per_feed = 25
+    oldest_article = 15
+    max_articles_per_feed = 50
     no_stylesheets = True
     use_embedded_content = False
     encoding = 'utf-8'
@@ -135,9 +135,9 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
             self.abort_article("Article is paywalled. Aborting.")
         if soup.find('meta', {'property': 'og:type', 'content': 'video'}) or soup.find("div", attrs={"class": "ArticleVideo"}):
             self.abort_article("Video article aborted.")
-        # for img in soup.findAll('img', attrs={'data-src': True}):
-            # img['src'] = img['data-src']
-
+        original_link = soup.find(name="link", attrs={"rel": "canonical", "href": True})
+        if original_link:
+            orig_url = original_link['href']
         for img in soup.findAll('img', attrs={'srcset': True}):
             img['src'] = img['srcset'].split(',')[-1].strip().split()[0].partition('?')[0]
             self.log(img['alt'])
@@ -211,7 +211,6 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         if toc_img:
             thumb_src = toc_img['src']
             self.add_toc_thumbnail(article, thumb_src)
-        # article_inline_date = soup.find("p", attrs={"class": "ArticleHeader__Date"})
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
