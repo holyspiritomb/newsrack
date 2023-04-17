@@ -32,10 +32,8 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     )
     publication_type = 'magazine'
     language = "en"
-
     oldest_article = 14
     max_articles_per_feed = 50
-
     use_embedded_content = False
     remove_empty_feeds = True
     ignore_duplicate_articles = {"url"}
@@ -60,21 +58,19 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         classes("body__inline-barrier social-icons persistent-aside ad"),
         dict(attrs={"aria-hidden": "true"}),
         dict(attrs={"data-testid": ["PaywallInlineBarrierWrapper"]})
-    #     classes(
-    #         "related-cne-video-component tags-component callout--related-list iframe-embed podcast_storyboard"
-    #         " inset-left-component ad consumer-marketing-component social-icons lead-asset__content__clip"
-    #         "consumer-marketing-unit consumer-marketing-unit--article-mid-content"
-    #     ),
-    #     dict(name=["meta", "link"]),
-    #     dict(id=["sharing", "social", "article-tags", "sidebar"]),
-    #     dict(attrs={"data-testid": ["ContentHeaderRubric", "GenericCallout"]}),
+        # classes(
+        #     "related-cne-video-component tags-component callout--related-list iframe-embed podcast_storyboard"
+        #     " inset-left-component ad consumer-marketing-component social-icons lead-asset__content__clip"
+        #     "consumer-marketing-unit consumer-marketing-unit--article-mid-content"
+        # ),
+        # dict(name=["meta", "link"]),
+        # dict(id=["sharing", "social", "article-tags", "sidebar"]),
+        # dict(attrs={"data-testid": ["ContentHeaderRubric", "GenericCallout"]}),
     ]
 
-
-
     conversion_options = {
-        'tags' : 'Young adult, Teen Vogue, Periodical, Pop Culture, Politics',
-        'authors' : 'newsrack',
+        'tags': 'Young adult, Teen Vogue, Periodical, Pop Culture, Politics',
+        'authors': 'newsrack',
     }
     # feeds = [
     #     ("Teen Vogue", "https://www.teenvogue.com/feed/rss"),
@@ -120,7 +116,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         header = soup.find(
             attrs={"data-testid": "ContentHeaderHed"}
         ) or soup.find("h1")
-        header.wrap(soup.new_tag("a", attrs={"data-src": url,"id": "original_link"}))
+        header.wrap(soup.new_tag("a", attrs={"data-src": url, "id": "original_link"}))
         # header.insert_after(meta_div)
         # soup.find("h1").insert_before(category_div)
         return str(soup)
