@@ -1,3 +1,18 @@
 {
-    "python.pythonPath": "calibre-debug"
+    "python.pythonPath": "calibre-debug",
+    "python.analysis.useLibraryCodeForTypes": true,
+    "pyright.completion.importSupport": true,
+    "coc.preferences.bracketEnterImprove": true,
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "pyright.inlayHints.functionReturnTypes": true,
+    "suggest.maxCompleteItemCount": 50,
+    "diagnostic.format": "%message (%source%code)",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportDuplicateImport": "none",
+        "reportMissingImports": "information",
+        "reportUnusedClass": "information",
+        "reportUnusedImport": "information",
+        "reportUnusedVariable": "none",
+    },
+    "python.analysis.extraPaths": ["recipes/includes", "."]
 }
