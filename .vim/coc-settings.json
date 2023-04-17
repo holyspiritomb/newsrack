@@ -14,5 +14,5 @@
         "reportUnusedImport": "information",
         "reportUnusedVariable": "none",
     },
-    "python.analysis.extraPaths": ["recipes/includes", "."]
+    "python.analysis.extraPaths": ["recipes/includes"]
 }
