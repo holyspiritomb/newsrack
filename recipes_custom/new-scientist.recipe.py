@@ -82,8 +82,10 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     extra_css = """
                                  body{font-family: "Lato", "Roboto", sans-serif}
                                  img{margin-bottom: 0.8em; display: block}
-                                 h1{font-size:1.3rem;text-align:left}
-                                 h1 + p.articleheader__copy{font-size:1.2rem}
+                                 h1{font-size:1.5rem;text-align:left}
+                                 h1 + p{font-size:1.2rem}
+                                 h4, div[data-method='caption-shortcode'] p{font-size: 0.8rem}
+                                 div[data-method='caption-shortcode'] ~ p{font-size:1rem}
                                  .quotebx{font-size: x-large; font-weight: bold; margin-right: 2em; margin-left: 2em}
                                  .article-title,h2,h3{font-family: "Lato Black", sans-serif}
                                  .strap{font-family: "Lato Light", sans-serif}
@@ -147,18 +149,13 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         article_date.insert(0, ": ")
         date_elem = article_date.extract()
         categ.insert_after(date_elem)
-        for body in soup.findAll("div", attrs={"class": "ArticleContent"}):
-            image_caption = body.find("div", attrs={"class": "ArticleImageCaption__CaptionWrapper"})
-            for p in image_caption.findAll("p"):
-                p["class"] = "image-caption"
-            for p in body.findAll("p", attrs={"class": False}):
-                p["class"] = "article-text"
         for img in soup.findAll('img', attrs={'srcset': True}):
             img['src'] = img['srcset'].split(',')[-1].strip().split()[0].partition('?')[0]
             self.log(img['alt'])
             del img['srcset']
             del img['data-src']
             del img['sizes']
+            # img.insert_after(img['alt'])
         return soup
 
     def get_article_url(self, article):
