@@ -67,7 +67,6 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
 
     # Feed are found here: http://arstechnica.com/rss-feeds/
     feeds = [
-        ('Ars Technica', 'http://feeds.arstechnica.com/arstechnica/index'),
         ('Features', 'http://feeds.arstechnica.com/arstechnica/features'),
         ('Technology Lab', 'http://feeds.arstechnica.com/arstechnica/technology-lab'),
         ('Gear &amp; Gadgets', 'http://feeds.arstechnica.com/arstechnica/gadgets'),
@@ -84,6 +83,7 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
         ('software', 'http://feeds.arstechnica.com/arstechnica/software'),
         ('telecom', 'http://feeds.arstechnica.com/arstechnica/telecom'),
         ('Internet', 'http://feeds.arstechnica.com/arstechnica/web'),
+        ('Ars Technica', 'http://feeds.arstechnica.com/arstechnica/index'),
     ]
 
     def populate_article_metadata(self, article, __, _):
