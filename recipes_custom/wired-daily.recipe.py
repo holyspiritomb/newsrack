@@ -76,7 +76,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         (u'AI', u'https://www.wired.com/feed/tag/ai/latest/rss'),
         (u'Business', u'https://www.wired.com/feed/category/business/latest/rss'),
         (u'Culture', u'https://www.wired.com/feed/category/culture/latest/rss'),
-        (u'Gear', u'https://www.wired.com/feed/category/gear/latest/rss'),
+        # (u'Gear', u'https://www.wired.com/feed/category/gear/latest/rss'),
         (u'Ideas', u'https://www.wired.com/feed/category/ideas/latest/rss'),
         (u'Science', u'https://www.wired.com/feed/category/science/latest/rss'),
         (u'Security', u'https://www.wired.com/feed/category/security/latest/rss'),
