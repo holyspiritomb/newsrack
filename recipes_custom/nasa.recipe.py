@@ -43,6 +43,7 @@ class NASA(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     timefmt = ' [%Y%b%d  %H%M]'
     language = 'en'
+    use_embedded_content = False
 
     description = 'News from NASA'
     __author__ = 'Scott Wxby & David Chen'
@@ -96,7 +97,7 @@ class NASA(BasicNewsrackRecipe, BasicNewsRecipe):
 # Mars feed may not work, as it is now considered "legacy" by NASA.
 
     feeds = [
-        (' Breaking News', 'https://www.nasa.gov/rss/dyn/breaking_news.rss'),
+        ('Breaking News', 'https://www.nasa.gov/rss/dyn/breaking_news.rss'),
         ('Image of the Day', 'https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss'),
         ('Mars Exploration', 'https://marsmobile.jpl.nasa.gov/rss/?feed=news&category=all'),
         ('Shuttle and Station News', 'https://www.nasa.gov/rss/dyn/shuttle_station.rss'),
