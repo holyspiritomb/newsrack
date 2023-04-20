@@ -27,6 +27,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
     oldest_article = 7
     max_articles_per_feed = 100
     auto_cleanup = True
+    use_embedded_content = False
 
     conversion_options = {
         'tags' : 'Science, News, Live Science, Periodical',
