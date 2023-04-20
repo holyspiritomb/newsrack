@@ -41,11 +41,12 @@ _name = 'NASA'
 class NASA(BasicNewsrackRecipe, BasicNewsRecipe):
 
     title = _name
-    timefmt = ' [%Y%b%d  %H%M]'
+    # timefmt = ' [%Y%b%d  %H%M]'
     language = 'en'
     use_embedded_content = False
+    remove_empty_feeds = True
 
-    description = 'News from NASA'
+    description = 'News from NASA: https://nasa.gov'
     __author__ = 'Scott Wxby & David Chen'
     no_stylesheets = True
 
@@ -106,3 +107,8 @@ class NASA(BasicNewsrackRecipe, BasicNewsRecipe):
         ('Earth News', 'https://www.nasa.gov/rss/dyn/earth.rss'),
         ('Aeronautics News', 'https://www.nasa.gov/rss/dyn/aeronautics.rss'),
     ]
+
+    def populate_article_metadata(self, article, __, _):
+        if (not self.pub_date) or article.utctime > self.pub_date:
+            self.pub_date = article.utctime
+            self.title = format_title(_name, article.utctime)
