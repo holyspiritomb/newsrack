@@ -163,6 +163,21 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
+        recipe="nasa",
+        slug="nasa",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Science",
+        tags=["science", "space"],
+        overwrite_cover=True,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/NASA_Worm_logo.svg/1024px-NASA_Worm_logo.svg.png",
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="nation",
         slug="nation",
         src_ext="mobi",
@@ -367,6 +382,21 @@ recipes: List[Recipe] = [
         category="Magazines",
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 18)), -4),
         tags=["news", "politics", "weekly"],
+    ),
+    CustomOptionsRecipe(
+        recipe="universe-today",
+        slug="universe-today",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Science",
+        tags=["science", "space"],
+        overwrite_cover=True,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://www.universetoday.com/wp-content/uploads/2020/10/cropped-cleanutlogo-1.png",
+        ),
     ),
     CustomMonthlyRecipe(
         recipe="wired-mag",
