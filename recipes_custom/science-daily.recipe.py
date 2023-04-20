@@ -106,16 +106,16 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         # (u'Top Technology', u'https://www.sciencedaily.com/rss/top/technology.xml'),
         # (u'Top Society', u'https://www.sciencedaily.com/rss/top/society.xml'),
         # (u'Top Environment', u'https://www.sciencedaily.com/rss/top/environment.xml'),
-        # ('Mind and Brain', 'https://www.sciencedaily.com/rss/mind_brain.xml'),
-        # ('Space and Time', 'https://www.sciencedaily.com/rss/space_time.xml'),
-        # ('Matter and Energy', 'https://www.sciencedaily.com/rss/matter_energy.xml'),
-        # ('Computers and Math', 'https://www.sciencedaily.com/rss/computers_math.xml'),
+        (u'Mind and Brain', u'https://www.sciencedaily.com/rss/mind_brain.xml'),
+        (u'Space and Time', u'https://www.sciencedaily.com/rss/space_time.xml'),
+        (u'Matter and Energy', u'https://www.sciencedaily.com/rss/matter_energy.xml'),
+        (u'Computers and Math', u'https://www.sciencedaily.com/rss/computers_math.xml'),
         # ('Technology News', 'https://www.sciencedaily.com/rss/top/technology.xml'),
         # ('Earth and Climate', 'https://www.sciencedaily.com/rss/earth_climate.xml'),
         # ('Plants and Animals', 'https://www.sciencedaily.com/rss/plants_animals.xml'),
         # ('Fossils and Ruins', 'https://www.sciencedaily.com/rss/fossils_ruins.xml'),
         # ('Society News', 'https://www.sciencedaily.com/rss/science_society.xml'),
-        # (u'Strange and Offbeat News', u'https://www.sciencedaily.com/rss/strange_offbeat.xml'),
+        (u'All News', u'https://www.sciencedaily.com/rss/all.xml'),
     ]
 
     def populate_article_metadata(self, article, __, _):
