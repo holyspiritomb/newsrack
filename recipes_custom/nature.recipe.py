@@ -37,8 +37,7 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "Jose Ortiz"
     description = (
-        '''Nature is a weekly international multidisciplinary scientific journal publishing peer-reviewed research in all fields of science and technology on the basis of its originality, importance, interdisciplinary interest, timeliness, accessibility, elegance and surprising conclusions.  Nature also provides rapid, authoritative, insightful and arresting news and interpretation of topical and coming trends affecting science, scientists and the wider public.
-         https://www.nature.com/nature/current-issue/'''
+        '''Nature is a weekly international multidisciplinary scientific journal publishing peer-reviewed research in all fields of science and technology on the basis of its originality, importance, interdisciplinary interest, timeliness, accessibility, elegance and surprising conclusions.  Nature also provides rapid, authoritative, insightful and arresting news and interpretation of topical and coming trends affecting science, scientists and the wider public. https://www.nature.com/nature/current-issue/'''
     )
     language = "en"
     encoding = "utf-8"
@@ -189,7 +188,7 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
                         "date": article_tag.find("time", attrs={"datetime": True})[
                             "datetime"
                         ],
-                        "autor": self.tag_to_string(
+                        "author": self.tag_to_string(
                             article_tag.find("li", {"itemprop": check_words("creator")})
                         ),
                     }
