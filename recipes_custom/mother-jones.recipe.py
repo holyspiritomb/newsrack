@@ -61,29 +61,29 @@ class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
     '''
 
     def populate_article_metadata(self, article, soup, _):
-        # if (not self.pub_date) or article.utctime > self.pub_date:
-            # self.pub_date = article.utctime
-            # self.title = format_title(_name, article.utctime)
+        if (not self.pub_date) or article.utctime > self.pub_date:
+            self.pub_date = article.utctime
+            self.title = format_title(_name, article.utctime)
         headline = soup.find("h1", attrs={"class": "entry-title"})
         if headline:
             article.title = self.tag_to_string(headline)
-        modified = soup.find("meta", attrs={"property": "article:modified"})
-        if modified:
-            modified_date = datetime.strptime(
-                modified["content"], "%Y-%m-%dT%H:%M:%S%z"
-            ).replace(tzinfo=timezone.utc)
-            if (not self.pub_date) or modified_date > self.pub_date:
-                self.pub_date = modified_date
-                self.title = format_title(_name, modified_date)
-        published = soup.find("meta", attrs={"property": "article:published"})
-        if published:
-            published_date = datetime.strptime(
-                published["content"], "%Y-%m-%dT%H:%M:%S%z"
-            ).replace(tzinfo=timezone.utc)
-            article.utctime = published_date
-            if (not self.pub_date) or published_date > self.pub_date:
-                self.pub_date = published_date
-                self.title = format_title(_name, published_date)
+        # modified = soup.find("meta", attrs={"property": "article:modified"})
+        # if modified:
+        #     modified_date = datetime.strptime(
+        #         modified["content"], "%Y-%m-%dT%H:%M:%S%z"
+        #     ).replace(tzinfo=timezone.utc)
+        #     if (not self.pub_date) or modified_date > self.pub_date:
+        #         self.pub_date = modified_date
+        #         self.title = format_title(_name, modified_date)
+        # published = soup.find("meta", attrs={"property": "article:published"})
+        # if published:
+        #     published_date = datetime.strptime(
+        #         published["content"], "%Y-%m-%dT%H:%M:%S%z"
+        #     ).replace(tzinfo=timezone.utc)
+        #     # article.utctime = published_date
+        #     if (not self.pub_date) or published_date > self.pub_date:
+        #         self.pub_date = published_date
+        #         self.title = format_title(_name, published_date)
         desc = soup.find("meta", attrs={"name": "description"})
         if desc:
             article.description = desc["content"]
