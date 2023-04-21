@@ -18,7 +18,7 @@ except ImportError:
     from includes.recipes_shared import BasicNewsrackRecipe, format_title
 
 
-_name = "Mother Jones Debug"
+_name = "Mother Jones"
 
 
 class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
@@ -37,7 +37,7 @@ class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
     feeds = [
         ('Mother Jones', 'http://feeds.feedburner.com/motherjones/feed'),
     ]
-    timefmt = ' [%b %d, %Y]'
+    # timefmt = ' [%b %d, %Y]'
     remove_tags_before = [
         dict(attrs={"class": "entry-header"})
     ]
@@ -70,7 +70,7 @@ class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
         modified = soup.find("meta", attrs={"property": "article:modified"})
         if modified:
             modified_date = datetime.strptime(
-                modified["content"], "%Y-%m-%dT%H:%M:%SZ"
+                modified["content"], "%Y-%m-%dT%H:%M:%S%z"
             ).replace(tzinfo=timezone.utc)
             if (not self.pub_date) or modified_date > self.pub_date:
                 self.pub_date = modified_date
@@ -78,7 +78,7 @@ class MotherJones(BasicNewsRecipe, BasicNewsrackRecipe):
         published = soup.find("meta", attrs={"property": "article:published"})
         if published:
             published_date = datetime.strptime(
-                published["content"], "%Y-%m-%dT%H:%M:%SZ"
+                published["content"], "%Y-%m-%dT%H:%M:%S%z"
             ).replace(tzinfo=timezone.utc)
             article.utctime = published_date
             if (not self.pub_date) or published_date > self.pub_date:
