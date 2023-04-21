@@ -206,7 +206,7 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
-        recipe="nature-custom",
+        recipe="nature",
         slug="nature",
         src_ext="mobi",
         target_ext=["epub"],
@@ -216,7 +216,7 @@ recipes: List[Recipe] = [
         tags=["science", "weekly"],
     ),
     CustomOptionsRecipe(
-        recipe="nautilus-custom",
+        recipe="nautilus",
         slug="nautilus",
         src_ext="mobi",
         target_ext=["epub"],
