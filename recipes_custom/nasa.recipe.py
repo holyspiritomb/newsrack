@@ -24,7 +24,9 @@
 '''
 Custom User Profile to download RSS News Feeds and Articles
 '''
+import os
 import re
+import sys
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
 try:

@@ -1,3 +1,5 @@
+import os
+import sys
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
 try:
