@@ -153,29 +153,29 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         self.cover_url = f"https://static.scientificamerican.com/sciam/cache/file/{image_id}_source.jpg?w=960"
 
         issue_date = datetime.strptime(issue_info["issue_date"], "%Y-%m-%d")
-        self.title = f"{_name}: {issue_date:%B %Y}"
-        feeds = {"Features": []}
-        for article in issue_info.get("article_previews", {}).get("featured", []):
-            feeds["Features"].append(
-                {
-                    "title": article["title"],
-                    "url": urljoin(
-                        "https://www.scientificamerican.com/article/", article["slug"]
-                    ),
-                    "description": article["summary"],
-                }
-            )
-        for article in issue_info.get("article_previews", {}).get("departments", []):
-            if article["category"] not in feeds:
-                feeds[article["category"]] = []
-            feeds[article["category"]].append(
-                {
-                    "title": article["title"],
-                    "url": urljoin(
-                        "https://www.scientificamerican.com/article/", article["slug"]
-                    ),
-                    "description": article["summary"],
-                }
-            )
+        self.title = (
+            f"{_name}: {issue_date:%B %Y} "
+            f'Vol. {issue_info.get("volume", "")}, Issue {issue_info.get("issue", "")}'
+        )
+
+        feeds = {}
+        for section in ("featured", "departments"):
+            for article in issue_info.get("article_previews", {}).get(section, []):
+                if section == "featured":
+                    feed_name = "Features"
+                else:
+                    feed_name = article["category"]
+                if feed_name not in feeds:
+                    feeds[feed_name] = []
+                feeds[feed_name].append(
+                    {
+                        "title": article["title"],
+                        "url": urljoin(
+                            "https://www.scientificamerican.com/article/",
+                            article["slug"],
+                        ),
+                        "description": article["summary"],
+                    }
+                )
 
         return feeds.items()
