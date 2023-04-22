@@ -262,6 +262,21 @@ recipes: List[Recipe] = [
         tags=["editorial", "commentary", "weekly"],
     ),
     CustomOptionsRecipe(
+        recipe="npr",
+        slug="npr",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="News",
+        overwrite_cover=True,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
+        tags=["news", "politics", "science", "daily"],
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/National_Public_Radio_logo.svg/1024px-National_Public_Radio_logo.svg.png"
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="nyt-books",
         slug="nyt-books",
         src_ext="mobi",
