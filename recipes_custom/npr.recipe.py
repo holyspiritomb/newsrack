@@ -49,11 +49,12 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         (u'World', u'http://www.npr.org/rss/rss.php?id=1004'),
         ('Law', 'https://feeds.npr.org/1070/rss.xml'),
         ('Politics', 'https://feeds.npr.org/1014/rss.xml'),
+        ('Health', 'https://feeds.npr.org/1128/rss.xml'),
         ('Science', 'https://feeds.npr.org/1007/rss.xml'),
         ('Space', 'https://feeds.npr.org/1026/rss.xml'),
         ('Climate', 'https://feeds.npr.org/1167/rss.xml'),
-        ('Health', 'https://feeds.npr.org/1128/rss.xml'),
         # ('Global Health', 'https://feeds.npr.org/1039/rss.xml'),
+        ('Education', 'https://feeds.npr.org/1013/rss.xml'),
         ('Race', 'https://feeds.npr.org/1015/rss.xml'),
         ('Religion', 'https://feeds.npr.org/1016/rss.xml'),
         ('Books', 'https://feeds.npr.org/1161/rss.xml'),
@@ -64,7 +65,7 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         .story-text{
         font-size: 1rem;
         }
-        .slug-line, .slug-line a, .slug-line .slug-link{
+        .slu.slug-link{
         font-size:0.75rem;
         }
         h1 {
@@ -72,6 +73,10 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         text-align:left;
         }
         h1.story-title ~ p{
+        font-size: 0.75rem;
+        }
+        span#dateline, div#categ-date{
+        text-transform: uppercase;
         font-size: 0.75rem;
         }
     '''
@@ -102,10 +107,33 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         para_div = soup.find("div", attrs={"class": "paragraphs-container"})
         for p in para_div.find("p"):
             p.class_ = "story-text"
+        related_hr = para_div.find_all("hr")
+        rel_cont = soup.new_tag("div", attrs={"id": "related-story-container"})
+        rel_cont_head = soup.new_tag("h3")
+        rel_cont_head.append("Related")
+        rel_cont_ul = soup.new_tag("ul", attrs={"id": "related-story-list"})
+        rel_cont.append(rel_cont_head)
+        rel_cont.append(rel_cont_ul)
+        for hr in related_hr:
+            if hr.next_sibling == "\n      Related Story: ":
+                related_story_link = hr.find_next("a").extract()
+                self.log.warn(f"related story found: {related_story_link.text}")
+                hr.next_sibling.replace_with("")
+                li = soup.new_tag("li")
+                li.append(related_story_link)
+                rel_cont_ul.append(li)
+                hr.find_next("hr").extract()
+                hr.extract()
+        if len(rel_cont_ul.contents) > 0:
+            soup.find("article").insert_after(rel_cont)
         header = soup.find("div", attrs={"class": "story-head"})
         dateline = header.find_all("p")[1]
         dateline['id'] = "dateline"
         dateline.name = "span"
+        dt_str = str(dateline.string)
+        dt = datetime.strptime(dt_str, "%A, %B %d, %Y • %I:%M %p %Z")
+        new_dt_str = datetime.strftime(dt, "%b %d %Y, %-I:%M %p")
+        dateline.string = new_dt_str
         dateline_ex = dateline.extract()
         category = soup.find_all("a", attrs={"class": "slug-link"})[1]
         if category.text == "Sports":
@@ -117,9 +145,8 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         header_div.append(dateline_ex)
         header.insert_before(header_div)
         soup.find('p', attrs={"class": "slug-line"}).decompose()
-
         # datep = firstp.sibling_next("p")
-                # dateline = datetime.strptime(p.text, "%A, %B %-d, %Y • %-I:%M %p %Z")
+                # dateline = datetime.strptime(str(p.text), "%A, %B %d, %Y • %I:%M %p %Z")
                 # date_str = datetime.strftime(dateline, "%b %d %Y, %-I:%M %p")
                 # self.log.warn(date_str)
         return str(soup)
@@ -129,9 +156,12 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         if richlink:
             richurl = richlink['href']
             richlink_el = soup.new_tag("a", attrs={"href": richurl})
-            richlink_el.append(f"Full article: {richurl}")
+            richlink_el.append(f"{richurl}")
             full_link_div = soup.new_tag("div", attrs={"id": "rich-link"})
+            full_link_div.append("Full article: ")
             full_link_div.append(richlink_el)
+            hr = soup.new_tag("hr")
+            soup.find("article").append(hr)
             soup.find("article").append(full_link_div)
             soup.find("header").decompose()
         return soup
