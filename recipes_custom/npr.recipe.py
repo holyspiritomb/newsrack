@@ -131,10 +131,10 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         dateline = header.find_all("p")[1]
         dateline['id'] = "dateline"
         dateline.name = "span"
-        dt_str = str(dateline.string)
-        dt = datetime.strptime(dt_str, "%A, %B %d, %Y • %I:%M %p %Z")
-        new_dt_str = datetime.strftime(dt, "%b %d %Y, %-I:%M %p")
-        dateline.string = new_dt_str
+        # dt_str = str(dateline.string)
+        # dt = datetime.strptime(dt_str, "%A, %B %d, %Y • %I:%M %p %Z")
+        # new_dt_str = datetime.strftime(dt, "%b %d %Y, %-I:%M %p")
+        # dateline.string = new_dt_str
         dateline_ex = dateline.extract()
         category = soup.find_all("a", attrs={"class": "slug-link"})[1]
         if category.text == "Sports":
