@@ -105,6 +105,8 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         soup = BeautifulSoup(raw_html, from_encoding='utf-8')
         # self.abort_recipe_processing()
         para_div = soup.find("div", attrs={"class": "paragraphs-container"})
+        if len(para_div.find_all("p")) == 1:
+            self.abort_article("aborting audio-only article")
         for p in para_div.find("p"):
             p.class_ = "story-text"
         related_hr = para_div.find_all("hr")
@@ -117,7 +119,6 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         for hr in related_hr:
             if hr.next_sibling == "\n      Related Story: ":
                 related_story_link = hr.find_next("a").extract()
-                self.log.warn(f"related story found: {related_story_link.text}")
                 hr.next_sibling.replace_with("")
                 li = soup.new_tag("li")
                 li.append(related_story_link)
