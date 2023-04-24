@@ -96,6 +96,16 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     def is_link_wanted(self, url, tag):
         return re.search(r'/[0-9]/$', url) is not None
 
+    def parse_feeds(self):
+        feeds = BasicNewsRecipe.parse_feeds(self)
+        for feed in feeds:
+            for article in feed.articles[:]:
+                # self.log.info(f"article.title is: {article.title}")
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or 'DEALMASTER' in article.title.upper():
+                    self.log.warn(f"removing {article.title} from feed")
+                    feed.articles.remove(article)
+        return feeds
+
     def postprocess_html(self, soup, first_fetch):
         if not first_fetch:
             for x in soup.findAll(itemprop=['headline', 'description']):
