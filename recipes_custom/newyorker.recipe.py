@@ -327,6 +327,9 @@ class NewYorker(BasicNewsrackRecipe, BasicNewsRecipe):
                     body = story.find(attrs={"class": "River__dek___CayIg"})
                     if body is not None:
                         desc = body.contents[0]
+                if 'OBESITY' in title.upper() or 'WEIGHT LOSS' in title.upper():
+                    self.log.warn(f"Not fetching article: {title}")
+                    continue
 
                 self.log("Found article:", title)
                 self.log("\t" + url)
