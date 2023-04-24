@@ -74,6 +74,11 @@ class QuantaMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
         articles = []
         for feed in parsed_feeds:
             articles.extend(feed.articles)
+            for article in feed.articles[:]:
+                # self.log.info(f"article.title is: {article.title}")
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
+                    self.log.warn(f"removing {article.title} from feed")
+                    feed.articles.remove(article)
         articles = sorted(articles, key=lambda a: a.utctime, reverse=True)
         new_feeds = []
         curr_feed = None
