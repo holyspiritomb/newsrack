@@ -83,6 +83,16 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
         ("Zoology", "https://nautil.us/topics/zoology/feed/"),
     ]
 
+    def parse_feeds(self):
+        feeds = BasicNewsRecipe.parse_feeds(self)
+        for feed in feeds:
+            for article in feed.articles[:]:
+                # self.log.info(f"article.title is: {article.title}")
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
+                    self.log.warn(f"removing {article.title} from feed")
+                    feed.articles.remove(article)
+        return feeds
+
     def populate_article_metadata(self, article, __, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
