@@ -116,6 +116,9 @@ class TimeMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
         articles = []
         self.temp_dir = PersistentTemporaryDirectory()
         for article in issue["articles"]:
+            if 'OBESITY' in article["friendly_title"].upper() or 'WEIGHT LOSS' in article["friendly_title"].upper():
+                self.log.warn(f"Not fetching article: {article['friendly_title']}")
+                continue
             with PersistentTemporaryFile(suffix=".json", dir=self.temp_dir) as f:
                 f.write(json.dumps(article).encode("utf-8"))
             description = article.get("excerpt") or ""
