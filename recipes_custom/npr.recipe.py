@@ -167,5 +167,15 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
             soup.find("header").decompose()
         return soup
 
+    def parse_feeds(self):
+        feeds = BasicNewsRecipe.parse_feeds(self)
+        for feed in feeds:
+            for article in feed.articles[:]:
+                # self.log(f"article.title is: {article.title}")
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
+                    self.log.warn(f"removing {article.title} from feed")
+                    feed.articles.remove(article)
+        return feeds
+
 
 calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
