@@ -222,6 +222,9 @@ class TheAtlantic(BasicNewsrackRecipe, BasicNewsRecipe):
         return raw_html
 
     def preprocess_html(self, soup):
+        headline = soup.find("h1", attrs={"class": "headline"})
+        if "OBESITY" in self.tag_to_string(headline).upper() or "WEIGHT LOSS" in self.tag_to_string(headline).upper():
+            self.abort_article()
         for img in soup.findAll("img", attrs={"data-srcset": True}):
             data_srcset = img["data-srcset"]
             if "," in data_srcset:
