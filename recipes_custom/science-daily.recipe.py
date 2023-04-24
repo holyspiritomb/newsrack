@@ -118,10 +118,21 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         (u'All News', u'https://www.sciencedaily.com/rss/all.xml'),
     ]
 
+    def parse_feeds(self):
+        feeds = BasicNewsRecipe.parse_feeds(self)
+        for feed in feeds:
+            for article in feed.articles[:]:
+                # self.log.info(f"article.title is: {article.title}")
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
+                    self.log.warn(f"removing {article.title} from feed")
+                    feed.articles.remove(article)
+        return feeds
+
     def populate_article_metadata(self, article, __, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+            article.title = format_title(article.title, article.utctime)
 
     def get_browser(self, *args, **kwargs):
         return self
