@@ -178,6 +178,9 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
                 subsection = self.tag_to_string(sect)
                 self.log(f"{section} > {subsection}")
                 title = self.tag_to_string(a.find("h3"))
+                if "HOROSCOPE" in title.upper() or "ZODIAC" in title.upper() or "RETROGRADE" in title.upper():
+                    self.log.warn(f"Skipping article: {title}")
+                    continue
                 self.log(title)
                 description = None
                 summary = a.parent.find(attrs={"class": "summary-item__dek"})
