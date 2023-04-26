@@ -1,1 +1,6 @@
 // Define your own custom reader viewer css here
+@media (max-width: 991px) {
+  #display-container {
+    height: 85vh;
+  }
+}
