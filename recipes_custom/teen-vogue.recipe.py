@@ -1,14 +1,14 @@
+import json
 import os
 import re
 import sys
 from collections import OrderedDict
 from urllib.parse import urlparse
 from urllib.parse import urljoin
-from datetime import datetime, timezone
 from calibre import browser
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe, classes
-from calibre.utils.date import utcnow, parse_date
+from calibre.utils.date import utcnow, parse_date, strptime
 
 
 # custom include to share code between recipes
@@ -33,7 +33,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     remove_empty_feeds = True
     ignore_duplicate_articles = {"url"}
-    # remove_javascript = True
+    # remove_javascript = False
     resolve_internal_links = False
     # use_embedded_content = False
     publisher = "Conde Nast"
@@ -47,6 +47,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(name="h1", attrs={"data-testid": "ContentHeaderHed"}),
         dict(name="div", attrs={"data-testid": "ContentHeaderAccreditation"}),
         dict(name="time", attrs={"data-testid": "ContentHeaderPublishDate"}),
+
     ]
     # remove_tags_before = [
         # dict(name="div",attrs={"data-testid": "ContentHeaderTitleBlockWrapper"})
@@ -54,7 +55,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     remove_tags = [
         classes("body__inline-barrier social-icons persistent-aside ad"),
         dict(attrs={"aria-hidden": "true"}),
-        dict(attrs={"data-testid": ["PaywallInlineBarrierWrapper"]})
+        dict(attrs={"data-testid": ["PaywallInlineBarrierWrapper"]}),
         # classes(
         #     "related-cne-video-component tags-component callout--related-list iframe-embed podcast_storyboard"
         #     " inset-left-component ad consumer-marketing-component social-icons lead-asset__content__clip"
@@ -79,9 +80,10 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         .caption__text,.caption__credit{font-size:0.8rem;font-style:italic;}
         .byline,.article-byline{font-size:0.8rem;}
         time{text-transform:uppercase;}
-        #article-body-container > p {font-size:1rem;}
-        #article-body-container > div {font-size:0.8rem;}
-        #article-body-container > div.heading-h3 {font-size:1.25rem;}
+        #article-body-container > p{font-size:1rem;}
+        #article-body-container > div:not(.heading-h3){font-size:0.8rem;}
+        #article-body-container > div.heading-h3{font-size:1.25rem;}
+        #article-body-container > div.heading-h3 > strong{font-size:1.25rem;}
     '''
 
     BASE_URL = "https://www.teenvogue.com"
@@ -93,22 +95,25 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
             url_string = urljoin(base_url or self.BASE_URL, url_string)
         return url_string
 
-    def populate_article_metadata(self, article, soup, _):
-        pub_date = soup.find("time")
-        if pub_date:
-            pub_dt = datetime.strptime(pub_date["datetime"], "%Y-%m-%dT%H:%M:%S%z")
-            article.title = format_title(article.title, pub_dt)
-
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
+        p_metadata = soup.find("meta", attrs={"name": "parsely-metadata"})
+        if p_metadata:
+            p_json = json.loads(p_metadata["content"])
+            description = p_json["description"]
+            if description:
+                headline = soup.find("h1", attrs={"data-testid": "ContentHeaderHed"})
+                headline["data-description"] = description
+        # article_title = soup.find("h1")
+        # self.log.warn(f"Preprocessing raw html for: {article_title.text}")
         pub_date_meta = soup.find(
             name="meta", attrs={"property": "article:modified_time"}
         )
-        post_date = datetime.strptime(pub_date_meta["content"], "%Y-%m-%dT%H:%M:%S.%fZ")
-        article_age = datetime.utcnow() - post_date
+        post_date = strptime(pub_date_meta["content"], "%Y-%m-%dT%H:%M:%S.%fZ")
+        article_age = utcnow() - post_date
         days_old = article_age.days
         if days_old > self.oldest_article:
-            self.abort_article("Aborting article that is too old")
+            self.abort_article(f"Aborting article that is {days_old} days old.")
         if not self.pub_date or post_date > self.pub_date:
             self.pub_date = post_date
             self.title = format_title(_name, post_date)
@@ -139,6 +144,8 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         return str(soup)
 
     def preprocess_html(self, soup):
+        # article_title = soup.find("h1")
+        # self.log.warn(f"Preprocessing html for: {article_title.text}")
         byline_div = soup.find(attrs={"data-testid": "ContentHeaderAccreditation"})
         article_subtitle = byline_div.find("div")
         article_subtitle.name = "h2"
@@ -183,6 +190,31 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
             div.decompose()
         return soup
 
+    def populate_article_metadata(self, article, soup, _):
+        article_head = soup.find("div", attrs={"data-testid": "ContentHeaderContainer"})
+        article_title = article_head.find("h1")
+        article.title = self.tag_to_string(article_title)
+        article.description = article_title["data-description"]
+        article.summary = article_title["data-description"]
+        article.text_summary = article_title["data-description"]
+        authors = soup.find_all("a", attrs={"class": "byline__name-link"})
+        article_author = self.tag_to_string(authors[0])
+        if len(authors) == 2:
+            article_author = self.tag_to_string(authors[0]) + " & " + self.tag_to_string(authors[1])
+        article.author = article_author
+        a_pub_date = soup.find("time")
+        # parsed_date = parse_date(a_pub_date.text)
+        if a_pub_date:
+            pub_dt = strptime(a_pub_date["datetime"], "%Y-%m-%dT%H:%M:%S%z")
+            article.title = format_title(article.title, pub_dt)
+            article.utctime = pub_dt
+            article.date = pub_dt
+        article_img_div = soup.find("div", attrs={"data-testid": "ContentHeaderLeadAsset"})
+        if article_img_div:
+            article_img = article_img_div.find("img")
+            if article_img:
+                article.toc_thumbnail = article_img["src"]
+
     def parse_tv_index_page(self, current_url, seen):
         soup = self.index_to_soup(current_url)
         section = self.tag_to_string(soup.find("h1", attrs={'data-testid': 'SectionHeaderHed'}))
@@ -196,6 +228,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
                     word_allcaps = word.upper()
                     if word_allcaps in title.upper():
                         self.log.warn(f"Skipping article that contains '{word}' in title: {title}")
+                        # the next line prevents adding the article to the yield
                         seen.add(url)
                         break
                     else:
@@ -209,8 +242,8 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
                     yield {
                         "title": title,
                         "url": urljoin(self.BASE_URL, url),
-                        "description": description,
                         "section": section,
+                        "description": description,
                         "subsection": subsection
                     }
 
