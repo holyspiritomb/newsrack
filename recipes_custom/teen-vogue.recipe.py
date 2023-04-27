@@ -108,7 +108,6 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         pub_date_meta = soup.find(
             name="meta", attrs={"property": "article:modified_time"}
         )
-        self.log.warn(pub_date_meta)
         post_date = datetime.strptime(pub_date_meta["content"], "%Y-%m-%dT%H:%M:%S.%fZ")
         article_age = datetime.utcnow() - post_date
         days_old = article_age.days
