@@ -4,18 +4,12 @@ __copyright__ = '2008-2012, Darko Miletic <darko.miletic at gmail.com>'
 arstechnica.com
 '''
 import os
+import re
 import sys
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-try:
-    from recipes_shared import BasicNewsrackRecipe, format_title
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import BasicNewsrackRecipe, format_title
-
-
-import re
+from recipes_shared import BasicNewsrackRecipe, format_title
 from calibre.web.feeds.news import BasicNewsRecipe
 
 _name = "Ars Technica"

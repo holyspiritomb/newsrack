@@ -29,13 +29,7 @@ import re
 import sys
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-try:
-    from recipes_shared import BasicNewsrackRecipe, format_title
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import BasicNewsrackRecipe, format_title
-from calibre.web.feeds.news import BasicNewsRecipe
-
+from recipes_shared import BasicNewsrackRecipe, format_title
 
 _name = 'NASA'
 

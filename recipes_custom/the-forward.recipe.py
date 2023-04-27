@@ -6,12 +6,7 @@ from datetime import datetime, timezone
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-try:
-    from recipes_shared import BasicNewsrackRecipe, format_title
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import BasicNewsrackRecipe, format_title
-
+from recipes_shared import BasicNewsrackRecipe, format_title
 from calibre.web.feeds.news import BasicNewsRecipe
 
 
@@ -36,11 +31,10 @@ class TheForward(BasicNewsRecipe, BasicNewsrackRecipe):
     }
 
     feeds = [
-        ('The Forward - News', 'https://forward.com/news/feed/'),
-        ('The Forward - Opinions', 'https://forward.com/opinion/feed/'),
-        ('The Forward - Culture', 'https://forward.com/culture/feed/'),
+        ('News', 'https://forward.com/news/feed/'),
+        ('Opinions', 'https://forward.com/opinion/feed/'),
+        ('Culture', 'https://forward.com/culture/feed/'),
     ]
-    timefmt = ' [%b %d, %Y]'
 
     def populate_article_metadata(self, article, __, _):
         if (not self.pub_date) or article.utctime > self.pub_date:

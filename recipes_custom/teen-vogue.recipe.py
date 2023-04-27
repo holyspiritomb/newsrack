@@ -13,11 +13,7 @@ from calibre.utils.date import utcnow, parse_date
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-try:
-    from recipes_shared import BasicNewsrackRecipe, format_title
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import BasicNewsrackRecipe, format_title
+from recipes_shared import BasicNewsrackRecipe, format_title
 
 # heavily based on the recipe for wired
 
@@ -39,7 +35,6 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     ignore_duplicate_articles = {"url"}
     # remove_javascript = True
     resolve_internal_links = False
-    pub_date = ""
     # use_embedded_content = False
     publisher = "Conde Nast"
     masthead_url = "https://www.teenvogue.com/verso/static/teen-vogue/assets/logo.ba28e9df68104824291913727893bf4aaf22e564.svg"
@@ -86,6 +81,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
         time{text-transform:uppercase;}
         #article-body-container > p {font-size:1rem;}
         #article-body-container > div {font-size:0.8rem;}
+        #article-body-container > div.heading-h3 {font-size:1.25rem;}
     '''
 
     BASE_URL = "https://www.teenvogue.com"
