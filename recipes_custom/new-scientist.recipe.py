@@ -66,7 +66,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     compress_news_images = False
     publication_type = 'magazine'
     scale_news_images = True
-    resolve_internal_links = True
+    resolve_internal_links = False
     reverse_article_order = False
     delay = 1
     simultaneous_downloads = 1
@@ -124,27 +124,22 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         # ('Other', 'https://www.newscientist.com/feed/home/')
     ]
 
-    # def preprocess_raw_html(self, raw_html, url):
-        # soup = BeautifulSoup(raw_html)
-        # gcacheprefix = 'https://webcache.googleusercontent.com/search?q=cache:'
-        # gcacheurl = gcacheprefix + url
-        # if soup.find(name="section", id="subscription-barrier"):
-        #     self.log.warn(f"Subscription barrier on {url}")
-        #     self.log.warn(f"Trying {gcacheurl}")
-        #     gcachesoup = self.index_to_soup(gcacheurl)
-        #     return str(gcachesoup)
-        # else:
-        # return str(soup)
-
-    def preprocess_html(self, soup):
+    def preprocess_raw_html(self, raw_html, url):
+        soup = BeautifulSoup(raw_html)
         if soup.find(name="meta", attrs={"name": "ob_page_type", "content": "paywall"}):
             self.log.warn("Paywall encountered.")
             self.abort_article("Article is paywalled. Aborting.")
         if soup.find('meta', {'property': 'og:type', 'content': 'video'}) or soup.find("div", attrs={"class": "ArticleVideo"}):
             self.abort_article("Video article aborted.")
-        original_link = soup.find(name="link", attrs={"rel": "canonical", "href": True})
-        if original_link:
-            orig_url = original_link['href']
+        header = soup.find(attrs={"class": "ArticleHeader"})
+        headline = header.find("h1")
+        headline["data-url"] = url
+        meta_desc = soup.find('meta', {'property': 'og:description'})
+        if meta_desc:
+            headline["data-desc"] = meta_desc["content"]
+        return str(soup)
+
+    def preprocess_html(self, soup):
         header = soup.find("section", attrs={"class": "ArticleHeader"})
         categ = header.find("a", attrs={"class": "ArticleHeader__CategoryLink"})
         article_date = header.find("p", attrs={"class": "ArticleHeader__Date"})
@@ -153,20 +148,27 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         date_elem = article_date.extract()
         categ.insert_after(date_elem)
         for img in soup.findAll('img', attrs={'srcset': True}):
-            img['src'] = img['srcset'].split(',')[-1].strip().split()[0].partition('?')[0]
-            self.log(img['alt'])
+            # img['src'] = img['srcset'].split(',')[-1].strip().split()[0].partition('?')[0]
+            # self.log(img['alt'])
             del img['srcset']
             del img['data-src']
             del img['sizes']
-            # img.insert_after(img['alt'])
+            alt_txt = img["alt"]
+            if alt_txt:
+                alt_div = soup.new_tag("div", attrs={"class": "img-alt-text"})
+                alt_div.append(alt_txt)
+                img.insert_after(alt_div)
         return soup
 
     def get_article_url(self, article):
         ans = BasicNewsRecipe.get_article_url(self, article)
         return ans.partition('?')[0]
 
-    def get_browser(self):
-        br = BasicNewsRecipe.get_browser(self)
+    def get_browser(self, *a, **kw):
+        kw[
+            "user_agent"
+        ] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+        br = BasicNewsRecipe.get_browser(self, *a, **kw)
         if self.username is not None and self.password is not None:
             def is_login_form(form):
                 return "action" in form.attrs and form.attrs['action'] == "/login/"
@@ -212,27 +214,39 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
             self.log(cover_url)
             return cover_url
 
-    # def get_obfuscated_article(self, url):
-        # gcacheprefix = 'https://webcache.googleusercontent.com/search?q=cache:'
-        # gurl = gcacheprefix + url
-
     def parse_feeds(self):
         feeds = BasicNewsRecipe.parse_feeds(self)
         for feed in feeds:
             for article in feed.articles[:]:
                 # self.log.info(f"article.title is: {article.title}")
-                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
-                    self.log.warn(f"removing {article.title} from feed")
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or "Watch" in article.title:
+                    self.log.warn(f"removing {article.url} from feed")
                     feed.articles.remove(article)
+                    continue
+                if "newscientist.com/video" in article.url:
+                    self.log.warn(f"removing {article.url} from feed")
+                    feed.articles.remove(article)
+                    continue
         return feeds
 
     def populate_article_metadata(self, article, soup, _):
-        self.log(article.title)
-        self.log(article.url)
-        self.log(article.utctime)
+        # self.log(article.title)
+        # self.log(article.url)
+        # self.log(article.utctime)
+        auths = []
+        for a in soup.find_all("a"):
+            if "author" in a["href"]:
+                auth = self.tag_to_string(a)
+                auths.append(auth)
+        if len(auths) > 0:
+            article.author = auths[0]
+            if len(auths) > 1:
+                for x in range(1, len(auths) - 1):
+                    article.author = article.author + " & " + auths[x]
         article.title = format_title(article.title, article.utctime)
-        div = soup.find("div", attrs={"class": "ArticleImage"})
-        toc_img = div.find("img", attrs={"class": "image"})
+        headline = soup.find("h1")
+        article.description = headline["data-desc"]
+        toc_img = soup.find("img", attrs={"class": "image"})
         if toc_img:
             thumb_src = toc_img['src']
             self.add_toc_thumbnail(article, thumb_src)
