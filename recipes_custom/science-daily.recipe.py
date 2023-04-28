@@ -28,9 +28,9 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         'authors' : 'newsrack',
     }
     masthead_url = "https://i.imgur.com/nQ1lgZZ.png"
-    oldest_article = 7
+    oldest_article = 14
     remove_empty_feeds = True
-    max_articles_per_feed = 50
+    max_articles_per_feed = 25
     use_embedded_content = False
     language = 'en'
     encoding = 'utf-8'
@@ -96,22 +96,41 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
 
     # Feed are found here: https://www.sciencedaily.com/newsfeeds.htm
     feeds = [
-        (u'Top Science News', u'https://www.sciencedaily.com/rss/top/science.xml'),
         # (u'Top News', u'https://www.sciencedaily.com/rss/top.xml'),
         # (u'Top Health', u'https://www.sciencedaily.com/rss/top/health.xml'),
         # (u'Top Technology', u'https://www.sciencedaily.com/rss/top/technology.xml'),
         # (u'Top Society', u'https://www.sciencedaily.com/rss/top/society.xml'),
-        # (u'Top Environment', u'https://www.sciencedaily.com/rss/top/environment.xml'),
-        (u'Mind and Brain', u'https://www.sciencedaily.com/rss/mind_brain.xml'),
-        (u'Space and Time', u'https://www.sciencedaily.com/rss/space_time.xml'),
-        (u'Matter and Energy', u'https://www.sciencedaily.com/rss/matter_energy.xml'),
-        (u'Computers and Math', u'https://www.sciencedaily.com/rss/computers_math.xml'),
-        # ('Technology News', 'https://www.sciencedaily.com/rss/top/technology.xml'),
-        # ('Earth and Climate', 'https://www.sciencedaily.com/rss/earth_climate.xml'),
-        # ('Plants and Animals', 'https://www.sciencedaily.com/rss/plants_animals.xml'),
-        # ('Fossils and Ruins', 'https://www.sciencedaily.com/rss/fossils_ruins.xml'),
-        # ('Society News', 'https://www.sciencedaily.com/rss/science_society.xml'),
-        (u'All News', u'https://www.sciencedaily.com/rss/all.xml'),
+        ('ADHD', 'https://www.sciencedaily.com/rss/mind_brain/add_and_adhd.xml'),
+        ("Alzheimer's", "https://www.sciencedaily.com/rss/mind_brain/alzheimer's.xml"),
+        ("Autism", "https://www.sciencedaily.com/rss/mind_brain/autism.xml"),
+        ("Behavior", "https://www.sciencedaily.com/rss/mind_brain/behavior.xml"),
+        ("Gender Difference", "https://www.sciencedaily.com/rss/mind_brain/gender_difference.xml"),
+        ("Language Acquisition", "https://www.sciencedaily.com/rss/mind_brain/language_acquisition.xml"),
+        ("Racial Issues", "https://www.sciencedaily.com/rss/mind_brain/racial_issues.xml"),
+        ('Obstructive Sleep Apnea', 'https://www.sciencedaily.com/rss/mind_brain/obstructive_sleep_apnea.xml'),
+        ("Psychiatry", "https://www.sciencedaily.com/rss/mind_brain/psychiatry.xml"),
+        ("Psychology", "https://www.sciencedaily.com/rss/mind_brain/psychology.xml"),
+        ('Schizophrenia', 'https://www.sciencedaily.com/rss/mind_brain/schizophrenia.xml'),
+        ('Sleep Disorders', 'https://www.sciencedaily.com/rss/mind_brain/sleep_disorders.xml'),
+        ('Mind and Brain', 'https://www.sciencedaily.com/rss/mind_brain.xml'),
+        ("Eating Disorders", "https://www.sciencedaily.com/rss/health_medicine/eating_disorders.xml"),
+        ("IBS", "https://www.sciencedaily.com/rss/health_medicine/irritable_bowel_syndrome.xml"),
+        ("Sexual Health", "https://www.sciencedaily.com/rss/health_medicine/sexual_health.xml"),
+        ("Sports Medicine", "https://www.sciencedaily.com/rss/health_medicine/sports_medicine.xml"),
+        ('Health and Medicine', 'https://www.sciencedaily.com/rss/health_medicine.xml'),
+        ('Computers and Math', 'https://www.sciencedaily.com/rss/computers_math.xml'),
+        ("Educatiom and Learning", "https://www.sciencedaily.com/rss/education_learning.xml"),
+        ("Severe Weather", "https://www.sciencedaily.com/rss/earth_climate/severe_weather.xml"),
+        ('Earth and Climate', 'https://www.sciencedaily.com/rss/earth_climate.xml'),
+        ('Fossils and Ruins', 'https://www.sciencedaily.com/rss/fossils_ruins.xml'),
+        ("Physics", "https://www.sciencedaily.com/rss/matter_energy/physics.xml"),
+        ('Matter and Energy', 'https://www.sciencedaily.com/rss/matter_energy.xml'),
+        ('Plants and Animals', 'https://www.sciencedaily.com/rss/plants_animals.xml'),
+        ('Society News', 'https://www.sciencedaily.com/rss/science_society.xml'),
+        ('Space and Time', 'https://www.sciencedaily.com/rss/space_time.xml'),
+        ('Technology News', 'https://www.sciencedaily.com/rss/top/technology.xml'),
+        ('Top Science News', 'https://www.sciencedaily.com/rss/top/science.xml'),
+        ('All News', 'https://www.sciencedaily.com/rss/all.xml'),
     ]
 
     def parse_feeds(self):
@@ -130,8 +149,12 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
             self.title = format_title(_name, article.utctime)
             article.title = format_title(article.title, article.utctime)
 
-    def get_browser(self, *args, **kwargs):
-        return self
+    def get_browser(self, *a, **kw):
+        kw[
+            "user_agent"
+        ] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+        br = BasicNewsRecipe.get_browser(self, *a, **kw)
+        return br
 
     def clone_browser(self, *args, **kwargs):
         return self.get_browser()

@@ -331,7 +331,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         tags=["science", "tech", "daily"],
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+            last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://i.imgur.com/nQ1lgZZ.png",
