@@ -28,7 +28,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         'authors' : 'newsrack',
     }
     masthead_url = "https://i.imgur.com/nQ1lgZZ.png"
-    oldest_article = 14
+    oldest_article = 7
     remove_empty_feeds = True
     max_articles_per_feed = 25
     use_embedded_content = False
