@@ -14,7 +14,13 @@ default_recipe_timeout = 180
 default_conv_options: Dict[str, List[str]] = {
     "mobi": ["--output-profile=kindle_oasis", "--mobi-file-type=both"],
     "pdf": ["--pdf-page-numbers"],
-    "epub": ["--output-profile=tablet"],
+    "epub": [
+        "--output-profile=tablet",
+        # to fix the problem of images having a fixed height after conversion
+        "--extra-css=img{height:auto !important;}",
+        # to fix the problem of some font sizes being too small
+        "--font-size-mapping=10,12,14,16,18,20,22,24",
+    ],
 }
 
 
