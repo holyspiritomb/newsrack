@@ -4,6 +4,7 @@ __copyright__ = '2014, Darko Miletic <darko.miletic at gmail.com>'
 www.wired.com
 '''
 import os
+import re
 import sys
 
 # custom include to share code between recipes
@@ -87,6 +88,22 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         (u'WIRED Guides', u'https://www.wired.com/feed/tag/wired-guide/latest/rss'),
         #    (u'Photo', u'https://www.wired.com/feed/category/photo/latest/rss'),
     ]
+
+    def parse_feeds(self):
+        feeds = BasicNewsRecipe.parse_feeds(self)
+        regex = re.compile(r'\d+\WBest')
+        for feed in feeds:
+            for article in feed.articles[:]:
+                # self.log.info(f"article.title is: {article.title}")
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
+                    self.log.warn(f"removing {article.title} from feed")
+                    feed.articles.remove(article)
+                    continue
+                if regex.match(article.title):
+                    self.log.warn(f"removing {article.title} from feed")
+                    feed.articles.remove(article)
+                    continue
+        return feeds
 
     def populate_article_metadata(self, article, __, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
