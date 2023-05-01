@@ -7,12 +7,9 @@ from urllib.parse import urlparse, urljoin
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-try:
-    from recipes_shared import BasicNewsrackRecipe
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import BasicNewsrackRecipe
+from recipes_shared import BasicNewsrackRecipe
 
+from calibre import browser
 from calibre.utils.date import parse_date
 from calibre.web.feeds.news import BasicNewsRecipe
 
@@ -67,7 +64,7 @@ class SpectatorMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     """
 
     def preprocess_html(self, soup):
-        paywall_ele = soup.find(name="meta", content="hard-paywall")
+        paywall_ele = soup.find(name="section", class_="paywall")
         if paywall_ele:
             err_msg = f'Article is paywalled: "{self.tag_to_string(soup.find("h1"))}"'
             self.log.warn(err_msg)
@@ -114,7 +111,7 @@ class SpectatorMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
         if cover_ele:
             cover_url = cover_ele["src"]
             self.cover_url = urljoin(cover_url, urlparse(cover_url).path)
-        issue_date_ele = soup.find(name="time", class_="magazine-header__date")
+        issue_date_ele = soup.find(name="time", class_="magazine-header__meta-item")
         if issue_date_ele:
             self.title = f"{_name}: {self.tag_to_string(issue_date_ele)}"
 
@@ -143,3 +140,16 @@ class SpectatorMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
                     }
                 )
         return feed.items()
+
+    # Ensure that we send no cookies
+    def get_browser(self, *args, **kwargs):
+        return self
+
+    def clone_browser(self, *args, **kwargs):
+        return self.get_browser()
+
+    def open_novisit(self, *args, **kwargs):
+        br = browser()
+        return br.open_novisit(*args, **kwargs)
+
+    open = open_novisit

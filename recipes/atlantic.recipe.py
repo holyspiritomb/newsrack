@@ -11,11 +11,7 @@ from datetime import datetime, timezone
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-try:
-    from recipes_shared import BasicNewsrackRecipe, format_title
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import BasicNewsrackRecipe, format_title
+from recipes_shared import BasicNewsrackRecipe, format_title
 
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe
@@ -153,13 +149,7 @@ class TheAtlantic(BasicNewsrackRecipe, BasicNewsRecipe):
     remove_tags_after = [dict(name=["main"])]
     remove_tags = [
         dict(id=["interview-related", "buyfive"]),
-        dict(
-            class_=[
-                "hints",
-                "social-icons",
-                "read-more",
-            ]
-        ),
+        dict(class_=["hints", "social-icons", "read-more", "related-content"]),
         dict(name=["script", "noscript", "style"]),
     ]
 

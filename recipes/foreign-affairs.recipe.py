@@ -7,11 +7,7 @@ from datetime import datetime
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-try:
-    from recipes_shared import BasicNewsrackRecipe
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import BasicNewsrackRecipe
+from recipes_shared import BasicNewsrackRecipe
 
 import mechanize
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
@@ -107,7 +103,7 @@ def get_issue_data(br, log, node_id="1126213", year="2020", volnum="99", issue_v
         source = entry["_source"]
         section = source["fa_node_type_or_subtype"][0]
         ans.setdefault(section, []).append(as_article(source))
-    for sectitle in sorted(ans):
+    for sectitle in ans:
         articles = ans[sectitle]
         log(sectitle)
         if articles:
@@ -131,7 +127,7 @@ class ForeignAffairsRecipe(BasicNewsrackRecipe, BasicNewsRecipe):
     encoding = "utf-8"
     publication_type = "magazine"
     INDEX = "https://www.foreignaffairs.com/magazine"
-
+    compress_news_images_auto_size = 8
     needs_subscription = "optional"
     ignore_duplicate_articles = {"title", "url"}
     remove_empty_feeds = True
@@ -160,9 +156,15 @@ class ForeignAffairsRecipe(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def parse_index(self):
         soup = self.index_to_soup(self.INDEX)
-        # get dates
-        date = re.split(r"\s\|\s", self.tag_to_string(soup.head.title.string))[0]
-        self.title = f"{_name}: {date}"
+        # get edition
+        edition_date_ele = soup.find("meta", property="og:title")
+        if edition_date_ele:
+            self.title = f'{_name}: {edition_date_ele["content"]}'
+        else:
+            title_date = re.split(
+                r"\s\|\s", self.tag_to_string(soup.head.title.string)
+            )[0]
+            self.title = f"{_name}: {title_date}"
         link = soup.find("link", rel="canonical", href=True)["href"]
         year, vol_num, issue_vol = link.split("/")[-3:]
         self.cover_url = soup.find(**classes("subscribe-callout-image"))[

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 https://github.com/ping/
+# Copyright (c) 2023 https://github.com/ping/
 #
 # This software is released under the GNU General Public License v3.0
 # https://opensource.org/licenses/GPL-3.0
@@ -11,21 +11,25 @@ from urllib.parse import urljoin
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import BasicNewsrackRecipe, format_title
+from recipes_shared import BasicNewsrackRecipe
 
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe
+from calibre.utils.cleantext import clean_ascii_chars
 
-_name = "Washington Post"
+_name = "Washington Post (Print)"
+_skip_sections = ["Sports", "Style", "Weekend"]
 
 
-class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
+class TheWashingtonPostPrint(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "ping"
-    description = "Breaking news and analysis on politics, business, world national news, entertainment more. In-depth DC, Virginia, Maryland news coverage including traffic, weather, crime, education, restaurant reviews and more. https://www.washingtonpost.com/"  # noqa
+    description = "Today's Washington Post https://www.washingtonpost.com/todays_paper/updates/"  # noqa
     publisher = "The Washington Post Company"
     category = "news, politics, USA"
     publication_type = "newspaper"
+    masthead_url = "https://www.washingtonpost.com/sf/brand-connect/dell-technologies/the-economics-of-change/media/wp_logo_black.png"
+
     use_embedded_content = False
     remove_empty_feeds = True
     auto_cleanup = False
@@ -36,9 +40,9 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
     oldest_article = 1
     max_articles_per_feed = 25
     ignore_duplicate_articles = {"url"}
-    masthead_url = "https://www.washingtonpost.com/sf/brand-connect/dell-technologies/the-economics-of-change/media/wp_logo_black.png"
 
     remove_attributes = ["style"]
+    index = "https://www.washingtonpost.com/todays_paper/updates/"
 
     extra_css = """
     .headline { font-size: 1.8rem; margin-bottom: 0.4rem; }
@@ -52,18 +56,6 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
     .video .caption { margin-top: 0.2rem; }
     .keyupdates li { margin-bottom: 0.5rem; }
     """
-
-    feeds = [
-        ("World", "http://feeds.washingtonpost.com/rss/world"),
-        ("National", "http://feeds.washingtonpost.com/rss/national"),
-        ("White House", "http://feeds.washingtonpost.com/rss/politics/whitehouse"),
-        ("Business", "http://feeds.washingtonpost.com/rss/business"),
-        ("Opinions", "http://feeds.washingtonpost.com/rss/opinions"),
-        # ("Local", "http://feeds.washingtonpost.com/rss/local"),
-        # ("Entertainment", "http://feeds.washingtonpost.com/rss/entertainment"),
-        # ("Sports", u"http://feeds.washingtonpost.com/rss/sports"),
-        # ("Redskins", u"http://feeds.washingtonpost.com/rss/sports/redskins"),
-    ]
 
     def _extract_child_nodes(self, nodes, parent_element, soup, url):
         if not nodes:
@@ -219,7 +211,8 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
                 pass
         if not self.pub_date or post_date > self.pub_date:
             self.pub_date = post_date
-            self.title = format_title(_name, post_date)
+        description = content.get("description", {}).get("basic", "")
+
         title = content["headlines"]["basic"]
         html = f"""<html>
         <head></head>
@@ -238,6 +231,8 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
         title_ele.string = title
         new_soup.head.append(title_ele)
         new_soup.body.article.h1.string = title
+        if description:
+            new_soup.body.article["data-description"] = description
         if content.get("subheadlines", {}).get("basic", ""):
             new_soup.find("div", class_="sub-headline").string = content[
                 "subheadlines"
@@ -250,3 +245,40 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
             content.get("content_elements"), new_soup.body.article, new_soup, url
         )
         return str(new_soup)
+
+    def populate_article_metadata(self, article, soup, first):
+        desc_ele = soup.find(attrs={"data-description": True})
+        if desc_ele:
+            article.summary = desc_ele["data-description"]
+            article.text_summary = clean_ascii_chars(desc_ele["data-description"])
+
+    def parse_index(self):
+        soup = self.index_to_soup(self.index)
+        articles = {}
+        for section in soup.find_all(class_="todays-content"):
+            today_ele = section.find(class_="todays-date")
+            if today_ele:
+                self.title = f"{_name}: {self.tag_to_string(today_ele)}"
+                today_ele.extract()
+            section_name = self.tag_to_string(section.find(class_="heading")).strip()
+            if section_name in _skip_sections:
+                continue
+            section_articles = []
+            self.log(f"Section: {section_name}")
+            for link in section.find_all("a", class_="headline"):
+                if link["href"] in (
+                    "https://www.washingtonpost.com/",
+                    "https://www.washingtonpost.com/local/",
+                ):
+                    # Digest links
+                    continue
+                section_articles.append(
+                    {"url": link["href"], "title": self.tag_to_string(link).strip()}
+                )
+                self.log(f'\t{self.tag_to_string(link)}\n\t{link["href"]}')
+            if not section_articles:
+                continue
+            if section_name not in articles:
+                articles[section_name] = []
+            articles[section_name].extend(section_articles)
+        return articles.items()

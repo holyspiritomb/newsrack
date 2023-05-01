@@ -8,7 +8,8 @@ https://opensource.org/licenses/GPL-3.0
 (function () {
     const params = URLSearchParams && new URLSearchParams(document.location.search.substring(1));
     const file = params && params.get("file") && decodeURIComponent(params.get("file"));
-    const currentSectionIndex = (params && params.get("loc")) ? params.get("loc") : undefined;
+    const hashParams = URLSearchParams && new URLSearchParams(document.location.hash.substring(1));
+    const currentSectionIndex = (hashParams && hashParams.get("loc")) ? hashParams.get("loc") : undefined;
     let isValidBook;
     try {
         new URL(file);
@@ -19,10 +20,15 @@ https://opensource.org/licenses/GPL-3.0
     const loadingContainer = document.getElementById("loading-container");
     const displayContainer = document.getElementById("display-container");
     const errEle = document.createElement("span");
-    errEle.classList.add("m-5");
+    errEle.classList.add("m-5", "d-block");
+    const backLink = document.createElement("a");
+    backLink["href"] = "./";
+    backLink.innerHTML = '<svg><use href="reader_sprites.svg#icon-home"></use></svg> Back to Home';
+    backLink.classList.add("d-flex", "align-items-center", "my-1", "gap-1", "justify-content-center");
 
     if (!isValidBook) {
         errEle.innerText = "Remote books not allowed.";
+        errEle.append(backLink);
         loadingContainer.innerHTML = "";
         loadingContainer.append(errEle);
     } else {
@@ -35,9 +41,23 @@ https://opensource.org/licenses/GPL-3.0
         book.on("openFailed", function (e) {
             console.error(e);
             errEle.innerText = e.toString();
+            errEle.append(backLink);
             loadingContainer.innerHTML = "";
             loadingContainer.append(errEle);
         });
+
+        function gotoNextChapter() {
+            const nextIndex = book.package.metadata.direction === "rtl" ? rendition.location.end.index-1 : rendition.location.end.index+1;
+            if (nextIndex >= 0 && nextIndex < rendition.book.spine.spineItems.length) {
+                rendition.display(rendition.book.spine.spineItems[nextIndex]["href"]);
+            }
+        }
+        function gotoPrevChapter() {
+            const prevIndex = book.package.metadata.direction === "rtl" ? rendition.location.start.index+1 : rendition.location.start.index-1;
+            if (prevIndex >= 0 && prevIndex < rendition.book.spine.spineItems.length) {
+                rendition.display(rendition.book.spine.spineItems[prevIndex]["href"]);
+            }
+        }
 
         book.ready.then(function () {
             if (loadingContainer) {
@@ -56,6 +76,18 @@ https://opensource.org/licenses/GPL-3.0
                 e.preventDefault();
             }, false);
 
+            const nextChapter = document.getElementById("next-chapter");
+            nextChapter.addEventListener("click", function (e) {
+                e.preventDefault();
+                gotoNextChapter();
+            }, false);
+
+            const prevChapter = document.getElementById("prev-chapter");
+            prevChapter.addEventListener("click", function (e) {
+                e.preventDefault();
+                gotoPrevChapter();
+            }, false);
+
             const keyListener = function (e) {
                 // Left Key
                 if ((e.keyCode || e.which) === 37) {
@@ -64,6 +96,14 @@ https://opensource.org/licenses/GPL-3.0
                 // Right Key
                 if ((e.keyCode || e.which) === 39) {
                     book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
+                }
+                // Up key
+                if ((e.keyCode || e.which) === 38) {
+                    gotoPrevChapter();
+                }
+                // Down key
+                if ((e.keyCode || e.which) === 40) {
+                    gotoNextChapter();
                 }
             };
             rendition.on("keyup", keyListener);
@@ -137,6 +177,27 @@ https://opensource.org/licenses/GPL-3.0
             } else {
                 prev.classList.remove("invisible");
             }
+
+            const nextChapter = book.package.metadata.direction === "rtl" ? document.getElementById("prev-chapter") : document.getElementById("next-chapter");
+            const prevChapter = book.package.metadata.direction === "rtl" ? document.getElementById("next-chapter") : document.getElementById("prev-chapter");
+
+            if (location.start.index <= 0 || location.start.index <= 0 ) {
+                prevChapter.classList.add("invisible");
+            } else {
+                prevChapter.classList.remove("invisible");
+            }
+
+            const maxIndex = book.spine.spineItems.length - 1;
+            if (location.start.index >= maxIndex || location.start.index >= maxIndex ) {
+                nextChapter.classList.add("invisible");
+            } else {
+                nextChapter.classList.remove("invisible");
+            }
+
+            const cfi = location.start.cfi;
+            const hashParams = URLSearchParams && new URLSearchParams(document.location.hash.substring(1));
+            hashParams.set("loc", cfi)
+            document.location.hash = "#" + hashParams.toString();
 
         });
 

@@ -66,7 +66,9 @@ RecipeOutput = namedtuple(
 # sort categories for display
 # Ignoring mypy error below because of https://github.com/python/mypy/issues/9372
 sort_category_key = cmp_to_key(  # type: ignore[misc]
-    lambda a, b: sort_category(a, b, custom_categories_sort or default_categories_sort)
+    lambda a, b: sort_category(
+        a[0], b[0], custom_categories_sort or default_categories_sort  # type: ignore[index]
+    )
 )
 
 
@@ -299,6 +301,7 @@ def _download_from_cache(
         except (
             requests.exceptions.ReadTimeout,
             requests.exceptions.HTTPError,  # it happens
+            requests.exceptions.ConnectionError,  # e.g. Connection aborted.
         ) as head_err:  # noqa
             logger.warning(
                 f"{head_err.__class__.__name__} sending HEAD request for {ebook_url}"
@@ -318,6 +321,7 @@ def _download_from_cache(
             except (
                 requests.exceptions.ReadTimeout,
                 requests.exceptions.HTTPError,  # it happens
+                requests.exceptions.ConnectionError,  # e.g. Connection aborted.
             ) as err:
                 if attempt < recipe.retry_attempts:
                     logger.warning(
@@ -863,17 +867,15 @@ def run(
             recipe_descriptions[books[0].recipe.slug] = books[0].description
 
         # display recipes without output
-        category_recipes = [r for r in recipes if r.category == category]
-        for r in category_recipes:
-            if not r.name:
-                continue
-            success = False
-            for recipe_name, _ in generated_items:
-                if recipe_name == r.name:
-                    success = True
-                    break
-            if success:
-                continue
+        generated_recipe_names = [recipe_name for recipe_name, _ in generated_items]
+        unsuccessful_category_recipes = [
+            r
+            for r in recipes
+            if r.category == category
+            and r.name
+            and r.name not in generated_recipe_names
+        ]
+        for r in unsuccessful_category_recipes:
             publication_listing.append(
                 f"""<li id="{r.slug}" data-cat-id="cat-{slugify(r.category, True)}" data-cat-name="{r.category}" class="not-available" data-tags="{"" if not r.tags else "#" + " #".join(r.tags)}">
                 <span class="title">{r.name}</span>
@@ -918,13 +920,12 @@ def run(
         open(site_html, "r", encoding="utf-8") as f_in,
         Path(publish_folder, "index.html").open("w", encoding="utf-8") as f_out,
     ):
-        site_css = f_site_css.read()
         site_js = f"var RECIPE_DESCRIPTIONS = {json.dumps(recipe_descriptions)};"
         site_js += f"var RECIPE_COVERS = {json.dumps(recipe_covers)};"
         site_js += f_site_js.read()
         html_output = f_in.read().format(
             listing=listing,
-            css=site_css,
+            css=f_site_css.read(),
             refreshed_ts=int(time.time() * 1000),
             refreshed_dt=datetime.now(tz=timezone.utc),
             js=site_js,

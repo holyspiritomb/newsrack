@@ -162,7 +162,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Magazines",
-        enable_on=(first_n_days_of_month(7, -4) or last_n_days_of_month(7, -4))
+        enable_on=(first_n_days_of_month(4, -4) or last_n_days_of_month(10, -4))
         and onlyat_hours(list(range(8, 22)), -4),
     ),
     Recipe(
@@ -244,11 +244,22 @@ recipes: List[Recipe] = [
         ),
     ),
     Recipe(
+        recipe="kirkus",
+        slug="kirkus",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Arts & Culture",
+        tags=["books", "reviews"],
+        overwrite_cover=False,
+        enable_on=onlyat_hours(list(range(0, 6)))
+        and (first_n_days_of_month(3) or last_n_days_of_month(3)),
+    ),
+    Recipe(
         recipe="knowable-magazine",
         slug="knowable-magazine",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Magazines",
+        category="Online Magazines",
         tags=["science"],
         cover_options=CoverOptions(logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"),
     ),
@@ -359,7 +370,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Magazines",
         overwrite_cover=False,
-        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+        enable_on=(first_n_days_of_month(4) or last_n_days_of_month(10))
         and onlyat_hours(list(range(8, 16))),
     ),
     Recipe(
@@ -395,7 +406,7 @@ recipes: List[Recipe] = [
         timeout=900,
         retry_attempts=0,
         enable_on=onlyat_hours(
-            list(range(0, 4)) + list(range(8, 18)) + list(range(22, 24))
+            list(range(0, 8)) + list(range(12, 18)) + list(range(22, 24))
         ),
         cover_options=CoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
@@ -407,9 +418,9 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="News",
-        timeout=900,
+        timeout=1320,
         retry_attempts=0,
-        enable_on=onlyat_hours(list(range(4, 8))),
+        enable_on=onlyat_hours(list(range(8, 12))),
         cover_options=CoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
         ),
@@ -469,6 +480,16 @@ recipes: List[Recipe] = [
         cover_options=CoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/ProPublica_text_logo.svg/1280px-ProPublica_text_logo.svg.png"
         ),
+    ),
+    Recipe(
+        recipe="prospect-magazine",
+        slug="prospect-magazine",
+        src_ext="mobi",
+        target_ext=["epub"],
+        overwrite_cover=False,
+        category="Magazines",
+        tags=["europe", "britain"],
+        enable_on=onlyon_weekdays([0, 2, 4, 6]) and onlyat_hours(list(range(6, 12))),
     ),
     Recipe(
         recipe="quanta-magazine",
@@ -602,6 +623,19 @@ recipes: List[Recipe] = [
         cover_options=CoverOptions(
             logo_path_or_url="https://www.washingtonpost.com/sf/brand-connect/dell-technologies/the-economics-of-change/media/wp_logo_black.png"
         ),
+        enable_on=onlyat_hours(list(range(0, 8)) + list(range(12, 24))),
+    ),
+    Recipe(
+        recipe="wapo-paper",
+        slug="wapo-print",
+        src_ext="mobi",
+        target_ext=["epub"],
+        timeout=600,
+        category="News",
+        cover_options=CoverOptions(
+            logo_path_or_url="https://www.washingtonpost.com/sf/brand-connect/dell-technologies/the-economics-of-change/media/wp_logo_black.png"
+        ),
+        enable_on=onlyat_hours(list(range(8, 12))),
     ),
     Recipe(
         recipe="wired",
@@ -617,15 +651,16 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
     ),
-    Recipe(
-        recipe="world-today",
-        slug="world-today",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Magazines",
-        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
-        and onlyat_hours(list(range(4, 12))),
-    ),
+    # # Blocked HTTP403 with captcha challenge
+    # Recipe(
+    #     recipe="world-today",
+    #     slug="world-today",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Magazines",
+    #     enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+    #     and onlyat_hours(list(range(4, 12))),
+    # ),
     Recipe(
         recipe="wsj-paper",
         slug="wsj-print",

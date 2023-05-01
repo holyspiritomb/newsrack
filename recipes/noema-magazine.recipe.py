@@ -2,19 +2,13 @@
 #
 # This software is released under the GNU General Public License v3.0
 # https://opensource.org/licenses/GPL-3.0
-import html
 import json
 import os
 import sys
-from datetime import datetime
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-try:
-    from recipes_shared import WordPressNewsrackRecipe
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import WordPressNewsrackRecipe
+from recipes_shared import WordPressNewsrackRecipe
 
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe
@@ -116,7 +110,7 @@ class NoemaMagazine(WordPressNewsrackRecipe, BasicNewsRecipe):
     def preprocess_raw_html(self, raw_html, url):
         # formulate the api response into html
         post = json.loads(raw_html)
-        date_published_loc = datetime.strptime(post["date"], "%Y-%m-%dT%H:%M:%S")
+        date_published_loc = self.parse_datetime(post["date"])
         post_authors = self.extract_authors(post)
         categories = self.extract_categories(post)
 

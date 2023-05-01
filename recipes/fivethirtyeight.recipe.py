@@ -9,17 +9,12 @@ fivethirtyeight.com
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import timezone
 from html import unescape
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-
-try:
-    from recipes_shared import WordPressNewsrackRecipe, format_title
-except ImportError:
-    # just for Pycharm to pick up for auto-complete
-    from includes.recipes_shared import WordPressNewsrackRecipe, format_title
+from recipes_shared import WordPressNewsrackRecipe, format_title
 
 from calibre.ptempfile import PersistentTemporaryDirectory, PersistentTemporaryFile
 from calibre.web.feeds.news import BasicNewsRecipe
@@ -88,12 +83,12 @@ class FiveThirtyEight(WordPressNewsrackRecipe, BasicNewsRecipe):
 
             latest_post_date = None
             for p in posts:
-                post_update_dt = datetime.strptime(
-                    p["modified_gmt"], "%Y-%m-%dT%H:%M:%S"
-                ).replace(tzinfo=timezone.utc)
+                post_update_dt = self.parse_datetime(p["modified_gmt"]).replace(
+                    tzinfo=timezone.utc
+                )
                 if not self.pub_date or post_update_dt > self.pub_date:
                     self.pub_date = post_update_dt
-                post_date = datetime.strptime(p["date"], "%Y-%m-%dT%H:%M:%S")
+                post_date = self.parse_datetime(p["date"])
                 if not latest_post_date or post_date > latest_post_date:
                     latest_post_date = post_date
                     self.title = format_title(_name, post_date)
