@@ -3,10 +3,12 @@
 
 import os
 import sys
-
+import json
+import re
 from calibre import browser
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
+from calibre.web.feeds import Feed
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 from calibre.utils.date import utcnow, parse_date
 
@@ -23,10 +25,10 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
     description = "Live Science is a science news website that publishes stories in a wide variety of topics such as Space, Animals, Health, Archaeology, Human behavior and Planet Earth. Sourced from https://www.livescience.com/feeds/all"
     __author__ = 'yodha8'
     language = 'en'
-    oldest_article = 6
+    oldest_article = 7
     max_articles_per_feed = 100
     no_stylesheets = True
-    no_javascript = True
+    remove_javascript = False
     auto_cleanup = False
     use_embedded_content = False
 
@@ -46,12 +48,24 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
     ]
     remove_tags = [
         dict(name="div", class_="ad-unit"),
+        dict(name="source", attrs={"type": "image/webp"}),
         dict(name="nav", class_="socialite-widget"),
         dict(name="div", class_="fancy-box"),
     ]
     remove_attributes = [
         "style"
     ]
+
+    extra_css = """
+        div.gallery-el{max-width:90vw;}
+        img{max-width:90vw;}
+        .gallery-el img{max-width:90vw;}
+        div.image-caption,span.caption-text,span.credit{font-size:0.8rem;}
+        #article-body p{font-size:1rem;}
+        h1{font-size:1.75rem;}
+        h2{font-size:1.5rem;}
+        p.strapline{font-size:1.5rem;font-style:italic;}
+    """
 
     def populate_article_metadata(self, article, __, _):
 
@@ -60,14 +74,85 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
             self.title = format_title(_name, article.utctime)
 
     def parse_feeds(self):
-        feeds = BasicNewsRecipe.parse_feeds(self)
-        for feed in feeds:
+        parsed_feeds = BasicNewsRecipe.parse_feeds(self)
+        for feed in parsed_feeds:
             for article in feed.articles[:]:
-                # self.log.info(f"article.title is: {article.title}")
                 if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
                     self.log.warn(f"removing {article.title} from feed")
                     feed.articles.remove(article)
-        return feeds
+        articles = []
+        for feed in parsed_feeds:
+            articles.extend(feed.articles)
+        articles = sorted(articles, key=lambda a: a.utctime, reverse=True)
+        new_feeds = []
+        curr_feed = None
+        parsed_feed = parsed_feeds[0]
+        for i, a in enumerate(articles, start=1):
+            date_published = a.utctime.replace(tzinfo=timezone.utc)
+            date_published_loc = date_published.astimezone(
+                timezone(offset=timedelta(hours=-4))
+            )
+            article_index = f"{date_published_loc:%B %-d, %Y}"
+            if i == 1:
+                curr_feed = Feed(log=parsed_feed.logger)
+                curr_feed.title = article_index
+                curr_feed.description = parsed_feed.description
+                curr_feed.image_url = parsed_feed.image_url
+                curr_feed.image_height = parsed_feed.image_height
+                curr_feed.image_alt = parsed_feed.image_alt
+                curr_feed.oldest_article = parsed_feed.oldest_article
+                curr_feed.articles = []
+                curr_feed.articles.append(a)
+                continue
+            if curr_feed.title == article_index:
+                curr_feed.articles.append(a)
+            else:
+                new_feeds.append(curr_feed)
+                curr_feed = Feed(log=parsed_feed.logger)
+                curr_feed.title = article_index
+                curr_feed.description = parsed_feed.description
+                curr_feed.image_url = parsed_feed.image_url
+                curr_feed.image_height = parsed_feed.image_height
+                curr_feed.image_alt = parsed_feed.image_alt
+                curr_feed.oldest_article = parsed_feed.oldest_article
+                curr_feed.articles = []
+                curr_feed.articles.append(a)
+            if i == len(articles):
+                # last article
+                new_feeds.append(curr_feed)
+        return new_feeds
+
+    def preprocess_raw_html(self, raw_html, url):
+        soup = BeautifulSoup(raw_html)
+        body = soup.find(attrs={"id": "article-body"})
+        for img in body.find_all("img", attrs={"src": "https://vanilla.futurecdn.net/livescience/media/img/missing-image.svg"}):
+            dsrcset = img["data-srcset"]
+            if dsrcset:
+                newsrc = dsrcset.split(",")[-1].strip().split()[0]
+                img["src"] = newsrc
+        div = body.find("div", attrs={"class": "imageGallery-wrapper"})
+        if div:
+            if div.previous_sibling.name == "script":
+                imgreg = re.compile("var data = ({.*?});", re.DOTALL)
+                js = div.previous_sibling.string
+                matches = imgreg.search(js)
+                imgjson = matches.group(1)
+                galleryj = json.loads(imgjson)
+                gallerydata = galleryj["galleryData"]
+                img_total = len(gallerydata)
+                newdiv = soup.new_tag("div", attrs={"class": "gallery-el"})
+                for i in range(0, img_total):
+                    imgsrc = gallerydata[i]["image"]["src"]
+                    imgalt = gallerydata[i]["image"]["alt"]
+                    imgcapt = gallerydata[i]["image"]["caption"]
+                    thisimg = soup.new_tag("img", attrs={"src": imgsrc, "alt": imgalt})
+                    cap = soup.new_tag("div", attrs={"class": "image-caption"})
+                    cap.string = imgcapt
+                    newdiv.append(thisimg)
+                    newdiv.append(cap)
+                div.insert_before(newdiv)
+                div.extract()
+        return str(soup)
 
     def get_browser(self, *a, **kw):
         kw[
