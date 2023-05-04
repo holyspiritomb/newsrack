@@ -179,7 +179,7 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
                     self.log.warn(f"removing {article.title} from feed")
                     feed.articles.remove(article)
                     continue
-                for i in ["GENDER", "TRANS", "ZEPHYR"]:
+                for i in ["GENDER", "TRANS ", "ZEPHYR"]:
                     if i in article.title.upper() or i in article.summary.upper():
                         self.log.warn(article.title)
                         self.log.warn(article.summary)
