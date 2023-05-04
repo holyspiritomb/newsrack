@@ -2,6 +2,7 @@ import os
 import sys
 from datetime import datetime, timezone, tzinfo
 from urllib.parse import urljoin
+from calibre.web.feeds import Feed
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 from calibre.utils.date import utcnow, parse_date
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
@@ -165,12 +166,30 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def parse_feeds(self):
         feeds = BasicNewsRecipe.parse_feeds(self)
+        trans_articles = Feed(self)
+        trans_articles.title = "Trans"
+        trans_articles.image_url = feeds[0].image_url
+        trans_articles.description = "Trans news."
+        trans_articles.articles = []
         for feed in feeds:
             for article in feed.articles[:]:
+                # self.log(article.summary)
                 # self.log(f"article.title is: {article.title}")
                 if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
                     self.log.warn(f"removing {article.title} from feed")
                     feed.articles.remove(article)
+                    continue
+                for i in ["GENDER", "TRANS", "ZEPHYR"]:
+                    if i in article.title.upper() or i in article.summary.upper():
+                        self.log.warn(article.title)
+                        self.log.warn(article.summary)
+                        if article not in trans_articles.articles:
+                            trans_articles.articles.append(article)
+                        feed.articles.remove(article)
+                        break
+                    else:
+                        continue
+        feeds.append(trans_articles)
         return feeds
 
 
