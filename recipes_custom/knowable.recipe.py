@@ -13,6 +13,8 @@ from datetime import timezone, timedelta
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
+from calibre.utils.date import utcnow, parse_date
+from calibre.web.feeds import Feed
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 
 
