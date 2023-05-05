@@ -40,7 +40,7 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     timeout = 60
 
-    oldest_article = 45  # days
+    oldest_article = 30  # days
     max_articles_per_feed = 15
     scale_news_images = (800, 1200)
 
