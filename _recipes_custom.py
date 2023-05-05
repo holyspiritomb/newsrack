@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days
+from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days, every_x_hours
 
 # Define the categories display order, optional
 categories_sort: List[str] = ["News", "Science", "Blogs", "Arts", "Magazines", "Politics"]
@@ -51,6 +51,21 @@ class CustomMonthlyRecipe(Recipe):
 
 recipes: List[Recipe] = [
     CustomOptionsRecipe(
+        recipe="advocate",
+        slug="advocate",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="News",
+        tags=["lgbtq"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://www.advocate.com/media-library/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbWFnZSI6Imh0dHBzOi8vYXNzZXRzLnJibC5tcy8zMjg0MjU0OC9vcmlnaW4ucG5nIiwiZXhwaXJlc19hdCI6MTcxNDcxMzQ4MH0.rZo95Jiq6Ph8PVSZjmnPedqpyEz0RwIhb9oRpSZVIHg/image.png"
+        ),
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="archlinux",
         slug="archlinux",
         src_ext="mobi",
@@ -60,6 +75,9 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Archlinux-logo-standard-version.png/1024px-Archlinux-logo-standard-version.png"
+        ),
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
     ),
     CustomOptionsRecipe(
@@ -73,8 +91,8 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ars_Technica_logo_(2016).svg/1024px-Ars_Technica_logo_(2016).svg.png"
         ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
     ),
     CustomOptionsRecipe(
@@ -85,8 +103,8 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="News",
         tags=["editorial", "commentary"],
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
@@ -111,8 +129,8 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Blogs",
         tags=["science", "linguistics"],
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://i.imgur.com/ScfaQZb.png"
@@ -126,8 +144,8 @@ recipes: List[Recipe] = [
         category="News",
         tags=["editorial", "commentary", "news"],
         overwrite_cover=True,
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=-4
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/The_Forward_logo_2022.svg/1024px-The_Forward_logo_2022.svg.png"
@@ -154,8 +172,8 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science"],
         overwrite_cover=True,
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Live_Science_logo.svg/1024px-Live_Science_logo.svg.png"
@@ -182,8 +200,8 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science", "space"],
         overwrite_cover=True,
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/NASA_Worm_logo.svg/1024px-NASA_Worm_logo.svg.png",
@@ -197,7 +215,7 @@ recipes: List[Recipe] = [
         category="Politics",
         tags=["politics", "commentary"],
         overwrite_cover=True,
-        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 22)), -4),
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 14)), -4),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Nation_logo.svg/1024px-The_Nation_logo.svg.png",
         ),
@@ -210,8 +228,8 @@ recipes: List[Recipe] = [
         category="Magazines",
         tags=["daily", "history", "science"],
         overwrite_cover=True,
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png"
@@ -281,6 +299,9 @@ recipes: List[Recipe] = [
         category="News",
         overwrite_cover=True,
         tags=["news", "politics", "science", "daily"],
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=6, drift=15
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/National_Public_Radio_logo.svg/1024px-National_Public_Radio_logo.svg.png"
         ),
@@ -293,8 +314,8 @@ recipes: List[Recipe] = [
         category="Arts",
         timeout=300,
         retry_attempts=0,
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=-60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
@@ -308,7 +329,9 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Magazines",
-        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=7, drift=60
+        ),
         tags=["philosophy", "commentary", "bimonthly"],
     ),
     CustomMonthlyRecipe(
@@ -319,7 +342,9 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Arts",
         title_date_format="%b %Y",
-        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=7, drift=60
+        ),
         tags=["literature", "arts", "monthly"],
     ),
     CustomOptionsRecipe(
@@ -342,8 +367,8 @@ recipes: List[Recipe] = [
         category="Science",
         overwrite_cover=True,
         tags=["science", "tech", "daily"],
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://i.imgur.com/nQ1lgZZ.png",
@@ -356,7 +381,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Science",
         overwrite_cover=False,
-        enable_on=onlyon_days(list(range(15, 31)), -5)
+        enable_on=onlyon_days(list(range(15, 31)), -4)
         and onlyat_hours(list(range(8, 20)), -4),  # middle of the month?
         tags=["science", "tech", "monthly"],
     ),
@@ -375,7 +400,7 @@ recipes: List[Recipe] = [
         slug="strange-horizons",
         src_ext="mobi",
         target_ext=["epub"],
-        enable_on=onlyon_weekdays([5, 6], -5),
+        enable_on=onlyon_weekdays([5, 6], -4),
         cover_options=CustomCoverOptions(
             logo_path_or_url="http://strangehorizons.com/wordpress/wp-content/themes/strangehorizons/images/sh-logo.jpg"
         ),
@@ -431,7 +456,7 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science", "tech", "monthly"],
         enable_on=(first_n_days_of_month(6) or last_n_days_of_month(6))
-        and onlyat_hours(list(range(2, 20)), -4),
+        and onlyat_hours(list(range(2, 14)), -4),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
