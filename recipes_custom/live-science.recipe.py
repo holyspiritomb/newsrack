@@ -124,6 +124,11 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
 
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
+        head = soup.find("head")
+        parselytags = head.find("meta", attrs={"name": "parsely-tags"})
+        if parselytags:
+            if "type_deal" in parselytags["content"]:
+                self.abort_article("Aborting article that is just a long ad.")
         body = soup.find(attrs={"id": "article-body"})
         for img in body.find_all("img", attrs={"src": "https://vanilla.futurecdn.net/livescience/media/img/missing-image.svg"}):
             dsrcset = img["data-srcset"]
