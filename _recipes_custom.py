@@ -163,7 +163,7 @@ recipes: List[Recipe] = [
         tags=["science"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"
+            logo_path_or_url="https://www.annualreviews.org/pb-assets/knowable-assets/knowablelogo.png"
         ),
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
     ),
@@ -375,7 +375,8 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://i.imgur.com/nQ1lgZZ.png",
+            # logo_path_or_url="https://i.imgur.com/nQ1lgZZ.png",
+            logo_path_or_url="https://www.sciencedaily.com/images/sd-logo.png"
         ),
     ),
     CustomMonthlyRecipe(
