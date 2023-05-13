@@ -371,9 +371,6 @@ recipes: List[Recipe] = [
         category="Science",
         overwrite_cover=True,
         tags=["science", "tech", "daily"],
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
-        ),
         cover_options=CustomCoverOptions(
             # logo_path_or_url="https://i.imgur.com/nQ1lgZZ.png",
             logo_path_or_url="https://www.sciencedaily.com/images/sd-logo.png"
