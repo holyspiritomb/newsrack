@@ -4,7 +4,7 @@ from typing import List
 from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days, every_x_hours
 
 # Define the categories display order, optional
-categories_sort: List[str] = ["Science", "Blogs", "Arts", "News", "Magazines", "Politics"]
+categories_sort: List[str] = ["Science", "Blogs", "Arts", "News", "Magazines", "Politics", "Editorial"]
 
 # Define your custom recipes list here
 # Example: https://github.com/ping/newsrack-fork-test/blob/custom/_recipes_custom.py
@@ -91,10 +91,9 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ars_Technica_logo_(2016).svg/1024px-Ars_Technica_logo_(2016).svg.png"
         ),
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_hours(
-        #     last_run=recipe.last_run, hours=24, drift=15
-        # ),
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
+        ),
     ),
     CustomOptionsRecipe(
         recipe="atlantic",
@@ -102,12 +101,12 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=True,
-        category="News",
+        category="Editorial",
         tags=["editorial", "commentary"],
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_hours(
-        #     last_run=recipe.last_run, hours=24, drift=15
-        # ),
+        # enable_on=False,
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
         ),
@@ -118,11 +117,11 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=False,
-        category="News",
+        category="Editorial",
         tags=["editorial", "commentary"],
-        enable_on=False,
-        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4)
-        # and onlyon_days(list(range(32 - 14, 32)), -4),
+        # enable_on=False,
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4)
+        and onlyon_days(list(range(32 - 14, 32)), -4),
     ),
     CustomOptionsRecipe(
         recipe="duolingo-blog",
@@ -176,7 +175,7 @@ recipes: List[Recipe] = [
         tags=["science"],
         overwrite_cover=True,
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
+            last_run=recipe.last_run, hours=12, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Live_Science_logo.svg/1024px-Live_Science_logo.svg.png"
@@ -204,7 +203,7 @@ recipes: List[Recipe] = [
         tags=["science", "space"],
         overwrite_cover=True,
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
+            last_run=recipe.last_run, hours=12, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/NASA_Worm_logo.svg/1024px-NASA_Worm_logo.svg.png",
@@ -289,7 +288,7 @@ recipes: List[Recipe] = [
         slug="newyorker",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Arts",
+        category="Editorial",
         overwrite_cover=False,
         enable_on=False,
         # enable_on=onlyon_weekdays([1, 3, 5], -5),
@@ -375,6 +374,9 @@ recipes: List[Recipe] = [
             # logo_path_or_url="https://i.imgur.com/nQ1lgZZ.png",
             logo_path_or_url="https://www.sciencedaily.com/images/sd-logo.png"
         ),
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=6, drift=15
+        ),
     ),
     CustomMonthlyRecipe(
         recipe="sciam",
@@ -415,7 +417,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=True,
-        category="Magazines",
+        category="News",
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=60
         ),
@@ -430,7 +432,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=False,
-        category="Magazines",
+        category="Editorial",
         # enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 18)), -4),
         enable_on=False,
         tags=["news", "politics", "weekly"],

@@ -34,7 +34,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     cover_url = 'https://www.wired.com/images/logos/wired.png'
     publisher = 'Conde Nast'
     category = 'news, IT, computers, technology'
-    oldest_article = 1
+    oldest_article = 3
     max_articles_per_feed = 200
     no_stylesheets = True
     encoding = 'utf-8'
@@ -49,7 +49,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
                         vertical-align: baseline;
                         display: inline;
                         }
-        ul li{display: inline}
+        ul:not(.calibre_feed_list) li{display: inline}
     """
     conversion_options = {
         'tags' : 'Science, Technology, Wired Daily, Periodical',
@@ -57,7 +57,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     }
 
     remove_tags = [
-        classes('related-cne-video-component tags-component podcast_42 storyboard inset-left-component social-icons'),
+        classes('related-cne-video-component tags-component podcast_42 storyboard inset-left-component social-icons recirc-most-popular-wrapper'),
         dict(name=['meta', 'link', 'aside']),
         dict(id=['sharing', 'social', 'article-tags', 'sidebar']),
     ]
@@ -69,12 +69,11 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
 
     # https://www.wired.com/about/rss-feeds/
     feeds = [
-        (u'Top Stories', u'https://www.wired.com/feed/rss'),
         (u'AI', u'https://www.wired.com/feed/tag/ai/latest/rss'),
         (u'Business', u'https://www.wired.com/feed/category/business/latest/rss'),
         (u'Culture', u'https://www.wired.com/feed/category/culture/latest/rss'),
-        # (u'Gear', u'https://www.wired.com/feed/category/gear/latest/rss'),
         (u'Ideas', u'https://www.wired.com/feed/category/ideas/latest/rss'),
+        (u'Gear', u'https://www.wired.com/feed/category/gear/latest/rss'),
         (u'Science', u'https://www.wired.com/feed/category/science/latest/rss'),
         (u'Security', u'https://www.wired.com/feed/category/security/latest/rss'),
         (
@@ -85,6 +84,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
             u'Backchannel',
             u'https://www.wired.com/feed/category/backchannel/latest/rss'
         ),
+        (u'Top Stories', u'https://www.wired.com/feed/rss'),
         (u'WIRED Guides', u'https://www.wired.com/feed/tag/wired-guide/latest/rss'),
         #    (u'Photo', u'https://www.wired.com/feed/category/photo/latest/rss'),
     ]
@@ -115,8 +115,12 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
 
     # Wired changes the content it delivers based on cookies, so the
     # following ensures that we send no cookies
-    def get_browser(self, *args, **kwargs):
-        return self
+    def get_browser(self, *a, **kw):
+        kw[
+            "user_agent"
+        ] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+        br = BasicNewsRecipe.get_browser(self, *a, **kw)
+        return br
 
     def clone_browser(self, *args, **kwargs):
         return self.get_browser()
