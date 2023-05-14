@@ -59,7 +59,7 @@ recipes: List[Recipe] = [
         tags=["lgbtq"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://www.advocate.com/media-library/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbWFnZSI6Imh0dHBzOi8vYXNzZXRzLnJibC5tcy8zMjg0MjU0OC9vcmlnaW4ucG5nIiwiZXhwaXJlc19hdCI6MTcxNDcxMzQ4MH0.rZo95Jiq6Ph8PVSZjmnPedqpyEz0RwIhb9oRpSZVIHg/image.png"
+            logo_path_or_url="https://i.imgur.com/kXO3xKG.png"
         ),
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=60
@@ -74,7 +74,7 @@ recipes: List[Recipe] = [
         tags=["tech"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Archlinux-logo-standard-version.png/1024px-Archlinux-logo-standard-version.png"
+            logo_path_or_url="https://i.imgur.com/eWtHvRT.png"
         ),
         enable_on=lambda recipe: every_x_hours(
             last_run=recipe.last_run, hours=24, drift=60
@@ -134,7 +134,8 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://i.imgur.com/ScfaQZb.png"
+            # green
+            logo_path_or_url="https://i.imgur.com/NStqTgw.png"
         ),
     ),
     CustomOptionsRecipe(
@@ -171,7 +172,7 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science"],
         overwrite_cover=True,
-        cover_options=CustomCoverOptions(logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"),
+        cover_options=CustomCoverOptions(logo_path_or_url="https://i.imgur.com/gN9TgA5.png"),
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
     ),
     CustomOptionsRecipe(
@@ -376,7 +377,10 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Science",
         title_date_format="%b %Y",
-        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        # enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=7, drift=60
+        ),
         tags=["science", "monthly"],
         # cover_options=CustomCoverOptions(
         #     logo_path_or_url="https://i.imgur.com/QW9Evsi.png",
@@ -404,8 +408,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         tags=["science", "tech", "daily"],
         cover_options=CustomCoverOptions(
-            # logo_path_or_url="https://i.imgur.com/nQ1lgZZ.png",
-            logo_path_or_url="https://www.sciencedaily.com/images/sd-logo.png"
+            logo_path_or_url="https://i.imgur.com/s1J9BBP.png"
         ),
         enable_on=lambda recipe: every_x_hours(
             last_run=recipe.last_run, hours=6, drift=15
@@ -483,7 +486,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=60
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://www.universetoday.com/wp-content/uploads/2020/10/cropped-cleanutlogo-1.png",
+            logo_path_or_url="https://i.imgur.com/pvzBq1K.png",
         ),
     ),
     CustomOptionsRecipe(
@@ -498,7 +501,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=60
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://whatthefuckjusthappenedtoday.com/public/wtfjht-t.jpg"
+            logo_path_or_url="https://i.imgur.com/0yt8645.jpg"
         ),
     ),
     CustomMonthlyRecipe(

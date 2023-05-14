@@ -20,7 +20,7 @@ class ArchLinux(BasicNewsrackRecipe, BasicNewsRecipe):
     auto_cleanup = True
     description = "Arch Linux updates and news."
     use_embedded_content = True
-    masthead_url = "https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png"
+    masthead_url = "https://archlinux.org/static/logos/archlinux-logo-black-scalable.f931920e6cdb.svg"
     conversion_options = {
         'tags': 'Arch Linux',
         'authors': 'newsrack',

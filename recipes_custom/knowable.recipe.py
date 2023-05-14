@@ -25,8 +25,7 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "ping"
     description = (
-        """Knowable Magazine explores the real-world significance of scholarly work through a journalistic lens. We report on the current state of play across a wide variety of fields — from agriculture to high-energy physics; biochemistry to water security; the origins of the universe to psychology.
-        https://knowablemagazine.org/"""
+        """Knowable Magazine explores the real-world significance of scholarly work through a journalistic lens. We report on the current state of play across a wide variety of fields — from agriculture to high-energy physics; biochemistry to water security; the origins of the universe to psychology. https://knowablemagazine.org/"""
     )
     conversion_options = {
         'tags' : 'Science, Knowable Magazine, Periodical',

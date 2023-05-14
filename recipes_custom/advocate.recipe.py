@@ -18,7 +18,7 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     recursions = 0
     remove_empty_feeds = True
-    masthead_url = "https://upload.wikimedia.org/wikipedia/en/4/46/Advocate1.jpg"
+    masthead_url = "https://i.imgur.com/kXO3xKG.png"
     # masthead_url = "https://www.advocate.com/media-library/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbWFnZSI6Imh0dHBzOi8vYXNzZXRzLnJibC5tcy8zMjg0MjU0OC9vcmlnaW4ucG5nIiwiZXhwaXJlc19hdCI6MTcxNDcxMzQ4MH0.rZo95Jiq6Ph8PVSZjmnPedqpyEz0RwIhb9oRpSZVIHg/image.png"
 
     description = "Gay, lesbian, bisexual, transgender, queer news leader including politics, commentary, arts and entertainment - your source for LGBTQ news for over 50 years."
