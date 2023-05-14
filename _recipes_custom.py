@@ -4,7 +4,7 @@ from typing import List
 from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days, every_x_hours
 
 # Define the categories display order, optional
-categories_sort: List[str] = ["Science", "Blogs", "Arts", "News", "Magazines", "Politics", "Editorial"]
+categories_sort: List[str] = ["Science", "Blogs", "Arts & Culture", "News", "Magazines", "Politics", "Editorial"]
 
 # Define your custom recipes list here
 # Example: https://github.com/ping/newsrack-fork-test/blob/custom/_recipes_custom.py
@@ -167,6 +167,19 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
     ),
     CustomOptionsRecipe(
+        recipe="lithub",
+        slug="lithub",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Arts & Culture",
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
+        and onlyat_hours(list(range(10, 17)), -5),
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://s26162.pcdn.co/wp-content/themes/rigel/images/social_logo.png"
+        ),
+        tags=["literature", "books"],
+    ),
+    CustomOptionsRecipe(
         recipe="live-science",
         slug="live-science",
         src_ext="mobi",
@@ -314,7 +327,7 @@ recipes: List[Recipe] = [
         slug="nyt-books",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Arts",
+        category="Arts & Culture",
         timeout=300,
         retry_attempts=0,
         enable_on=lambda recipe: every_x_hours(
@@ -331,7 +344,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=False,
-        category="Magazines",
+        category="Arts & Culture",
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=7, drift=60
         ),
@@ -343,7 +356,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=False,
-        category="Arts",
+        category="Arts & Culture",
         title_date_format="%b %Y",
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=7, drift=60
@@ -408,7 +421,7 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="http://strangehorizons.com/wordpress/wp-content/themes/strangehorizons/images/sh-logo.jpg"
         ),
-        category="Arts",
+        category="Arts & Culture",
         tags=["literature", "arts", "weekly"],
     ),
     CustomOptionsRecipe(
