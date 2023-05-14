@@ -50,6 +50,7 @@ class PsychologyToday(BasicNewsrackRecipe, BasicNewsRecipe):
         a_div = presoup.find("div", class_='magazine-thumbnail')
         a = a_div.find("a")
         # self.timefmt = ' [%s]' % a['title']
+        self.title = f"{_name}: {a['title']}"
         self.cover_url = absurl(a.img['src'])
         soup = self.index_to_soup(absurl(a['href']))
         articles = []
