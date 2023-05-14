@@ -33,7 +33,8 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
         'authors' : 'newsrack',
     }
     # masthead_url = "https://knowablemagazine.org/pb-assets/knowable-assets/images/logo-1586554394067.svg"
-    masthead_url = "https://www.annualreviews.org/pb-assets/knowable-assets/knowablelogo.png"
+    # masthead_url = "https://www.annualreviews.org/pb-assets/knowable-assets/knowablelogo.png"
+    masthead_url = "https://knowablemagazine.org/pb-assets/knowable-assets/images/logo-1586554394067.svg"
     language = "en"
     encoding = "utf-8"
     publication_type = "magazine"

@@ -120,8 +120,7 @@ recipes: List[Recipe] = [
         category="Editorial",
         tags=["editorial", "commentary"],
         # enable_on=False,
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4)
-        and onlyon_days(list(range(32 - 14, 32)), -4),
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
     ),
     CustomOptionsRecipe(
         recipe="duolingo-blog",
@@ -136,6 +135,17 @@ recipes: List[Recipe] = [
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://i.imgur.com/ScfaQZb.png"
+        ),
+    ),
+    CustomOptionsRecipe(
+        recipe="fivethirtyeight",
+        slug="fivethirtyeight",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Politics",
+        tags=["politics"],
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/FiveThirtyEight_Logo.svg/1024px-FiveThirtyEight_Logo.svg.png"
         ),
     ),
     CustomOptionsRecipe(
@@ -161,9 +171,7 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science"],
         overwrite_cover=True,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://www.annualreviews.org/pb-assets/knowable-assets/knowablelogo.png"
-        ),
+        cover_options=CustomCoverOptions(logo_path_or_url="https://i.imgur.com/OMxGtzQ.jpg"),
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
     ),
     CustomOptionsRecipe(
@@ -244,7 +252,7 @@ recipes: List[Recipe] = [
         tags=["daily", "history", "science"],
         overwrite_cover=True,
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
+            last_run=recipe.last_run, hours=12, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png"
@@ -274,13 +282,14 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([2, 4, 5], 0),
     ),
     CustomOptionsRecipe(
-        recipe="new-republic",
-        slug="new-republic",
+        recipe="new-republic-magazine",
+        slug="new-republic-magazine",
         src_ext="mobi",
         target_ext=["epub"],
         category="Politics",
         overwrite_cover=False,
-        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7)),
+        enable_on=(first_n_days_of_month(4) or last_n_days_of_month(10))
+        and onlyat_hours(list(range(8, 16))),
         tags=["politics", "commentary"],
     ),
     CustomOptionsRecipe(
@@ -304,7 +313,7 @@ recipes: List[Recipe] = [
         category="Editorial",
         overwrite_cover=False,
         enable_on=False,
-        # enable_on=onlyon_weekdays([1, 3, 5], -5),
+        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
         tags=["editorial", "commentary", "weekly"],
     ),
     CustomOptionsRecipe(
@@ -323,16 +332,14 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
-        recipe="nyt-books",
-        slug="nyt-books",
+        recipe="nytimes-books",
+        slug="nytimes-books",
         src_ext="mobi",
         target_ext=["epub"],
         category="Arts & Culture",
         timeout=300,
         retry_attempts=0,
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
-        ),
+        enable_on=onlyat_hours(list(range(18, 22))),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
         ),
@@ -358,18 +365,31 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Arts & Culture",
         title_date_format="%b %Y",
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=7, drift=60
-        ),
+        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
         tags=["literature", "arts", "monthly"],
     ),
+    CustomMonthlyRecipe(
+        recipe="psychology-today",
+        slug="psychology-today",
+        src_ext="mobi",
+        target_ext=["epub"],
+        overwrite_cover=False,
+        category="Science",
+        title_date_format="%b %Y",
+        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        tags=["science", "monthly"],
+        # cover_options=CustomCoverOptions(
+        #     logo_path_or_url="https://i.imgur.com/QW9Evsi.png",
+        # ),
+    ),
     CustomOptionsRecipe(
-        recipe="quanta",
-        slug="quanta",
+        recipe="quanta-magazine",
+        slug="quanta-magazine",
         src_ext="mobi",
         target_ext=["epub"],
         category="Science",
-        enable_on=onlyon_weekdays([0, 2, 4], -5),
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
+        and onlyat_hours(list(range(8, 14))),
         tags=["science", "weekly"],
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/640px-Quanta_Magazine_Logo_05.2022.svg.png",
@@ -392,23 +412,24 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomMonthlyRecipe(
-        recipe="sciam",
-        slug="sciam",
+        recipe="scientific-american",
+        slug="scientific-american",
         src_ext="mobi",
         target_ext=["epub"],
         category="Science",
         overwrite_cover=False,
-        enable_on=onlyon_days(list(range(15, 31)), -4)
+        enable_on=onlyon_days(list(range(15, 31)), -5)  # middle of the month?
         and onlyat_hours(list(range(8, 20)), -4),  # middle of the month?
         tags=["science", "tech", "monthly"],
     ),
     CustomMonthlyRecipe(
-        recipe="smithsonian-mag",
-        slug="smithsonian-mag",
+        recipe="smithsonian-magazine",
+        slug="smithsonian-magazine",
         src_ext="mobi",
         target_ext=["epub"],
         category="Magazines",
-        enable_on=onlyon_days(list(range(16, 31)), -5),
+        enable_on=onlyon_days(list(range(16, 31)), -5)
+        and onlyat_hours(list(range(10, 19)), -5),
         overwrite_cover=False,
         tags=["science", "history", "monthly"],
     ),
@@ -474,22 +495,22 @@ recipes: List[Recipe] = [
         category="News",
         tags=["daily"],
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
+            last_run=recipe.last_run, days=1, drift=60
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://whatthefuckjusthappenedtoday.com/public/wtfjht-t.jpg"
         ),
     ),
     CustomMonthlyRecipe(
-        recipe="wired-mag",
-        slug="wired-mag",
+        recipe="wired",
+        slug="wired",
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=True,
         category="Science",
         tags=["science", "tech", "monthly"],
-        enable_on=(first_n_days_of_month(6) or last_n_days_of_month(6))
-        and onlyat_hours(list(range(2, 14)), -4),
+        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+        and onlyat_hours(list(range(10, 18))),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
@@ -502,10 +523,9 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Science",
         tags=["science", "tech", "daily"],
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_days(
-        #     last_run=recipe.last_run, days=1, drift=0
-        # ),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
