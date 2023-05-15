@@ -30,8 +30,7 @@ class Duolingo(BasicNewsrackRecipe, BasicNewsRecipe):
     no_stylesheets = True
     remove_attributes = ["style"]
     # recursions = 1
-    # masthead_url = "https://upload.wikimedia.org/wikipedia/commons/5/5c/Duolingo_logo_(2019).svg"
-    masthead_url = "https://i.imgur.com/mnAT4B4.png"
+    masthead_url = "https://upload.wikimedia.org/wikipedia/commons/5/5c/Duolingo_logo_(2019).svg"
     description = (
         '''Read about how Duolingo works, and how our learning scientists are working to make education fun and accessible to everyone. Generated from https://blog.duolingo.com'''
     )

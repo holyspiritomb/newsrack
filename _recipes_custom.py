@@ -59,7 +59,7 @@ recipes: List[Recipe] = [
         tags=["lgbtq"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://i.imgur.com/kXO3xKG.png"
+            logo_path_or_url="static/img/advocate.png"
         ),
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=60
@@ -74,7 +74,7 @@ recipes: List[Recipe] = [
         tags=["tech"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://i.imgur.com/eWtHvRT.png"
+            logo_path_or_url="static/img/archlinux.png"
         ),
         enable_on=lambda recipe: every_x_hours(
             last_run=recipe.last_run, hours=24, drift=60
@@ -92,7 +92,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ars_Technica_logo_(2016).svg/1024px-Ars_Technica_logo_(2016).svg.png"
         ),
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
+            last_run=recipe.last_run, hours=24, drift=60
         ),
     ),
     CustomOptionsRecipe(
@@ -134,8 +134,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
-            # green
-            logo_path_or_url="https://i.imgur.com/NStqTgw.png"
+            logo_path_or_url="static/img/duolingo-green.png"
         ),
     ),
     CustomOptionsRecipe(
@@ -172,7 +171,7 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science"],
         overwrite_cover=True,
-        cover_options=CustomCoverOptions(logo_path_or_url="https://i.imgur.com/gN9TgA5.png"),
+        cover_options=CustomCoverOptions(logo_path_or_url="static/img/knowable.png"),
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
     ),
     CustomOptionsRecipe(
@@ -382,9 +381,6 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=7, drift=60
         ),
         tags=["science", "monthly"],
-        # cover_options=CustomCoverOptions(
-        #     logo_path_or_url="https://i.imgur.com/QW9Evsi.png",
-        # ),
     ),
     CustomOptionsRecipe(
         recipe="quanta-magazine",
@@ -408,7 +404,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         tags=["science", "tech", "daily"],
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://i.imgur.com/s1J9BBP.png"
+            logo_path_or_url="static/img/science-daily.png"
         ),
         enable_on=lambda recipe: every_x_hours(
             last_run=recipe.last_run, hours=6, drift=15
@@ -486,7 +482,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=60
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://i.imgur.com/pvzBq1K.png",
+            logo_path_or_url="static/img/universe-today.png",
         ),
     ),
     CustomOptionsRecipe(
@@ -501,7 +497,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=60
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://i.imgur.com/0yt8645.jpg"
+            logo_path_or_url="static/img/wtfjht-t.jpg"
         ),
     ),
     CustomMonthlyRecipe(

@@ -40,7 +40,7 @@ class PsychologyToday(BasicNewsrackRecipe, BasicNewsRecipe):
     encoding = 'UTF-8'
     no_stylesheets = True
     publication_type = 'magazine'
-    masthead_url = "https://i.imgur.com/QW9Evsi.png"
+    # masthead_url = "https://i.imgur.com/QW9Evsi.png"
 
     keep_only_tags = [dict(attrs={'id': 'block-pt-content'})]
     remove_tags = [classes('pt-social-media')]
