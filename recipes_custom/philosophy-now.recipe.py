@@ -11,6 +11,7 @@ from recipes_shared import BasicNewsrackRecipe
 
 _name = 'Philosophy Now'
 
+
 class PhilosophyNow(BasicNewsRecipe, BasicNewsrackRecipe):
 
     title = _name
@@ -38,12 +39,17 @@ class PhilosophyNow(BasicNewsRecipe, BasicNewsrackRecipe):
     }
 
     def parse_index(self):
+        nr_soup = self.index_to_soup("https://holyspiritomb.github.io/newsrack/")
+        nr_issue_date = nr_soup.find("li", id="philosophy-now").find("span", class_="title").string[16:]
         soup = self.index_to_soup('https://philosophynow.org/')
         div = soup.find('div', attrs={'id': 'aside_issue_cover'})
         url = div.find('a', href=True)['href']
         issue_date = div.find('p', attrs={'id': 'aside_issue_date'})
         self.log('Issue date found: ', self.tag_to_string(issue_date).strip())
         cleaned_issue_date = self.tag_to_string(issue_date).strip()
+        if nr_issue_date:
+            if nr_issue_date == cleaned_issue_date:
+                self.abort_recipe_processing("We have this issue.")
         self.title = f"{_name}: {cleaned_issue_date}"
         self.log('Added title: ', self.title)
         for issue in div.findAll('div', attrs={'id': 'aside_issue_text'}):
@@ -63,6 +69,8 @@ class PhilosophyNow(BasicNewsRecipe, BasicNewsrackRecipe):
             des = h2.find_next_sibling('p')
             if des:
                 desc = self.tag_to_string(des)
+            else:
+                desc = ""
             h3 = h2.find_previous_sibling('h3')
             section_title = self.tag_to_string(h3).title()
             self.log('\t', title)

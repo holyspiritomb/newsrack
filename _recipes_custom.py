@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days, every_x_hours
+from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days, every_x_hours, get_local_now
 
 # Define the categories display order, optional
 categories_sort: List[str] = ["Science", "Blogs", "Arts & Culture", "News", "Magazines", "Politics", "Editorial"]
@@ -47,6 +47,20 @@ class CustomMonthlyRecipe(Recipe):
         self.conv_options = {
             "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'"],
         }
+
+
+def bimonthly_odd(offset: float = 0.0):
+    if get_local_now(offset).month % 2 != 0:
+        return True
+    else:
+        return False
+
+
+def bimonthly_even(offset: float = 0.0):
+    if get_local_now(offset).month % 2 == 0:
+        return True
+    else:
+        return False
 
 
 recipes: List[Recipe] = [
@@ -131,7 +145,7 @@ recipes: List[Recipe] = [
         category="Blogs",
         tags=["science", "linguistics"],
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
+            last_run=recipe.last_run, hours=12, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="static/img/duolingo-green.png"
@@ -364,7 +378,6 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Arts & Culture",
-        title_date_format="%b %Y",
         enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
         tags=["literature", "arts", "monthly"],
     ),
