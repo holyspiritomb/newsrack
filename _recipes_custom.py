@@ -190,6 +190,19 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
+        recipe="gender-analysis",
+        slug="gender-analysis",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Blogs",
+        overwrite_cover=True,
+        tags=["science", "trans", "lgbtq"],
+        cover_options=CustomCoverOptions(
+            # logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Transgender_Pride_flag.svg/1024px-Transgender_Pride_flag.svg.png"
+            logo_path_or_url="https://genderanalysis.net/wp-content/uploads/2017/05/newgabanner.png"
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="knowable",
         slug="knowable",
         src_ext="mobi",
