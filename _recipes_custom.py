@@ -152,6 +152,18 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
+        recipe="erin",
+        slug="erin",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="News",
+        overwrite_cover=True,
+        tags=["news", "trans", "lgbtq"],
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Transgender_Pride_flag.svg/1024px-Transgender_Pride_flag.svg.png"
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="fivethirtyeight",
         slug="fivethirtyeight",
         src_ext="mobi",
