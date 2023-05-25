@@ -65,6 +65,21 @@ def bimonthly_even(offset: float = 0.0):
 
 recipes: List[Recipe] = [
     CustomOptionsRecipe(
+        recipe="additude",
+        slug="additude",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Blogs",
+        tags=["magazine"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="static/img/additude.png"
+        ),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="advocate",
         slug="advocate",
         src_ext="mobi",
