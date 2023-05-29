@@ -270,6 +270,21 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
+        recipe="msf",
+        slug="msf",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="News",
+        overwrite_cover=True,
+        tags=["news"],
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://upload.wikimedia.org/wikipedia/en/thumb/b/bd/Msf_logo.svg/1024px-Msf_logo.svg.png"
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="nasa",
         slug="nasa",
         src_ext="mobi",
