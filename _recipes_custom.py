@@ -95,6 +95,21 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
+        recipe="aiweirdness",
+        slug="aiweirdness",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Blogs",
+        tags=["science", "tech"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://www.aiweirdness.com/content/images/2021/03/ai_weirdness_with_neural_net_box.png"
+        ),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="archlinux",
         slug="archlinux",
         src_ext="mobi",
