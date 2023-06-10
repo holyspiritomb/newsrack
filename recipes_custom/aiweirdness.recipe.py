@@ -16,7 +16,6 @@ class AIWeirdness(BasicNewsrackRecipe, BasicNewsRecipe):
     recursions = 0
     remove_empty_feeds = True
     masthead_url = "https://www.aiweirdness.com/content/images/2021/03/ai_weirdness_with_neural_net_box.png"
-
     description = "AI Weirdness: the strange side of machine learning. https://www.aiweirdness.com/"
     __author__ = 'holyspiritomb'
     no_stylesheets = True
