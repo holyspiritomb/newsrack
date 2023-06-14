@@ -6,7 +6,9 @@ sciencedaily.com
 '''
 
 import os
+import re
 import sys
+
 from calibre import browser
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 from calibre.utils.date import utcnow, parse_date
@@ -28,7 +30,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         'authors' : 'newsrack',
     }
     masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/static/img/science-daily.png"
-    oldest_article = 7
+    oldest_article = 1
     remove_empty_feeds = True
     max_articles_per_feed = 25
     use_embedded_content = False
@@ -101,35 +103,35 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         # (u'Top Technology', u'https://www.sciencedaily.com/rss/top/technology.xml'),
         # (u'Top Society', u'https://www.sciencedaily.com/rss/top/society.xml'),
         ('ADHD', 'https://www.sciencedaily.com/rss/mind_brain/add_and_adhd.xml'),
-        ("Alzheimer's", "https://www.sciencedaily.com/rss/mind_brain/alzheimer's.xml"),
-        ("Autism", "https://www.sciencedaily.com/rss/mind_brain/autism.xml"),
-        ("Behavior", "https://www.sciencedaily.com/rss/mind_brain/behavior.xml"),
-        ("Gender Difference", "https://www.sciencedaily.com/rss/mind_brain/gender_difference.xml"),
-        ("Language Acquisition", "https://www.sciencedaily.com/rss/mind_brain/language_acquisition.xml"),
-        ("Racial Issues", "https://www.sciencedaily.com/rss/mind_brain/racial_issues.xml"),
-        ('Obstructive Sleep Apnea', 'https://www.sciencedaily.com/rss/mind_brain/obstructive_sleep_apnea.xml'),
-        ("Psychiatry", "https://www.sciencedaily.com/rss/mind_brain/psychiatry.xml"),
-        ("Psychology", "https://www.sciencedaily.com/rss/mind_brain/psychology.xml"),
-        ('Schizophrenia', 'https://www.sciencedaily.com/rss/mind_brain/schizophrenia.xml'),
-        ('Sleep Disorders', 'https://www.sciencedaily.com/rss/mind_brain/sleep_disorders.xml'),
-        ('Mind and Brain', 'https://www.sciencedaily.com/rss/mind_brain.xml'),
-        ("Eating Disorders", "https://www.sciencedaily.com/rss/health_medicine/eating_disorders.xml"),
-        ("IBS", "https://www.sciencedaily.com/rss/health_medicine/irritable_bowel_syndrome.xml"),
-        ("Sexual Health", "https://www.sciencedaily.com/rss/health_medicine/sexual_health.xml"),
-        ("Sports Medicine", "https://www.sciencedaily.com/rss/health_medicine/sports_medicine.xml"),
-        ('Health and Medicine', 'https://www.sciencedaily.com/rss/health_medicine.xml'),
-        ('Computers and Math', 'https://www.sciencedaily.com/rss/computers_math.xml'),
-        ("Educatiom and Learning", "https://www.sciencedaily.com/rss/education_learning.xml"),
-        ("Severe Weather", "https://www.sciencedaily.com/rss/earth_climate/severe_weather.xml"),
-        ('Earth and Climate', 'https://www.sciencedaily.com/rss/earth_climate.xml'),
-        ('Fossils and Ruins', 'https://www.sciencedaily.com/rss/fossils_ruins.xml'),
-        ("Physics", "https://www.sciencedaily.com/rss/matter_energy/physics.xml"),
-        ('Matter and Energy', 'https://www.sciencedaily.com/rss/matter_energy.xml'),
-        ('Plants and Animals', 'https://www.sciencedaily.com/rss/plants_animals.xml'),
-        ('Society News', 'https://www.sciencedaily.com/rss/science_society.xml'),
-        ('Space and Time', 'https://www.sciencedaily.com/rss/space_time.xml'),
-        ('Technology News', 'https://www.sciencedaily.com/rss/top/technology.xml'),
-        ('Top Science News', 'https://www.sciencedaily.com/rss/top/science.xml'),
+        # ("Alzheimer's", "https://www.sciencedaily.com/rss/mind_brain/alzheimer's.xml"),
+        # ("Autism", "https://www.sciencedaily.com/rss/mind_brain/autism.xml"),
+        # ("Behavior", "https://www.sciencedaily.com/rss/mind_brain/behavior.xml"),
+        # ("Gender Difference", "https://www.sciencedaily.com/rss/mind_brain/gender_difference.xml"),
+        # ("Language Acquisition", "https://www.sciencedaily.com/rss/mind_brain/language_acquisition.xml"),
+        # ("Racial Issues", "https://www.sciencedaily.com/rss/mind_brain/racial_issues.xml"),
+        # ('Obstructive Sleep Apnea', 'https://www.sciencedaily.com/rss/mind_brain/obstructive_sleep_apnea.xml'),
+        # ("Psychiatry", "https://www.sciencedaily.com/rss/mind_brain/psychiatry.xml"),
+        # ("Psychology", "https://www.sciencedaily.com/rss/mind_brain/psychology.xml"),
+        # ('Schizophrenia', 'https://www.sciencedaily.com/rss/mind_brain/schizophrenia.xml'),
+        # ('Sleep Disorders', 'https://www.sciencedaily.com/rss/mind_brain/sleep_disorders.xml'),
+        # ('Mind and Brain', 'https://www.sciencedaily.com/rss/mind_brain.xml'),
+        # ("Eating Disorders", "https://www.sciencedaily.com/rss/health_medicine/eating_disorders.xml"),
+        # ("IBS", "https://www.sciencedaily.com/rss/health_medicine/irritable_bowel_syndrome.xml"),
+        # ("Sexual Health", "https://www.sciencedaily.com/rss/health_medicine/sexual_health.xml"),
+        # ("Sports Medicine", "https://www.sciencedaily.com/rss/health_medicine/sports_medicine.xml"),
+        # ('Health and Medicine', 'https://www.sciencedaily.com/rss/health_medicine.xml'),
+        # ('Computers and Math', 'https://www.sciencedaily.com/rss/computers_math.xml'),
+        # ("Educatiom and Learning", "https://www.sciencedaily.com/rss/education_learning.xml"),
+        # ("Severe Weather", "https://www.sciencedaily.com/rss/earth_climate/severe_weather.xml"),
+        # ('Earth and Climate', 'https://www.sciencedaily.com/rss/earth_climate.xml'),
+        # ('Fossils and Ruins', 'https://www.sciencedaily.com/rss/fossils_ruins.xml'),
+        # ("Physics", "https://www.sciencedaily.com/rss/matter_energy/physics.xml"),
+        # ('Matter and Energy', 'https://www.sciencedaily.com/rss/matter_energy.xml'),
+        # ('Plants and Animals', 'https://www.sciencedaily.com/rss/plants_animals.xml'),
+        # ('Society News', 'https://www.sciencedaily.com/rss/science_society.xml'),
+        # ('Space and Time', 'https://www.sciencedaily.com/rss/space_time.xml'),
+        # ('Technology News', 'https://www.sciencedaily.com/rss/top/technology.xml'),
+        # ('Top Science News', 'https://www.sciencedaily.com/rss/top/science.xml'),
         ('All News', 'https://www.sciencedaily.com/rss/all.xml'),
     ]
 
@@ -138,7 +140,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         for feed in feeds:
             for article in feed.articles[:]:
                 # self.log.info(f"article.title is: {article.title}")
-                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or 'LOSE WEIGHT' in article.title.upper():
                     self.log.warn(f"removing {article.title} from feed")
                     feed.articles.remove(article)
         return feeds
@@ -148,6 +150,49 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
             article.title = format_title(article.title, article.utctime)
+
+    def preprocess_html(self, soup):
+        meta = soup.new_tag("div")
+        meta["id"] = "metadata"
+        date_posted = soup.find(attrs={"id": "date_posted"}).extract()
+        dst = date_posted.string
+        date_posted.string = "Date: {}".format(dst)
+        art_source = soup.find(attrs={"id": "source"}).extract()
+        art_source.string = "Source: {}".format(art_source.string)
+        abstract = soup.find(attrs={"id": "abstract"}).extract()
+        abstract.string = "Summary: {}".format(abstract.string)
+        for el in [date_posted, art_source, abstract]:
+            el.name = "div"
+        meta.append(date_posted)
+        meta.append(art_source)
+        meta.append(abstract)
+        hr = soup.new_tag("hr")
+        subhead = soup.find(attrs={"id": "subtitle"})
+        if subhead:
+            subhead.insert_after(meta)
+            subhead.insert_after(hr)
+        else:
+            soup.find("h1").insert_after(meta)
+            soup.find("h1").insert_after(hr)
+        soup.find("dl").extract()
+        return soup
+
+    def postprocess_html(self, soup, first_fetch):
+        div = soup.find("div", attrs={"id": "citation_apa"})
+        regex = re.compile("www.*?htm", re.DOTALL)
+        if div:
+            match = regex.search(self.tag_to_string(div))
+            # pyright yells about the group method unless we ignore its type
+            uri = match.group(0)  # type: ignore
+            link = soup.new_tag("a")
+            link["id"] = "article_url"
+            link["href"] = 'https://{}'.format(uri)
+            link.string = uri
+            retrived_old = div.contents.pop(-1)
+            retrieved_date = retrived_old.split("www")[0]
+            div.append(retrieved_date)
+            div.append(link)
+        return soup
 
     def get_browser(self, *a, **kw):
         kw[
