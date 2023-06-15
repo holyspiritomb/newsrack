@@ -5,10 +5,8 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import json
 import os
 import random
-import re
 import sys
 import time
 from collections import OrderedDict
@@ -32,24 +30,21 @@ class WSJ(BasicNewsrackRecipe, BasicNewsRecipe):
     masthead_url = (
         "https://vir.wsj.net/fp/assets/webpack4/img/wsj-logo-small.1e2f0a7a.svg"
     )
-
-    compress_news_images_auto_size = 7
+    compress_news_images_auto_size = 9
     scale_news_images = (800, 1200)
-
     ignore_duplicate_articles = {"url"}
-    remove_attributes = ["style", "height", "width"]
-    needs_subscription = False
 
+    remove_attributes = ["style", "height", "width"]
     extra_css = """
-        .wsj-article-headline { font-size: 1.8rem; margin-bottom: 0.4rem; }
-        .sub-head { font-size: 1.2rem; font-style: italic; margin-bottom: 0.5rem; font-weight: normal; }
-        .bylineWrap { margin-top: 0.5rem; margin-bottom: 1rem; font-weight: bold; color: #444;  }
-        .image-container img, .media-object img {
-            display: block; margin-bottom: 0.3rem;
-            max-width: 100%; height: auto;
-            box-sizing: border-box;
-        }
-        .imageCaption { font-size: 0.8rem; }
+    .wsj-article-headline { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .sub-head { font-size: 1.2rem; font-style: italic; margin-bottom: 0.5rem; font-weight: normal; }
+    .bylineWrap { margin-top: 0.5rem; margin-bottom: 1rem; font-weight: bold; color: #444;  }
+    .image-container img, .media-object img {
+        display: block; margin-bottom: 0.3rem;
+        max-width: 100%; height: auto;
+        box-sizing: border-box;
+    }
+    .imageCaption { font-size: 0.8rem; }
     """
 
     keep_only_tags = [
@@ -98,22 +93,7 @@ class WSJ(BasicNewsrackRecipe, BasicNewsRecipe):
         return br
 
     def _get_page_info(self, soup):
-        for script in soup.find_all("script"):
-            if not script.contents:
-                continue
-            if not script.contents[0].strip().startswith("window.__STATE__"):
-                continue
-            index_js = re.sub(
-                r"window.__STATE__\s*=\s*", "", script.contents[0].strip()
-            )
-            if index_js.endswith(";"):
-                index_js = index_js[:-1]
-            try:
-                info = json.loads(index_js)
-                return info
-            except json.JSONDecodeError:
-                self.log.exception("Unable to parse __STATE__")
-        return None
+        return self.get_script_json(soup, r"window.__STATE__\s*=\s*")
 
     def _do_wait(self, message):
         if message:
@@ -203,7 +183,7 @@ class WSJ(BasicNewsrackRecipe, BasicNewsRecipe):
                             {
                                 "url": i["url"].replace("/articles/", "/amp/articles/"),
                                 "title": i["headline"],
-                                "description": i["summary"],
+                                "description": i.get("summary", ""),
                             }
                         )
                     break

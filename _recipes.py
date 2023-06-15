@@ -40,6 +40,14 @@ categories_sort: List[str] = ["News", "Magazines", "Online Magazines", "Arts & C
 # Keep this list in alphabetical order
 recipes: List[Recipe] = [
     Recipe(
+        recipe="aeon",
+        slug="aeon",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Online Magazines",
+        cover_options=CoverOptions(logo_path_or_url="https://aeon.co/logo.png"),
+    ),
+    Recipe(
         recipe="asahi-shimbun",
         slug="asahi-shimbun",
         src_ext="mobi",
@@ -140,21 +148,22 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/FiveThirtyEight_Logo.svg/1024px-FiveThirtyEight_Logo.svg.png"
         ),
     ),
-    Recipe(
-        recipe="forbes-editors-picks",
-        slug="forbes-editors-picks",
-        src_ext="mobi",
-        target_ext=["epub"],
-        timeout=360,  # will glitch often and take a really long time
-        retry_attempts=1,
-        category="Online Magazines",
-        tags=["business"],
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4)
-        and onlyat_hours(list(range(8, 20)), -4),
-        cover_options=CoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Forbes_logo.svg/1024px-Forbes_logo.svg.png"
-        ),
-    ),
+    # Not reading this
+    # Recipe(
+    #     recipe="forbes-editors-picks",
+    #     slug="forbes-editors-picks",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     timeout=360,  # will glitch often and take a really long time
+    #     retry_attempts=1,
+    #     category="Online Magazines",
+    #     tags=["business"],
+    #     enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4)
+    #     and onlyat_hours(list(range(8, 20)), -4),
+    #     cover_options=CoverOptions(
+    #         logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Forbes_logo.svg/1024px-Forbes_logo.svg.png"
+    #     ),
+    # ),
     Recipe(
         recipe="foreign-affairs",
         slug="foreign-affairs",
@@ -566,7 +575,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Magazines",
         tags=["europe", "britain"],
-        enable_on=onlyon_weekdays([4]),
+        enable_on=onlyon_weekdays([3, 4]),
         overwrite_cover=False,
     ),
     Recipe(
@@ -601,9 +610,7 @@ recipes: List[Recipe] = [
         category="Online Magazines",
         enable_on=onlyat_hours(list(range(5, 20)), 5.5),
         tags=["asia", "climate"],
-        cover_options=CoverOptions(
-            logo_path_or_url="https://www.thethirdpole.net/content/uploads/2020/02/TheThirdPoleLogo2.png"
-        ),
+        cover_options=CoverOptions(logo_path_or_url="recipes/logos/thirdpole.png"),
     ),
     Recipe(
         recipe="time-magazine",

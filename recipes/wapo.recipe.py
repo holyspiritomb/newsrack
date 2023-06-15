@@ -7,7 +7,7 @@ import json
 import os
 import sys
 from datetime import datetime
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlencode
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -32,6 +32,7 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
     encoding = "utf-8"
     language = "en"
     simultaneous_downloads = 8
+    compress_news_images_auto_size = 12
 
     oldest_article = 1
     max_articles_per_feed = 25
@@ -64,6 +65,12 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
         # ("Sports", u"http://feeds.washingtonpost.com/rss/sports"),
         # ("Redskins", u"http://feeds.washingtonpost.com/rss/sports/redskins"),
     ]
+
+    def image_url_processor(self, article_url, image_url):
+        image_processor = "https://www.washingtonpost.com/wp-apps/imrs.php"
+        if image_url.startswith(image_processor):
+            return image_url
+        return f'{image_processor}?{urlencode({"src": image_url, "w": 1200})}'
 
     def _extract_child_nodes(self, nodes, parent_element, soup, url):
         if not nodes:
@@ -106,7 +113,7 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
                 parent_element.append(container_ele)
             elif node_type == "header":
                 header_ele = soup.new_tag(f'h{c["level"]}')
-                header_ele.string = c["content"]
+                header_ele.append(BeautifulSoup(c["content"], features="html.parser"))
                 parent_element.append(header_ele)
             elif node_type == "correction":
                 para_ele = soup.new_tag("p", attrs={"class": "correction"})
@@ -192,15 +199,7 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
-        script = soup.find_all("script", id="__NEXT_DATA__")
-        data = {}
-        try:
-            data = json.loads(script[0].contents[0])
-        except IndexError:
-            self.log.exception("Unable to get script contents")
-        except json.decoder.JSONDecodeError:
-            # self.log.error(script[0].contents[0])
-            self.log.exception("Unable to decode script json")
+        data = self.get_script_json(soup, "", {"id": "__NEXT_DATA__", "src": False})
         content = data.get("props", {}).get("pageProps", {}).get("globalContent", {})
         if not content:
             # E.g. interactive articles

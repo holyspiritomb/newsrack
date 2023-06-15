@@ -267,6 +267,18 @@ def _find_output(folder_path: Path, slug: str, ext: str) -> List[Path]:
     return [r for r in res if slug_match_re.match(r.name)]
 
 
+def _get_cached_files(recipe: Recipe, cached: Dict):
+    """
+    Get the list of cached files for a recipe
+
+    :param recipe:
+    :param cached:
+    :return:
+    """
+    # [TODO] changed from using name to slug, check name to keep backward compat
+    return cached.get(recipe.slug, []) or cached.get(recipe.name, [])
+
+
 def _download_from_cache(
     recipe: Recipe, cached: Dict, publish_site: str, cache_sess: requests.Session
 ) -> bool:
@@ -279,8 +291,7 @@ def _download_from_cache(
     :return:
     """
     abort = False
-    # [TODO] changed from using name to slug, check name to keep backward compat
-    cached_files = cached.get(recipe.slug, []) or cached.get(recipe.name, [])
+    cached_files = _get_cached_files(recipe, cached)
     for cached_item in cached_files:
         ext = Path(cached_item["filename"]).suffix
         if ext != f".{recipe.src_ext}" and ext not in [
@@ -462,8 +473,7 @@ def run(
         if verbose_mode:
             os.environ["recipe_debug_folder"] = str(publish_folder.absolute())
 
-        # [TODO] changed from using name to slug, check name to keep backward compat
-        cached_files = cached.get(recipe.slug, []) or cached.get(recipe.name, [])
+        cached_files = _get_cached_files(recipe, cached)
 
         if not _find_output(publish_folder, recipe.slug, recipe.src_ext):
             # existing file does not exist
@@ -858,19 +868,29 @@ def run(
                     )
                 book_links.append(
                     f'<div class="book">'
-                    f'<a href="{book.rename_to}">{book_ext}<span class="file-size">{humanize.naturalsize(file_size).replace(" ", "")}</span>'
+                    f'<a title="Download {book_ext[1:]}" href="{book.rename_to}">{book_ext}<span class="file-size">{humanize.naturalsize(file_size).replace(" ", "")}</span>'
                     f"</a>{reader_link}"
                     f"</div>"
                 )
+            tags_html = (
+                ""
+                if not books[0].recipe.tags
+                else '<div class="tags"><span title="Search with this tag" class="tag">#'
+                + '</span><span title="Search with this tag" class="tag">#'.join(
+                    books[0].recipe.tags
+                )
+                + "</span></div>"
+            )
             publication_listing.append(
                 f"""
-            <li id="{books[0].recipe.slug}" data-cat-id="cat-{slugify(category, True)}" data-cat-name="{category}"
-                    data-tags="{"" if not books[0].recipe.tags else "#" + " #".join(books[0].recipe.tags)}">
+            <li id="{books[0].recipe.slug}" data-cat-id="cat-{slugify(category, True)}" data-cat-name="{category}">
             <span class="title">{books[0].title or recipe_name}</span>
             {" ".join(book_links)}
+            <div class="meta" data-pub-id="{books[0].recipe.slug}">
             <div class="pub-date" data-pub-date="{int(books[0].published_dt.timestamp() * 1000)}">
                 Published at {books[0].published_dt:%Y-%m-%d %-I:%M%p %z}
-                {"" if not books[0].recipe.tags else '<span class="tags">#' + " #".join(books[0].recipe.tags) + "</span>"}
+            </div>
+            {tags_html}
             </div>
             <div class="contents hide"></div>
             </li>"""
@@ -898,7 +918,7 @@ def run(
         listing += f"""<div class="category-container is-open"><h2 id="cat-{slugify(category, True)}" class="category is-open">{category}
         <a class="opds" title="OPDS for {category.title()}" href="{slugify(category, True)}.xml">OPDS</a></h2>
         <ol class="books">{"".join(publication_listing)}</ol>
-        <div class="close-cat-container"><div class="close-cat-shortcut" data-click-target="cat-{slugify(category)}"></div></div>
+        <div class="close-cat-container"><div class="close-cat-shortcut" title="Collapse category" data-click-target="cat-{slugify(category)}"></div></div>
         </div>
         """
 
@@ -948,7 +968,7 @@ def run(
             publish_site=publish_site,
             elapsed=humanize.naturaldelta(elapsed_time, minimum_unit="seconds"),
             catalog=catalog_path,
-            source_link=f'<a class="git" href="{source_url}">{commit_hash[0:7]}</a>',
+            source_link=f'<a class="git" title="Source" href="{source_url}">{commit_hash[0:7]}</a>',
         )
         f_out.write(html_output)
 
