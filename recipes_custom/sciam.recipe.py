@@ -3,9 +3,7 @@ __license__ = "GPL v3"
 
 # Original at https://github.com/kovidgoyal/calibre/blob/29cd8d64ea71595da8afdaec9b44e7100bff829a/recipes/scientific_american.recipe
 
-import json
 import os
-import re
 import sys
 from datetime import datetime, timezone, timedelta
 from os.path import splitext
@@ -20,6 +18,7 @@ from calibre.web.feeds.news import BasicNewsRecipe
 
 
 _name = "Scientific American"
+_issue_url = ""
 
 
 class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
@@ -35,11 +34,11 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         "https://static.scientificamerican.com/sciam/assets/Image/newsletter/salogo.png"
     )
     compress_news_images_auto_size = 8
+    remove_empty_feeds = True
     conversion_options = {
         'tags' : 'Scientific American, Science, Periodical',
         'authors' : 'newsrack',
     }
-    remove_empty_feeds = True
 
     remove_attributes = ["width", "height", "data-behavior", "data-dfp-adword", "data-newsletterpromo_article-button-link", "data-newsletterpromo_article-button-text", "data-newsletterpromo_article-image", "data-newsletterpromo_article-text"]
     keep_only_tags = [
@@ -54,9 +53,6 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
             ]
         ),
     ]
-    conversion_options = {
-        'tags' : 'Periodical, Science',
-    }
     remove_tags = [
         dict(id=["seeAlsoLinks"]),
         dict(alt="author-avatar"),
@@ -85,15 +81,6 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         br = BasicNewsRecipe.get_browser(self, *a, **kw)
         return br
 
-    def preprocess_html(self, soup):
-            # media_div.find("picture").append(aimg)
-            # headerimgsrc = srcmedia["srcset"].strip().split(",")[-1].strip().split(" ")[0]
-            # headerimgsrc = srcmedia["srcset"].strip().split(",")[-1].partition("?")[0]
-            # self.log.warn(headerimgsrc)
-        # for srcmedia in soup.find_all("source", attrs={"srcset": True}):
-            # srcmedia.decompose()
-        return soup
-
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
         for media_div in soup.find_all("figure", attrs={"class": "article-media"}):
@@ -104,19 +91,8 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
             pic.clear()
             pic.append(aimg)
 
-        for script in soup.find_all(name="script"):
-            if not script.contents:
-                continue
-            article_js = script.contents[0].strip()
-            if not article_js.startswith("dataLayer"):
-                continue
-            article_js = re.sub(r"dataLayer\s*=\s*", "", article_js)
-            if article_js.endswith(";"):
-                article_js = article_js[:-1]
-            try:
-                info = json.loads(article_js)
-            except json.JSONDecodeError:
-                continue
+        info = self.get_script_json(soup, r"dataLayer\s*=\s*")
+        if info:
             for i in info:
                 if not i.get("content"):
                     continue
@@ -151,23 +127,21 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
                 self.pub_date = pub_date
 
     def parse_index(self):
-        # Get the cover, date and issue URL
-        fp_soup = self.index_to_soup("https://www.scientificamerican.com")
-        curr_issue_link = fp_soup.select(".tout_current-issue__cover a")
-        if not curr_issue_link:
-            self.abort_recipe_processing("Unable to find issue link")
-        issue_url = curr_issue_link[0]["href"]
+        if not _issue_url:
+            fp_soup = self.index_to_soup("https://www.scientificamerican.com")
+            curr_issue_link = fp_soup.select(".tout_current-issue__cover a")
+            if not curr_issue_link:
+                self.abort_recipe_processing("Unable to find issue link")
+            issue_url = curr_issue_link[0]["href"]
+        else:
+            issue_url = _issue_url
+
         soup = self.index_to_soup(issue_url)
-        script = soup.find("script", id="__NEXT_DATA__")
-        if not script:
+        info = self.get_script_json(soup, "", attrs={"id": "__NEXT_DATA__"})
+        if not info:
             self.abort_recipe_processing("Unable to find script")
 
-        issue_info = (
-            json.loads(script.contents[0])
-            .get("props", {})
-            .get("pageProps", {})
-            .get("issue", {})
-        )
+        issue_info = info.get("props", {}).get("pageProps", {}).get("issue", {})
         if not issue_info:
             self.abort_recipe_processing("Unable to find issue info")
 
@@ -185,10 +159,6 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
             for article in issue_info.get("article_previews", {}).get(section, []):
                 if "OBESITY" in article["title"].upper() or "WEIGHT LOSS" in article["title"].upper():
                     continue
-                article_date = article["release_date"]
-                dt = datetime.strptime(article_date, "%Y-%m-%dT%H:%M:%SZ")
-                dts = datetime.strftime(dt, "%b %-d %Y")
-                self.log.warn(dts)
                 if section == "featured":
                     feed_name = "Features"
                 else:
