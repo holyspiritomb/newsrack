@@ -75,8 +75,8 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="static/img/additude.png"
         ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=60
         ),
     ),
     CustomOptionsRecipe(
@@ -90,8 +90,8 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="static/img/advocate.png"
         ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=60
         ),
     ),
     CustomOptionsRecipe(
@@ -243,7 +243,7 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science"],
         overwrite_cover=True,
-        cover_options=CustomCoverOptions(logo_path_or_url="static/img/knowable.png"),
+        cover_options=CoverOptions(logo_path_or_url="recipes/logos/knowable.png"),
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
     ),
     CustomOptionsRecipe(
@@ -366,7 +366,9 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
         ),
-        enable_on=onlyon_weekdays([2, 4, 5], 0),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=60
+        ),
     ),
     CustomOptionsRecipe(
         recipe="new-republic-magazine",
@@ -459,10 +461,10 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Science",
         title_date_format="%b %Y",
-        # enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=7, drift=60
-        ),
+        enable_on=False,
+        # enable_on=lambda recipe: every_x_days(
+        #     last_run=recipe.last_run, days=7, drift=60
+        # ),
         tags=["science", "monthly"],
     ),
     CustomOptionsRecipe(
@@ -488,9 +490,6 @@ recipes: List[Recipe] = [
         tags=["science", "tech", "daily"],
         cover_options=CustomCoverOptions(
             logo_path_or_url="static/img/science-daily.png"
-        ),
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=6, drift=15
         ),
     ),
     CustomMonthlyRecipe(
@@ -534,8 +533,8 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=True,
         category="News",
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=12, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Teen_Vogue_logo.svg/1024px-Teen_Vogue_logo.svg.png"
@@ -576,8 +575,8 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="News",
         tags=["daily"],
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=12, drift=60
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="static/img/wtfjht-t.jpg"
@@ -589,7 +588,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=True,
-        category="Science",
+        category="Magazines",
         tags=["science", "tech", "monthly"],
         enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
         and onlyat_hours(list(range(10, 18))),
@@ -605,8 +604,8 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Science",
         tags=["science", "tech", "daily"],
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=12, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
