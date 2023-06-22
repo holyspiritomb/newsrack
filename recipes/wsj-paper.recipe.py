@@ -14,7 +14,7 @@ from datetime import datetime, timedelta, timezone
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import BasicNewsrackRecipe, format_title
+from recipes_shared import BasicNewsrackRecipe, format_title, get_date_format
 
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe, classes
@@ -66,9 +66,8 @@ class WSJ(BasicNewsrackRecipe, BasicNewsRecipe):
         mod_date_ele = soup.find(
             "meta", attrs={"name": "article.updated"}
         ) or soup.find("meta", itemprop="dateModified")
-        post_mod_date = datetime.strptime(
-            mod_date_ele["content"], "%Y-%m-%dT%H:%M:%S.%fZ"
-        ).replace(tzinfo=timezone.utc)
+        # %Y-%m-%dT%H:%M:%S.%fZ
+        post_mod_date = self.parse_date(mod_date_ele["content"])
         if not self.pub_date or post_mod_date > self.pub_date:
             self.pub_date = post_mod_date
 
@@ -132,8 +131,9 @@ class WSJ(BasicNewsrackRecipe, BasicNewsRecipe):
                 for k, v in info["data"].items():
                     if not k.startswith("rss_subnav_collection_"):
                         continue
-                    issue_date = datetime.strptime(v["data"]["id"], "%Y%m%d")
-                    self.title = f"{_name}: {issue_date:%-d %b, %Y}"
+                    # %Y%m%d
+                    issue_date = self.parse_date(v["data"]["id"])
+                    self.title = f"{_name}: {issue_date:{get_date_format()}}"
                     self.log(
                         f'Issue date is: {issue_date:%Y%m%d}, title is "{self.title}"'
                     )

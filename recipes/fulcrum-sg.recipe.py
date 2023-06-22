@@ -9,7 +9,7 @@ import sys
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import WordPressNewsrackRecipe
+from recipes_shared import WordPressNewsrackRecipe, get_datetime_format
 
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe
@@ -110,7 +110,7 @@ class FulcrumSg(WordPressNewsrackRecipe, BasicNewsRecipe):
     def preprocess_raw_html(self, raw_html, url):
         # formulate the api response into html
         post = json.loads(raw_html)
-        date_published_loc = self.parse_datetime(post["date"])
+        date_published_loc = self.parse_date(post["date"], tz_info=None, as_utc=False)
         if post.get("commentaries_author"):
             post_authors = [post["commentaries_author"]]
         else:
@@ -129,7 +129,7 @@ class FulcrumSg(WordPressNewsrackRecipe, BasicNewsRecipe):
             <div class="article-meta">
                 {f'<span class="author">{", ".join(post_authors)}</span>' if post_authors else ''}
                 <span class="published-dt">
-                    {date_published_loc:%-I:%M%p, %-d %b, %Y}
+                    {date_published_loc:{get_datetime_format()}}
                 </span>
             </div>
             </article>

@@ -27,7 +27,7 @@ import requests  # type: ignore
 from bleach import linkify
 
 from _opds import init_feed, simple_tag, extension_contenttype_map
-from _recipe_utils import sort_category, Recipe
+from _recipe_utils import sort_category, Recipe, is_windows
 from _recipes import (
     recipes as default_recipes,
     categories_sort as default_categories_sort,
@@ -165,7 +165,10 @@ def _write_opds(generated_output: Dict, recipe_covers: Dict, publish_site: str) 
                     simple_tag(
                         doc,
                         "summary",
-                        f"{books[0].title or recipe_name} published at {books[0].published_dt:%Y-%m-%d %H:%M%p}.",
+                        (
+                            f"{books[0].title or recipe_name} published at "
+                            f'{books[0].published_dt:{"%Y-%m-%d %I:%M%p %Z" if is_windows else "%Y-%m-%d %-I:%M%p %Z"}}'
+                        ),
                     )
                 )
                 entry.appendChild(
@@ -246,9 +249,19 @@ def _write_opds(generated_output: Dict, recipe_covers: Dict, publish_site: str) 
                     )
                 feed.appendChild(entry)
 
+        cat_style = main_doc.createProcessingInstruction(
+            "xml-stylesheet", 'type="text/xsl" href="opds.xsl"'
+        )
+        cat_doc.insertBefore(cat_style, cat_feed)
+
         opds_xml_path = publish_folder.joinpath(f"{slugify(category, True)}.xml")
         with opds_xml_path.open("wb") as f:  # type: ignore
             f.write(cat_doc.toprettyxml(encoding="utf-8", indent=""))
+
+    main_style = main_doc.createProcessingInstruction(
+        "xml-stylesheet", 'type="text/xsl" href="opds.xsl"'
+    )
+    main_doc.insertBefore(main_style, main_feed)
 
     opds_xml_path = publish_folder.joinpath(catalog_path)
     with opds_xml_path.open("wb") as f:  # type: ignore
@@ -423,6 +436,7 @@ def run(
 
         if recipe_path.exists():
             os.environ["newsrack_title_dt_format"] = recipe.title_date_format
+            os.environ["newsrack_title_dts_format"] = recipe.recipe_datetime_format
 
         job_status = ""
         recipe.last_run = job_log.get(recipe.slug, 0)
@@ -875,8 +889,8 @@ def run(
             tags_html = (
                 ""
                 if not books[0].recipe.tags
-                else '<div class="tags"><span title="Search with this tag" class="tag">#'
-                + '</span><span title="Search with this tag" class="tag">#'.join(
+                else '<div class="tags"><span tabindex="0" title="Search with this tag" class="tag">#'
+                + '</span><span tabindex="0" title="Search with this tag" class="tag">#'.join(
                     books[0].recipe.tags
                 )
                 + "</span></div>"
@@ -887,7 +901,7 @@ def run(
             <span class="title">{books[0].title or recipe_name}</span>
             {" ".join(book_links)}
             <div class="meta" data-pub-id="{books[0].recipe.slug}">
-            <div class="pub-date" data-pub-date="{int(books[0].published_dt.timestamp() * 1000)}">
+            <div tabindex="0" class="pub-date" data-pub-date="{int(books[0].published_dt.timestamp() * 1000)}">
                 Published at {books[0].published_dt:%Y-%m-%d %-I:%M%p %z}
             </div>
             {tags_html}
@@ -915,10 +929,10 @@ def run(
                 </div></li>"""
             )
 
-        listing += f"""<div class="category-container is-open"><h2 id="cat-{slugify(category, True)}" class="category is-open">{category}
+        listing += f"""<div class="category-container is-open"><h2 tabindex="0" id="cat-{slugify(category, True)}" class="category is-open">{category}
         <a class="opds" title="OPDS for {category.title()}" href="{slugify(category, True)}.xml">OPDS</a></h2>
         <ol class="books">{"".join(publication_listing)}</ol>
-        <div class="close-cat-container"><div class="close-cat-shortcut" title="Collapse category" data-click-target="cat-{slugify(category)}"></div></div>
+        <div class="close-cat-container"><div tabindex="0" class="close-cat-shortcut" title="Collapse category" data-click-target="cat-{slugify(category)}"></div></div>
         </div>
         """
 

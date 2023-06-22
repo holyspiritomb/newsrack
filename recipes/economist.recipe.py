@@ -7,7 +7,6 @@ import json
 import os
 import sys
 from collections import defaultdict
-from datetime import datetime, timezone
 from http.cookiejar import Cookie
 
 # custom include to share code between recipes
@@ -231,10 +230,8 @@ class Economist(BasicNewsrackRecipe, BasicNewsRecipe):
     ]
     keep_only_tags = [dict(name="article", id=lambda x: not x)]
     remove_attributes = ["data-reactid", "width", "height"]
-    # economist.com has started throttling after about 60% of the total has
-    # downloaded with connection reset by peer (104) errors.
-    # delay = 1
-    simultaneous_downloads = 2  # doesn't seem throttled now 2022.04.15
+    # economist.com has started throttling with HTTP 429
+    delay = 1
 
     masthead_url = "https://www.economist.com/assets/the-economist-logo.png"
 
@@ -323,13 +320,10 @@ class Economist(BasicNewsrackRecipe, BasicNewsRecipe):
         article.text_summary = clean_ascii_chars(article.summary)
         div_date = soup.find(attrs={"datecreated": True})
         if div_date:
-            date_published = datetime.strptime(
-                div_date["datecreated"],
-                "%Y-%m-%dT%H:%M:%SZ",
-            ).replace(tzinfo=timezone.utc)
+            # "%Y-%m-%dT%H:%M:%SZ"
+            date_published = self.parse_date(div_date["datecreated"])
             if not self.pub_date or date_published > self.pub_date:
                 self.pub_date = date_published
-                # self.title = f"{_name}: {date_published:%-d %b, %Y}"
 
     def parse_index(self):
         if edition_date:
@@ -372,11 +366,10 @@ class Economist(BasicNewsrackRecipe, BasicNewsRecipe):
             )
             self.log("Got cover:", self.cover_url)
 
-            # Example 2022-04-16T00:00:00Z
-            date_published = datetime.strptime(
-                data["props"]["pageProps"]["content"]["datePublished"],
-                "%Y-%m-%dT%H:%M:%SZ",
-            ).replace(tzinfo=timezone.utc)
+            # Example 2022-04-16T00:00:00Z "%Y-%m-%dT%H:%M:%SZ"
+            date_published = self.parse_date(
+                data["props"]["pageProps"]["content"]["datePublished"]
+            )
             self.title = format_title(_name, date_published)
             feeds_dict = defaultdict(list)
             for part in safe_dict(

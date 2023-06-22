@@ -1,13 +1,11 @@
-import json
 import os
 import sys
 from datetime import datetime, timezone
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import BasicNewsrackRecipe, format_title
+from recipes_shared import BasicNewsrackRecipe, format_title, get_date_format
 
-from calibre.web.feeds import Feed
 from calibre.web.feeds.news import BasicNewsRecipe, prefixed_classes
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
@@ -59,12 +57,11 @@ class Aeon(BasicNewsrackRecipe, BasicNewsRecipe):
         article = self.get_ld_json(soup, lambda d: d.get("@type", "") == "Article")
         if not (article and article.get("articleBody")):
             err_msg = f"Unable to find article: {url}"
-            self.log.warn(err_msg)
+            self.log.warning(err_msg)
             self.abort_article(err_msg)
 
-        published_date = datetime.strptime(
-            article["datePublished"], "%Y-%m-%d"
-        ).replace(tzinfo=timezone.utc)
+        # "%Y-%m-%d"
+        published_date = self.parse_date(article["datePublished"])
         if (not self.pub_date) or published_date > self.pub_date:
             self.pub_date = published_date
             self.title = format_title(_name, published_date)
@@ -73,8 +70,22 @@ class Aeon(BasicNewsrackRecipe, BasicNewsRecipe):
         header = soup.find("h1") or soup.find("h2")
         if header:
             date_ele = soup.new_tag("div", attrs={"class": "custom-date-published"})
-            date_ele.append(f"{published_date:%-d %B, %Y}")
+            date_ele.append(f"{published_date:{get_date_format()}}")
             header.insert_after(date_ele)
+
+        # re-position header image
+        essay_header = soup.find(
+            "div", class_=lambda c: c and c.startswith("article__EssayHeader-sc-")
+        )
+        if essay_header:
+            header_img = essay_header.find("img")
+            attribution = essay_header.find(
+                "div",
+                class_=lambda c: c
+                and c.startswith("styled__ThumbnailAttributionWrapper-sc-"),
+            )
+            if header_img and attribution:
+                attribution.insert_before(header_img.extract())
         return str(soup)
 
     def parse_feeds(self):

@@ -6,12 +6,12 @@
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from urllib.parse import urljoin, urlencode
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import BasicNewsrackRecipe, format_title
+from recipes_shared import BasicNewsrackRecipe, format_title, get_datetime_format
 
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe
@@ -170,14 +170,12 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
                 )
                 container_ele.append(header_ele)
 
-                # Example 2022-04-13T14:04:03.051Z
-                post_date = datetime.strptime(
-                    c["display_date"], "%Y-%m-%dT%H:%M:%S.%fZ"
-                )
+                # Example 2022-04-13T14:04:03.051Z "%Y-%m-%dT%H:%M:%S.%fZ"
+                post_date = self.parse_date(c["display_date"])
                 meta_ele = BeautifulSoup(
                     f"""<div class="article-meta">
                         <span class="author"></span>
-                        <span class="published-dt">{post_date:%-I:%M%p %-d %B, %Y}</span>
+                        <span class="published-dt">{post_date:{get_datetime_format()}}</span>
                     </div>"""
                 )
                 authors = [a["name"] for a in c.get("credits", {}).get("by", [])]
@@ -204,15 +202,19 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
         if not content:
             # E.g. interactive articles
             # https://www.washingtonpost.com/world/interactive/2022/china-shanghai-covid-lockdown-food-shortage/
-            self.abort_article(f"Unable to get content from script: {url}")
+            if "/interactive/" in url:
+                err_msg = f"Exclude interactive article: {url}"
+            else:
+                err_msg = f"Unable to get content from script: {url}"
+            self.log.warning(err_msg)
+            self.abort_article(err_msg)
 
-        # Example 2022-04-13T14:04:03.051Z
-        post_date = datetime.strptime(content["display_date"], "%Y-%m-%dT%H:%M:%S.%fZ")
-        if post_date > datetime.today():  # it happens
+        # Example 2022-04-13T14:04:03.051Z "%Y-%m-%dT%H:%M:%S.%fZ"
+        post_date = self.parse_date(content["display_date"])
+        if post_date > datetime.utcnow().replace(tzinfo=timezone.utc):  # it happens
             try:
-                post_date = datetime.strptime(
-                    content["publish_date"][:-5], "%Y-%m-%dT%H:%M:%S"
-                )
+                # "%Y-%m-%dT%H:%M:%S"
+                post_date = self.parse_date(content["publish_date"][:-5])
             except:  # noqa
                 # do nothing
                 pass
@@ -228,7 +230,7 @@ class TheWashingtonPost(BasicNewsrackRecipe, BasicNewsRecipe):
                 <div class="sub-headline"></div>
                 <div class="article-meta">
                     <span class="author"></span>
-                    <span class="published-dt">{post_date:%-I:%M%p %-d %B, %Y}</span>
+                    <span class="published-dt">{post_date:{get_datetime_format()}}</span>
                 </div>
             </article>
         </body></html>"""

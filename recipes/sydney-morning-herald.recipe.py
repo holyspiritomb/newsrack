@@ -4,7 +4,6 @@ smh.com.au
 __license__ = "GPL v3"
 __copyright__ = "2010-2011, Darko Miletic <darko.miletic at gmail.com>"
 
-import json
 import os
 import sys
 
@@ -85,12 +84,16 @@ class SydneyMorningHerald(BasicNewsrackRecipe, BasicNewsRecipe):
             "div", attrs={"data-testid": "video-player", "class": "noPrint"}
         )
         if vid_player:
-            self.abort_article("Video article")
+            err_msg = f"Excluding video article: {url}"
+            self.log.warning(err_msg)
+            self.abort_article(err_msg)
         live_blog = self.get_ld_json(
             soup, lambda d: d.get("@type", "") == "LiveBlogPosting"
         )
         if live_blog:
-            self.abort_article("Exclude live post")
+            err_msg = f"Excluding live post article: {url}"
+            self.log.warning(err_msg)
+            self.abort_article(err_msg)
 
         ul_eles = soup.find_all("ul") or []
         for ul in ul_eles:

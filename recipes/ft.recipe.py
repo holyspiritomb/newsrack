@@ -6,16 +6,14 @@
 """
 ft.com
 """
-import json
 import os
 import re
 import sys
-from datetime import datetime, timezone
 from urllib.parse import urljoin, quote_plus
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import BasicCookielessNewsrackRecipe, format_title
+from recipes_shared import BasicCookielessNewsrackRecipe, format_title, get_date_format
 
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe
@@ -74,7 +72,7 @@ class FinancialTimes(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         article = self.get_ld_json(soup, lambda d: d.get("@type", "") == "NewsArticle")
         if not (article and article.get("articleBody")):
             err_msg = f"Unable to find article: {url}"
-            self.log.warn(err_msg)
+            self.log.warning(err_msg)
             self.abort_article(err_msg)
 
         try:
@@ -84,10 +82,8 @@ class FinancialTimes(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
 
         date_published = article.get("datePublished", None)
         if date_published:
-            # Example: 2022-03-29T04:00:05.154Z
-            date_published = datetime.strptime(
-                date_published, "%Y-%m-%dT%H:%M:%S.%fZ"
-            ).replace(tzinfo=timezone.utc)
+            # Example: 2022-03-29T04:00:05.154Z "%Y-%m-%dT%H:%M:%S.%fZ"
+            date_published = self.parse_date(date_published)
 
         paragraphs = []
         lede_image_url = article.get("image", {}).get("url")
@@ -128,7 +124,7 @@ class FinancialTimes(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             {"" if not article.get("description") else '<div class="sub-headline">' + article.get("description", "") + '</div>'}
             <div class="article-meta">
                 <span class="author">{author}</span>
-                <span class="published-dt">{date_published:%-d %B, %Y}</span>
+                <span class="published-dt">{date_published:{get_date_format()}}</span>
             </div>
             {article_body}
             </article>

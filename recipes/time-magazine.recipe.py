@@ -6,11 +6,11 @@
 import json
 import os
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta, timezone
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import BasicNewsrackRecipe
+from recipes_shared import BasicNewsrackRecipe, get_date_format
 
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.ptempfile import PersistentTemporaryDirectory, PersistentTemporaryFile
@@ -49,9 +49,12 @@ class TimeMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
         except TypeError:
             # sometimes authors = [[]]
             authors = []
-        date_published_loc = datetime.strptime(
-            article["time"]["published"], "%Y-%m-%d %H:%M:%S"
-        ).replace(tzinfo=timezone(timedelta(hours=-4)))
+        # "%Y-%m-%d %H:%M:%S"
+        date_published_loc = self.parse_date(
+            article["time"]["published"],
+            tz_info=timezone(timedelta(hours=-4)),
+            as_utc=False,
+        )
         date_published_utc = date_published_loc.astimezone(timezone.utc)
         if not self.pub_date or date_published_utc > self.pub_date:
             self.pub_date = date_published_utc
@@ -80,7 +83,7 @@ class TimeMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
                     {", ".join(authors)}
                 </span>
                 <span class="published-dt">
-                    {date_published_loc:%-d %b, %Y}
+                    {date_published_loc:{get_date_format()}}
                 </span>
             </div>
             {str(content_soup.body)}

@@ -3,7 +3,6 @@ ft.com
 """
 # Original from https://github.com/kovidgoyal/calibre/blob/902e80ec173bc40037efb164031043994044ec6c/recipes/financial_times_print_edition.recipe
 
-import json
 import os
 import re
 import sys
@@ -12,7 +11,7 @@ from urllib.parse import quote_plus, urljoin
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import BasicCookielessNewsrackRecipe, format_title
+from recipes_shared import BasicCookielessNewsrackRecipe, format_title, get_date_format
 
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe, classes
@@ -104,7 +103,7 @@ class FinancialTimesPrint(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         article = self.get_ld_json(soup, lambda d: d.get("@type", "") == "NewsArticle")
         if not (article and article.get("articleBody")):
             err_msg = f"Unable to find article: {url}"
-            self.log.warn(err_msg)
+            self.log.warning(err_msg)
             self.abort_article(err_msg)
 
         try:
@@ -114,10 +113,8 @@ class FinancialTimesPrint(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
 
         date_published = article.get("datePublished", None)
         if date_published:
-            # Example: 2022-03-29T04:00:05.154Z
-            date_published = datetime.strptime(
-                date_published, "%Y-%m-%dT%H:%M:%S.%fZ"
-            ).replace(tzinfo=timezone.utc)
+            # Example: 2022-03-29T04:00:05.154Z "%Y-%m-%dT%H:%M:%S.%fZ"
+            date_published = self.parse_date(date_published)
             if (not self.pub_date) or date_published > self.pub_date:
                 self.pub_date = date_published
                 self.title = format_title(_name, date_published)
@@ -161,7 +158,7 @@ class FinancialTimesPrint(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             {"" if not article.get("description") else '<div class="sub-headline">' + article.get("description", "") + '</div>'}
             <div class="article-meta">
                 <span class="author">{author}</span>
-                <span class="published-dt">{date_published:%-d %B, %Y}</span>
+                <span class="published-dt">{date_published:{get_date_format()}}</span>
             </div>
             {article_body}
             </article>
