@@ -139,13 +139,14 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def postprocess_html(self, soup, first_fetch):
         ems = soup.findAll("em")
-        prefix = "https://www.nature.com/articles"
         for em in ems:
             if "doi: https://doi.org/" in em.string:
                 article_doi = self.tag_to_string(em).split(" ")[1]
-                article_id = article_doi.split("/")[-1]
-                article_url = f"{prefix}/{article_id}"
-                self.log.info(article_url)
+                doi_a = soup.new_tag("a")
+                doi_a["href"] = article_doi
+                doi_a.string = article_doi
+                em.string = "doi: "
+                em.append(doi_a)
         return soup
 
     def parse_index(self):
