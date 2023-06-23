@@ -3,7 +3,7 @@
   #display-container {
     height: 85vh;
   }
-  .vh-100 {
-    height: 100%;
-  }
+}
+main.vh-100.container-fluid {
+  height: calc(100% - 5vh) !important;
 }
