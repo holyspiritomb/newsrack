@@ -153,11 +153,11 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
             _issue_url if _issue_url else f"{BASE}/nature/current-issue"
         )
         self.cover_url = (
-            "https:"
-            + soup.find("img", attrs={"data-test": check_words("issue-cover-image")})[
+            soup.find("img", attrs={"data-test": check_words("issue-cover-image")})[
                 "src"
             ]
         )
+        self.log(self.cover_url)
         try:
             self.cover_url = re.sub(
                 r"\bw\d+\b", "w1000", self.cover_url
