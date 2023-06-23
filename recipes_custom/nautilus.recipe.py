@@ -4,6 +4,7 @@ nautil.us
 # Original from https://github.com/kovidgoyal/calibre/blob/946ae082e1291f61d88638ff3f3723df591da835/recipes/nautilus.recipe
 import os
 import sys
+from urllib.parse import urljoin
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -21,8 +22,7 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
     oldest_article = 45  # days
     max_articles_per_feed = 50
     description = (
-        '''Nautilus is a different kind of science magazine. Our stories take you into the depths of science and spotlight its ripples in our lives and cultures. We believe any subject in science, no matter how complex, can be explained with clarity and vitality.
-        https://nautil.us/'''
+        '''Nautilus is a different kind of science magazine. Our stories take you into the depths of science and spotlight its ripples in our lives and cultures. We believe any subject in science, no matter how complex, can be explained with clarity and vitality. https://nautil.us/'''
     )
     conversion_options = {
         'tags' : 'Science, Nautilus, Periodical',
@@ -53,37 +53,24 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
     div.wp-block-image div { font-size: 0.8rem; }
     blockquote.wp-block-quote { font-size: 1.25rem; margin-left: 0; text-align: center; }
     div.feature-image img, div.wp-block-image img { display: block; max-width: 100%; height: auto; }
+    .article-author { margin-top: 2rem; border-top: solid 1px; padding-top: 0.5rem; font-style: italic; }
     """
 
-    feeds = [
-        ("Anthropology", "https://nautil.us/topics/anthropology/feed/"),
-        ("Arts", "https://nautil.us/topics/arts/feed/"),
-        ("Astronomy", "https://nautil.us/topics/astronomy/feed/"),
-        ("Communication", "https://nautil.us/topics/communication/feed/"),
-        ("Economics", "https://nautil.us/topics/economics/feed/"),
-        ("Environment", "https://nautil.us/topics/environment/feed/"),
-        ("Evolution", "https://nautil.us/topics/evolution/feed/"),
-        ("Genetics", "https://nautil.us/topics/genetics/feed/"),
-        ("Geoscience", "https://nautil.us/topics/geoscience/feed/"),
-        ("Health", "https://nautil.us/topics/health/feed/"),
-        ("History", "https://nautil.us/topics/history/feed/"),
-        ("Math", "https://nautil.us/topics/math/feed/"),
-        ("Microbiology", "https://nautil.us/topics/microbiology/feed/"),
-        ("Neuroscience", "https://nautil.us/topics/neuroscience/feed/"),
-        ("Paleontology", "https://nautil.us/topics/paleontology/feed/"),
-        ("Philosophy", "https://nautil.us/topics/philosophy/feed/"),
-        ("Physics", "https://nautil.us/topics/physics/feed/"),
-        ("Psychology", "https://nautil.us/topics/psychology/feed/"),
-        ("Sociology", "https://nautil.us/topics/sociology/feed/"),
-        ("Technology", "https://nautil.us/topics/technology/feed/"),
-        ("Zoology", "https://nautil.us/topics/zoology/feed/"),
-    ]
+    def get_feeds(self):
+        soup = self.index_to_soup("https://nautil.us/")
+        topics = soup.find_all(
+            name="a",
+            attrs={"data-ev-act": "topics", "data-ev-label": True, "href": True},
+        )
+        if not topics:
+            return self.feeds
+        feeds = [(t["data-ev-label"], urljoin(t["href"], "feed/")) for t in topics]
+        return feeds
 
     def parse_feeds(self):
         feeds = BasicNewsRecipe.parse_feeds(self)
         for feed in feeds:
             for article in feed.articles[:]:
-                # self.log.info(f"article.title is: {article.title}")
                 if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
                     self.log.warn(f"removing {article.title} from feed")
                     feed.articles.remove(article)
@@ -93,17 +80,6 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
-
-    def get_cover_url(self):
-        soup = self.index_to_soup("https://nautil.us/shop/category/issues/")
-        div = soup.find("li", **classes("product"))
-        if div:
-            self.cover_url = (
-                div.find("img", attrs={"srcset": True})["srcset"]
-                .split(",")[0]
-                .split()[0]
-            )
-        return getattr(self, "cover_url", self.cover_url)
 
     def preprocess_html(self, soup):
         breadcrumb = soup.find("ul", attrs={"class": "breadcrumb"})
@@ -130,4 +106,13 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
 
         for img in soup.findAll("img", attrs={"data-src": True}):
             img["src"] = img["data-src"].split("?")[0]
+
+        # convert author ul/li
+        for ul in soup.find_all("ul", class_="article-author"):
+            for li in ul.find_all("li", class_="article-author-box"):
+                for p in li.find_all("p"):
+                    p.name = "div"
+                li.name = "div"
+            ul.name = "div"
+
         return soup
