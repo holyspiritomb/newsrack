@@ -2,7 +2,7 @@
 if [ -z "$1" ];
 then
     echo "No recipe specified."
-    echo "Usage: sh _debug.sh example"
+    echo "Usage: sh _debug-full.sh example"
     exit 9
 fi
 
@@ -21,7 +21,7 @@ do
 done
 
 rm -rf debug
-ebook-convert "$1.recipe" .mobi --debug-pipeline debug -vv && \
+ebook-convert "$1.recipe" .mobi --test --debug-pipeline debug -vv && \
 # open debug/input/index.html
 
 if [ -f "$1.recipe" ]; then
