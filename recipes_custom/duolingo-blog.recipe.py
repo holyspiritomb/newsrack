@@ -30,14 +30,14 @@ class Duolingo(BasicNewsrackRecipe, BasicNewsRecipe):
     no_stylesheets = True
     remove_attributes = ["style"]
     # recursions = 1
-    masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/static/img/duolingo.svg"
+    masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/recipes_custom/logos/duolingo.svg"
     description = (
         '''Read about how Duolingo works, and how our learning scientists are working to make education fun and accessible to everyone. Generated from https://blog.duolingo.com'''
     )
     conversion_options = {
         'linearize_tables' : False,
         'tags' : 'Duolingo, Linguistics, Education',
-        'authors' : 'newsrack',
+        'authors' : 'Duolingo',
         'change_justification': 'left',
     }
     # feeds = [

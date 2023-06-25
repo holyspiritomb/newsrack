@@ -14,7 +14,7 @@ categories_sort: List[str] = ["Science", "Blogs", "Arts & Culture", "News", "Mag
 class CustomConvOptions(Recipe):
     def __post_init__(self):
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher=https://holyspiritomb.github.io/newsrack/"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'"],
         }
 
 
@@ -73,7 +73,7 @@ recipes: List[Recipe] = [
         tags=["magazine"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="static/img/additude.png"
+            logo_path_or_url="recipes_custom/logos/additude.png"
         ),
         enable_on=lambda recipe: every_x_hours(
             last_run=recipe.last_run, hours=24, drift=60
@@ -88,7 +88,7 @@ recipes: List[Recipe] = [
         tags=["lgbtq"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="static/img/advocate.png"
+            logo_path_or_url="recipes_custom/logos/advocate.png"
         ),
         enable_on=lambda recipe: every_x_hours(
             last_run=recipe.last_run, hours=24, drift=60
@@ -118,7 +118,7 @@ recipes: List[Recipe] = [
         tags=["tech"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="static/img/archlinux.png"
+            logo_path_or_url="recipes_custom/logos/archlinux.png"
         ),
     ),
     CustomOptionsRecipe(
@@ -175,7 +175,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="static/img/duolingo-green.png"
+            logo_path_or_url="recipes_custom/logos/duolingo-green.png"
         ),
     ),
     CustomOptionsRecipe(
@@ -489,7 +489,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         tags=["science", "tech", "daily"],
         cover_options=CustomCoverOptions(
-            logo_path_or_url="static/img/science-daily.png"
+            logo_path_or_url="recipes_custom/logos/science-daily.png"
         ),
     ),
     CustomMonthlyRecipe(
@@ -564,7 +564,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=60
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="static/img/universe-today.png",
+            logo_path_or_url="recipes_custom/logos/universe-today.png",
         ),
     ),
     CustomOptionsRecipe(
@@ -579,7 +579,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, hours=12, drift=60
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="static/img/wtfjht-t.jpg"
+            logo_path_or_url="recipes_custom/logos/wtfjht-t.jpg"
         ),
     ),
     CustomMonthlyRecipe(

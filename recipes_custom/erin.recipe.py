@@ -28,6 +28,8 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
 
     conversion_options = {
         'tags' : 'Blog, Trans, LGBTQ',
+        'authors': 'Erin Reed',
+        'publisher': 'Erin Reed'
     }
 
     remove_tags = [

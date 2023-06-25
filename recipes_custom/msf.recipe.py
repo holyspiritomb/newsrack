@@ -26,7 +26,7 @@ class MSF(BasicNewsRecipe, BasicNewsrackRecipe):
     remove_attributes = ['height', 'width', 'style']
     encoding = 'utf-8'
     ignore_duplicate_articles = {'url'}
-    masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/static/img/msf.svg"
+    masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/recipes_custom/logos/msf.svg"
     keep_only_tags = [
         dict(name="h1", attrs={"class": "typo-headline"}),
         dict(attrs={"class": "hero__media"}),

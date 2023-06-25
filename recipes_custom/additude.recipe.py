@@ -25,7 +25,7 @@ class ADDitude(WordPressNewsrackRecipe, BasicNewsRecipe):
     # no_javascript = True
     remove_empty_feeds = True
     use_embedded_content = True
-    masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/static/img/additude.svg"
+    masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/recipes_custom/logos/additude.svg"
     description = (
         '''Articles about ADHD of interest to people with ADHD.'''
     )

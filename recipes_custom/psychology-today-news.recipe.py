@@ -40,7 +40,7 @@ class PsychologyTodayDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     language = 'en'
     no_stylesheets = True
     publication_type = 'newspaper'
-    masthead_url = "https://i.imgur.com/QW9Evsi.png"
+    masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/recipes_custom/logos/psych.svg"
     delay = 1
 
     keep_only_tags = [dict(attrs={'id': 'block-pt-content'})]
