@@ -210,7 +210,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="News",
-        tags=["editorial", "commentary", "news"],
+        tags=["editorial", "commentary", "news", "jewish", "religion"],
         overwrite_cover=True,
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=0
@@ -243,8 +243,22 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science"],
         overwrite_cover=True,
-        cover_options=CoverOptions(logo_path_or_url="recipes/logos/knowable.png"),
+        cover_options=CustomCoverOptions(logo_path_or_url="recipes/logos/knowable.png"),
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
+    ),
+    CustomOptionsRecipe(
+        recipe="life-is-a-sacred-text",
+        slug="life-is-a-sacred-text",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Blogs",
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="recipes_custom/logos/life-is-a-sacred-text.png"
+        ),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
+        tags=["religion", "jewish"],
     ),
     CustomOptionsRecipe(
         recipe="lithub",
@@ -399,10 +413,10 @@ recipes: List[Recipe] = [
         slug="newyorker",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Editorial",
+        category="Magazines",
         overwrite_cover=False,
-        enable_on=False,
-        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
+        # enable_on=False,
+        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
         tags=["editorial", "commentary", "weekly"],
     ),
     CustomOptionsRecipe(
@@ -429,7 +443,7 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
         ),
-        tags=["literature"],
+        tags=["literature", "books"],
     ),
     CustomMonthlyRecipe(
         recipe="philosophy-now",
@@ -459,12 +473,12 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=False,
-        category="Science",
+        category="Magazines",
         title_date_format="%b %Y",
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_days(
-        #     last_run=recipe.last_run, days=7, drift=60
-        # ),
+        # enable_on=False,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=7, drift=60
+        ),
         tags=["science", "monthly"],
     ),
     CustomOptionsRecipe(
@@ -497,10 +511,9 @@ recipes: List[Recipe] = [
         slug="scientific-american",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Science",
+        category="Magazines",
         overwrite_cover=False,
-        enable_on=onlyon_days(list(range(15, 31)), -5)  # middle of the month?
-        and onlyat_hours(list(range(8, 20)), -4),  # middle of the month?
+        enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
         tags=["science", "tech", "monthly"],
     ),
     CustomMonthlyRecipe(
@@ -542,14 +555,14 @@ recipes: List[Recipe] = [
         tags=["news", "politics"],
     ),
     CustomOptionsRecipe(
-        recipe="time",
-        slug="time",
+        recipe="time-magazine",
+        slug="time-magazine",
         src_ext="mobi",
         target_ext=["epub"],
         overwrite_cover=False,
-        category="Editorial",
-        # enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(10, 18)), -4),
-        enable_on=False,
+        category="Magazines",
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
+        # enable_on=False,
         tags=["news", "politics", "weekly"],
     ),
     CustomOptionsRecipe(
