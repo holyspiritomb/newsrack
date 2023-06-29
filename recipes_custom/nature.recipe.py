@@ -3,7 +3,6 @@ import os
 import re
 import sys
 from collections import OrderedDict
-from datetime import datetime, timezone
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -20,10 +19,6 @@ def absurl(url):
     elif url.startswith("http://"):
         url = "https" + url[4:]
     return url
-
-
-def check_words(words):
-    return lambda x: x and frozenset(words.split()).intersection(x.split())
 
 
 _name = "Nature"
@@ -92,7 +87,6 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
             article.utctime = pub_date_utc
             if not self.pub_date or pub_date_utc > self.pub_date:
                 self.pub_date = pub_date_utc
-                # self.title = f"{_name}: {pub_date_utc:%-d %b, %Y}"
 
     def preprocess_html(self, soup):
         if soup.find(name="h2", id="access-options"):
@@ -131,10 +125,8 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
                 img["src"] = "https:" + img["data-src"]
             else:
                 img["src"] = img["data-src"]
-        for div in soup.findAll(
-            "div", {"data-component": check_words("article-container")}
-        )[1:]:
-            div.extract()
+        for div in soup.find_all("div", {"data-component": "article-container"})[1:]:
+            div.decompose()
         return soup
 
     def postprocess_html(self, soup, first_fetch):
@@ -153,12 +145,9 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
         soup = self.index_to_soup(
             _issue_url if _issue_url else f"{BASE}/nature/current-issue"
         )
-        self.cover_url = (
-            soup.find("img", attrs={"data-test": check_words("issue-cover-image")})[
-                "src"
-            ]
-        )
-        self.log(self.cover_url)
+        self.cover_url = soup.find("img", attrs={"data-test": "issue-cover-image"})[
+            "src"
+        ]
         try:
             self.cover_url = re.sub(
                 r"\bw\d+\b", "w1000", self.cover_url
@@ -207,7 +196,7 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
                             "datetime"
                         ],
                         "author": self.tag_to_string(
-                            article_tag.find("li", {"itemprop": check_words("creator")})
+                            article_tag.find("li", {"itemprop": "creator"})
                         ),
                     }
                 )
