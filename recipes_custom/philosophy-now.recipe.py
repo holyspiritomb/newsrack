@@ -45,15 +45,20 @@ class PhilosophyNow(BasicNewsRecipe, BasicNewsrackRecipe):
         div = soup.find('div', attrs={'id': 'aside_issue_cover'})
         url = div.find('a', href=True)['href']
         issue_date = div.find('p', attrs={'id': 'aside_issue_date'})
+        # issue_number = div.find('p', attrs={'id': 'aside_issue_number'})
+        # seriesidx = self.tag_to_string(issue_number).split(' ')[1]
         self.log('Issue date found: ', self.tag_to_string(issue_date).strip())
+        self.log(self.verbose)
         cleaned_issue_date = self.tag_to_string(issue_date).strip()
         if nr_issue_date:
             if nr_issue_date == cleaned_issue_date:
                 self.abort_recipe_processing("We have this issue.")
         self.title = f"{_name}: {cleaned_issue_date}"
-        self.log('Added title: ', self.title)
+        # self.log('Added title: ', self.title)
         for issue in div.findAll('div', attrs={'id': 'aside_issue_text'}):
             self.log('Downloading issue:', self.tag_to_string(issue).strip())
+            self.series = "Philosophy Now"
+            # self.series_index = seriesidx
         cov_url = div.find('img', src=True)['src']
         self.cover_url = 'https://philosophynow.org' + cov_url
         soup = self.index_to_soup('https://philosophynow.org' + url)
