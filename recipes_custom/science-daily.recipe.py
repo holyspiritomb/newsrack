@@ -30,7 +30,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         'authors' : 'newsrack',
     }
     masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/static/img/science-daily.png"
-    oldest_article = 7
+    oldest_article = 3
     remove_empty_feeds = True
     max_articles_per_feed = 25
     use_embedded_content = False

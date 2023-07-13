@@ -324,8 +324,8 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science", "space"],
         overwrite_cover=True,
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=12, drift=60
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/NASA_Worm_logo.svg/1024px-NASA_Worm_logo.svg.png",
@@ -352,8 +352,8 @@ recipes: List[Recipe] = [
         category="Magazines",
         tags=["daily", "history", "science"],
         overwrite_cover=True,
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=12, drift=0
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png"
@@ -381,7 +381,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
         ),
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+            last_run=recipe.last_run, days=3, drift=60
         ),
     ),
     CustomOptionsRecipe(
@@ -391,7 +391,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Politics",
         overwrite_cover=False,
-        enable_on=(first_n_days_of_month(4) or last_n_days_of_month(10))
+        enable_on=(first_n_days_of_month(4) or last_n_days_of_month(6))
         and onlyat_hours(list(range(8, 16))),
         tags=["politics", "commentary"],
     ),

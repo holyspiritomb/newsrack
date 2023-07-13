@@ -28,7 +28,7 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     )
     publication_type = 'magazine'
     language = "en"
-    oldest_article = 14
+    oldest_article = 7
     max_articles_per_feed = 50
     use_embedded_content = False
     remove_empty_feeds = True
