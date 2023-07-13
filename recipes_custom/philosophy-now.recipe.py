@@ -50,9 +50,10 @@ class PhilosophyNow(BasicNewsRecipe, BasicNewsrackRecipe):
         self.log('Issue date found: ', self.tag_to_string(issue_date).strip())
         self.log(self.verbose)
         cleaned_issue_date = self.tag_to_string(issue_date).strip()
-        if nr_issue_date:
-            if nr_issue_date == cleaned_issue_date:
-                self.abort_recipe_processing("We have this issue.")
+        if self.verbose is not True:
+            if nr_issue_date:
+                if nr_issue_date == cleaned_issue_date:
+                    self.abort_recipe_processing("We have this issue.")
         self.title = f"{_name}: {cleaned_issue_date}"
         # self.log('Added title: ', self.title)
         for issue in div.findAll('div', attrs={'id': 'aside_issue_text'}):
