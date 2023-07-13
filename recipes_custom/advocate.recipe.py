@@ -72,8 +72,8 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
                 new_tweet = tweet.encode("utf-8").decode("unicode-escape")
                 new_tweet_soup = BeautifulSoup(new_tweet, 'html5lib', from_encoding="unicode")
                 tweet.insert_before(new_tweet_soup)
-                self.log(tweet)
-                self.log(new_tweet_soup)
+                # self.log(tweet)
+                # self.log(new_tweet_soup)
                 tweet.decompose()
             # twdiv = tweet.find("div")
                 # if twdiv:

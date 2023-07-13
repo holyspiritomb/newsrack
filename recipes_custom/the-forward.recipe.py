@@ -20,7 +20,7 @@ class TheForward(BasicNewsRecipe, BasicNewsrackRecipe):
     masthead_url = "https://forward.com/wp-content/themes/studio-simpatico/svgs/logo.svg"
     language = "en"
     encoding = "utf-8"
-    oldest_article = 7
+    oldest_article = 3
     max_articles_per_feed = 50
     auto_cleanup = True
     publication_type = 'newspaper'

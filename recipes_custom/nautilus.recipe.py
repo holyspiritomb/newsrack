@@ -19,7 +19,7 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     language = "en"
     __author__ = "unkn0wn"
-    oldest_article = 45  # days
+    oldest_article = 14  # days
     max_articles_per_feed = 50
     description = (
         '''Nautilus is a different kind of science magazine. Our stories take you into the depths of science and spotlight its ripples in our lives and cultures. We believe any subject in science, no matter how complex, can be explained with clarity and vitality. https://nautil.us/'''

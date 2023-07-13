@@ -50,6 +50,7 @@ class PhilosophyNow(BasicNewsRecipe, BasicNewsrackRecipe):
         self.log('Issue date found: ', self.tag_to_string(issue_date).strip())
         self.log(self.verbose)
         cleaned_issue_date = self.tag_to_string(issue_date).strip()
+        # Setting verbose forces a regeneration
         if self.verbose is not True:
             if nr_issue_date:
                 if nr_issue_date == cleaned_issue_date:
