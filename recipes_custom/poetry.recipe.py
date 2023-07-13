@@ -75,6 +75,8 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
         return soup
 
     def parse_index(self):
+        nr_soup = self.index_to_soup("https://holyspiritomb.github.io/newsrack/")
+        nr_issue_date = nr_soup.find("li", id="poetry").find("span", class_="title").string[8:]
         if _issue_url:
             soup = self.index_to_soup(_issue_url)
         else:
@@ -84,8 +86,12 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
                 self.abort_recipe_processing("Unable to find latest issue")
             current_issue = current_issue[0]
             soup = self.index_to_soup(current_issue["href"])
-
         issue_edition = self.tag_to_string(soup.find("h1"))
+        # self.log(issue_edition)
+        # Setting verbose will force a regeneration
+        if self.verbose is not True:
+            if issue_edition == nr_issue_date:
+                self.abort_recipe_processing("We have this issue already.")
         self.title = f"{_name}: {issue_edition}"
         try:
             self.pub_date = datetime.strptime(issue_edition, "%B %Y").replace(
