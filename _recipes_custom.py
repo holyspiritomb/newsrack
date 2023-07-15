@@ -24,7 +24,8 @@ class CustomOptionsRecipe(Recipe):
     def __post_init__(self):
         self.title_date_format = "%Y %b %-d"
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'", "--change-justification='left'"],
+            "epub": ["--embed-font-family='Open Sans'", "--change-justification='left'"]
         }
 
 
@@ -45,7 +46,8 @@ class CustomMonthlyRecipe(Recipe):
     def __post_init__(self):
         self.title_date_format = "%b %Y"
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'"],
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'", "--change-justification='left'"],
+            "epub": ["--embed-font-family='Open Sans'", "--change-justification='left'"]
         }
 
 
