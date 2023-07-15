@@ -19,10 +19,6 @@ from calibre.web.feeds.news import BasicNewsRecipe
 _issue_url = ""
 _name = "Poetry"
 
-if os.path.exists('/home/runner/work/newsrack/newsrack'):
-    for entry in os.walk('/home/runner/work/newsrack/newsrack/static'):
-        print(entry)
-
 
 class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
