@@ -12,6 +12,8 @@ from calibre.web.feeds.news import BasicNewsRecipe
 
 _name = "Arch Linux"
 
+for entry in os.walk('/usr/share/fonts'):
+    print(entry)
 
 class ArchLinux(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
@@ -37,8 +39,6 @@ class ArchLinux(BasicNewsrackRecipe, BasicNewsRecipe):
             # article.title = format_title(article.title, article.utctime)
 
     def parse_feeds(self):
-        for entry in os.walk('/usr/share/fonts'):
-            print(entry)
         # convert single parsed feed into date-sectioned feed
         # use this only if there is just 1 feed
         parsed_feeds = super().parse_feeds()
