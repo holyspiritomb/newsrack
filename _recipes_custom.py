@@ -114,8 +114,8 @@ recipes: List[Recipe] = [
     CustomOptionsRecipe(
         recipe="archlinux",
         slug="archlinux",
-        src_ext="mobi",
-        target_ext=["epub"],
+        src_ext="epub",
+        target_ext=["mobi"],
         category="News",
         tags=["tech"],
         overwrite_cover=True,
@@ -585,8 +585,8 @@ recipes: List[Recipe] = [
     CustomOptionsRecipe(
         recipe="wtfjht",
         slug="wtfjht",
-        src_ext="mobi",
-        target_ext=["epub"],
+        src_ext="epub",
+        target_ext=["mobi"],
         overwrite_cover=True,
         category="News",
         tags=["daily"],
@@ -620,7 +620,7 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science", "tech", "daily"],
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=12, drift=15
+            last_run=recipe.last_run, hours=24, drift=15
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
