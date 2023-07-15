@@ -3,6 +3,7 @@
 # This software is released under the GNU General Public License v3.0
 # https://opensource.org/licenses/GPL-3.0
 import os
+import os.path
 import re
 import sys
 from collections import OrderedDict
@@ -17,6 +18,10 @@ from calibre.web.feeds.news import BasicNewsRecipe
 
 _issue_url = ""
 _name = "Poetry"
+
+if os.path.exists('/home/runner/work/newsrack/newsrack'):
+    for entry in os.walk('/home/runner/work/newsrack/newsrack/static'):
+        print(entry)
 
 
 class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
