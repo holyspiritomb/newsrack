@@ -18,7 +18,7 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     recursions = 0
     remove_empty_feeds = True
-    masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/static/img/advocate.png"
+    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/advocate.png"
 
     description = "Gay, lesbian, bisexual, transgender, queer news leader including politics, commentary, arts and entertainment - your source for LGBTQ news for over 50 years."
     __author__ = 'holyspiritomb'

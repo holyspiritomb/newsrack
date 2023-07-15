@@ -22,6 +22,7 @@ class UniverseToday(WordPressNewsrackRecipe, BasicNewsRecipe):
     max_articles_per_feed = 40
     no_stylesheets = True
     remove_empty_feeds = True
+    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/universe-today.png"
     resolve_internal_links = False
     remove_tags = [
         dict(name=["script", "noscript", "style"]),

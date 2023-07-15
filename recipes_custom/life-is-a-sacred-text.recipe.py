@@ -22,6 +22,7 @@ class LifeIsASacredText(BasicNewsrackRecipe, BasicNewsRecipe):
     remove_empty_feeds = True
     resolve_internal_links = True
     use_embedded_content = True
+    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/life-is-a-sacred-text.png"
 
     feeds = [("Posts", "https://lifeisasacredtext.substack.com/feed")]
 

@@ -40,7 +40,7 @@ class PsychologyToday(BasicNewsrackRecipe, BasicNewsRecipe):
     encoding = 'UTF-8'
     no_stylesheets = True
     publication_type = 'magazine'
-    masthead_url = "https://raw.githubusercontent.com/holyspiritomb/newsrack/spiritomb/recipes_custom/logos/psych.svg"
+    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/psych.svg"
 
     keep_only_tags = [dict(attrs={'id': 'block-pt-content'})]
     remove_tags = [classes('pt-social-media')]

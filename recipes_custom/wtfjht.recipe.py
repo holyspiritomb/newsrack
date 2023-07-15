@@ -26,6 +26,7 @@ class WTFJHT(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = True
     publication_type = 'newspaper'
     # masthead_url = ""
+    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/wtfjht-t.jpg"
     # auto_cleanuo = True
     description = (
         '''Today's essential guide to the daily shock and awe in national politics. Read in moderation.'''
