@@ -12,8 +12,6 @@ from calibre.web.feeds.news import BasicNewsRecipe
 
 _name = "Arch Linux"
 
-for entry in os.walk('/usr/share/fonts'):
-    print(entry)
 
 class ArchLinux(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
