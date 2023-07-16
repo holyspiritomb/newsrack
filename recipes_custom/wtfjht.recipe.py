@@ -25,7 +25,6 @@ class WTFJHT(BasicNewsrackRecipe, BasicNewsRecipe):
     remove_empty_feeds = True
     use_embedded_content = True
     publication_type = 'newspaper'
-    # masthead_url = ""
     masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/wtfjht-t.jpg"
     # auto_cleanuo = True
     description = (
@@ -38,7 +37,7 @@ class WTFJHT(BasicNewsrackRecipe, BasicNewsRecipe):
     # remove_tags = []
     feeds = [
         # ('WTF', 'https://whatthefuckjusthappenedtoday.com/atom.xml'),
-        ('WTF 2', 'https://whatthefuckjusthappenedtoday.com/rss.xml')
+        ('WTF ', 'https://whatthefuckjusthappenedtoday.com/rss.xml')
     ]
 
     extra_css = '''
@@ -57,13 +56,6 @@ class WTFJHT(BasicNewsrackRecipe, BasicNewsRecipe):
             return parsed_feeds
 
         articles = []
-        for feed in parsed_feeds:
-            articles.extend(feed.articles)
-            for article in feed.articles[:]:
-                # self.log.info(f"article.title is: {article.title}")
-                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
-                    self.log.warn(f"removing {article.title} from feed")
-                    feed.articles.remove(article)
         articles = sorted(articles, key=lambda art: art.utctime, reverse=True)
         new_feeds = []
         curr_feed = None
