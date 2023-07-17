@@ -46,8 +46,8 @@ class CustomMonthlyRecipe(Recipe):
     def __post_init__(self):
         self.title_date_format = "%b %Y"
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'", "--change-justification=left"],
-            "epub": ["--embed-font-family=Lato"]
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'", "--change-justification=left"]
+            # "epub": ["--embed-font-family=Lato"]
         }
 
 
