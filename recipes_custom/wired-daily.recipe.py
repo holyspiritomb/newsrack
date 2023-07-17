@@ -49,6 +49,16 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
                         vertical-align: baseline;
                         display: inline;
                         }
+        p {font-size: 1em}
+        #lead-image, #lead-image-caption{
+                        display: block;
+                        }
+        #lead-image-caption, #categ_date, .caption__text, .caption__credit, p.byline, .caption{font-size:0.8em;}
+        span.lead-in-text-callout, .caption__text p {font-size: 1.1em;}
+        #categ_date{
+                        text-transform: uppercase;
+                        }
+        img[alt] {max-width: 90vw; height:auto;}
         ul:not(.calibre_feed_list) li{display: inline}
     """
     conversion_options = {
@@ -58,13 +68,14 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
 
     remove_tags = [
         classes('related-cne-video-component tags-component podcast_42 storyboard inset-left-component social-icons recirc-most-popular-wrapper'),
+        dict(name='button', attrs={'aria-label': 'Save'}),
         dict(name=['meta', 'link', 'aside']),
         dict(id=['sharing', 'social', 'article-tags', 'sidebar']),
     ]
     keep_only_tags = [
         dict(name='article', attrs={'class': 'article main-content'}),
     ]
-    remove_attributes = ['srcset']
+    remove_attributes = ['srcset', 'sizes', 'media', 'data-event-click', 'data-offer-url']
     handle_gzip = True
 
     # https://www.wired.com/about/rss-feeds/
@@ -95,13 +106,9 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         for feed in feeds:
             for article in feed.articles[:]:
                 # self.log.info(f"article.title is: {article.title}")
-                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or regex.match(article.title):
                     self.log.warn(f"removing {article.title} from feed")
-                    feed.articles.remove(article)
-                    continue
-                if regex.match(article.title):
-                    self.log.warn(f"removing {article.title} from feed")
-                    feed.articles.remove(article)
+                    # feed.articles.remove(article)
                     continue
         return feeds
 
@@ -109,6 +116,50 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+
+    def preprocess_html(self, soup):
+        a_soup = soup.find(class_='article main-content')
+        headline = a_soup.find(attrs={'data-testid': "ContentHeaderHed"})
+        subhead = a_soup.find(attrs={'data-testid': 'ContentHeaderAccreditation'})
+        subhead["id"] = "subhead"
+        subhead.name = "h2"
+        subhead_text = self.tag_to_string(subhead)
+        subhead.clear()
+        subhead.append(subhead_text)
+        category = a_soup.find("a", class_='rubric__link')
+        category["class"] = 'rubric__link'
+        author = a_soup.find("p", attrs={'itemprop': 'author'})
+        author["class"] = 'byline bylines__byline'
+        lead_pic = a_soup.find("div", class_='lead-asset')
+        lead_img = lead_pic.find('img')
+        lead_cap = lead_pic.find(attrs={'class': 'caption__credit'})
+        lead_img["id"] = "lead-image"
+        lead_cap["id"] = "lead-image-credit"
+        a_date = a_soup.find("time")
+        content = a_soup.find_all("div", class_='body__inner-container')
+        cat_time = soup.new_tag("div")
+        cat_time["id"] = "categ_date"
+        cat_time.append(category)
+        cat_time.append(" || ")
+        cat_time.append(a_date)
+        new_soup = soup.new_tag("div")
+        new_soup.append(cat_time)
+        new_soup.append(headline)
+        new_soup.append(author)
+        new_soup.append(subhead)
+        new_soup.append(lead_img)
+        new_soup.append(lead_cap)
+        for piece in content:
+            new_soup.append(piece)
+        new_soup["class"] = 'the_article'
+        for noscript in new_soup.find_all("noscript"):
+            noscript["class"] = "noscript"
+            noscript.name = "div"
+        for div in new_soup.find_all("div", attrs={'aria-level': "3"}):
+            div.name = "h3"
+        a_soup.clear()
+        a_soup.append(new_soup)
+        return soup
 
     def get_article_url(self, article):
         return article.get('link', None)
