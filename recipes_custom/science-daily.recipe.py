@@ -30,9 +30,9 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         'authors' : 'newsrack',
     }
     masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/science-daily.png"
-    oldest_article = 3
+    oldest_article = 7
     remove_empty_feeds = True
-    max_articles_per_feed = 25
+    max_articles_per_feed = 20
     use_embedded_content = False
     language = 'en'
     encoding = 'utf-8'
@@ -42,7 +42,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     resolve_internal_links = False
     recursions = 0
     remove_tags = [
-        classes("logo sharing hr-logo fullstory"),
+        classes("logo sharing hr-logo fullstory breaking-list sidebar"),
         dict(id='related_releases'),
         dict(id='related_topics'),
         dict(id='share_top'),
@@ -56,6 +56,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(name='dt', attrs={'class': 'no-print'}),
         dict(name='dd', attrs={'class': 'no-print'}),
         dict(name='div', attrs={'class': 'mobile-top-rectangle'}),
+        dict(name='div', attrs={'class': 'display-none'}),
         dict(name='div', attrs={'class': 'mobile-end-rectangle'}),
         dict(name='ul', attrs={'class': 'topics'}),
     ]
