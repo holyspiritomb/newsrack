@@ -21,6 +21,7 @@ done
 
 mkdir -p public meta \
 && cp -p static/*.svg public/ \
+&& cp -p static/*.ttf public/ \
 && cp -p static/opds.xsl public/ \
 && npx babel static/site.js --out-file static/site.compiled.js \
 && npx babel static/reader.js --out-file static/reader.compiled.js \
