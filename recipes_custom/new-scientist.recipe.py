@@ -79,6 +79,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                                  body{font-family: "Lato", "Roboto", sans-serif}
                                  img{margin-bottom: 0.8em; display: block}
                                  h1{font-size:1.75rem;text-align:left}
+                                 #url_div{padding-top:5px;}
                                  h4 > a + span{font-weight:normal; text-transform: uppercase;font-family:sans-serif}
                                  h1 + p{font-size:1.5rem;font-style:italic;}
                                  h1 + p + p {font-size:1rem;border-bottom:1px dashed black;padding-bottom:0.7rem}
@@ -113,6 +114,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
 
     feeds = [
         ('Features', 'https://www.newscientist.com/section/features/feed/'),
+        ('News', 'https://www.newscientist.com/section/news/feed/'),
         ('Physics', 'https://www.newscientist.com/subject/physics/feed/'),
         ('Technology', 'https://www.newscientist.com/subject/technology/feed/'),
         ('Space', 'https://www.newscientist.com/subject/space/feed/'),
@@ -120,7 +122,6 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         ('Earth', 'https://www.newscientist.com/subject/earth/feed/'),
         ('Health', 'https://www.newscientist.com/subject/health/feed/'),
         ('Humans', 'https://www.newscientist.com/subject/humans/feed/'),
-        ('News', 'https://www.newscientist.com/section/news/feed/'),
         # ('Other', 'https://www.newscientist.com/feed/home/')
     ]
 
@@ -137,6 +138,16 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         meta_desc = soup.find('meta', {'property': 'og:description'})
         if meta_desc:
             headline["data-desc"] = meta_desc["content"]
+        for img in soup.findAll('img', attrs={'srcset': True}):
+            if "?" in img["src"]:
+                a_src = img["src"].split("?")[0]
+                img["src"] = a_src
+        for div in soup.findAll(attrs={"class": "article-image-inline"}):
+            for img in div.findAll("img", attrs={"loading": "lazy"}):
+                if "?" in img["data-src"]:
+                    imgsrc = img["data-src"].split("?")[0]
+                    img["data-src"] = imgsrc
+                img["src"] = img["data-src"]
         return str(soup)
 
     def preprocess_html(self, soup):
@@ -158,6 +169,26 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                 alt_div = soup.new_tag("div", attrs={"class": "img-alt-text"})
                 alt_div.append(alt_txt)
                 img.insert_after(alt_div)
+        topics = soup.find("section", attrs={"class": "ArticleTopics"})
+        url = soup.find("h1")["data-url"]
+        orig_url_div = soup.new_tag("div")
+        orig_url_div["id"] = "url_div"
+        srclink = soup.new_tag("a")
+        srclink["id"] = "original_url"
+        srclink.append(url)
+        srclink_wrapper = soup.new_tag("span")
+        srclink_wrapper.append("Downloaded from ")
+        srclink_wrapper.append(srclink)
+        orig_url_div.append(srclink_wrapper)
+        self.log(orig_url_div)
+        topics.insert_after(orig_url_div)
+        topics.extract()
+        return soup
+
+    def postprocess_html(self, soup, _):
+        orig_link = soup.find("a", attrs={"id": "original_url"})
+        a_url = self.tag_to_string(orig_link)
+        orig_link["href"] = a_url
         return soup
 
     def get_article_url(self, article):
@@ -227,6 +258,11 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                     self.log.warn(f"removing {article.url} from feed")
                     feed.articles.remove(article)
                     continue
+                if "PREMIUM ARTICLE" in article.summary.upper():
+                    self.log.warn(f"removing {article.url} from feed")
+                    feed.articles.remove(article)
+                    continue
+        # new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
         return feeds
 
     def populate_article_metadata(self, article, soup, _):
