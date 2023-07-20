@@ -1,21 +1,32 @@
 // Define your own custom viewer theme css here
 @font-face {
     font-display: swap;
-    font-family: "Readex Pro Light";
-    src: url('ReadexPro-Light.ttf') format('truetype');
-    font-weight: 300;
-}
-@font-face {
-    font-display: swap;
-    font-family: "Readex Pro";
-    src: url('ReadexPro-Regular.ttf') format('truetype');
+    font-family: "Lato";
+    src: url('LatoLatin-Regular.ttf') format('truetype');
     font-weight: 400;
 }
+
 @font-face {
     font-display: swap;
-    font-family: "Readex Pro";
-    src: url('ReadexPro-SemiBold.ttf') format('truetype');
-    font-weight: 500;
+    font-family: "Lato";
+    src: url('LatoLatin-Bold.ttf') format('truetype');
+    font-weight: 600;
+}
+
+@font-face {
+    font-display: swap;
+    font-family: "Lato";
+    src: url('LatoLatin-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-display: swap;
+    font-family: "Lato";
+    src: url('LatoLatin-BoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
 }
 .viewer-theme {
   font-family: 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
