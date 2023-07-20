@@ -114,7 +114,6 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
 
     feeds = [
         ('Features', 'https://www.newscientist.com/section/features/feed/'),
-        ('News', 'https://www.newscientist.com/section/news/feed/'),
         ('Physics', 'https://www.newscientist.com/subject/physics/feed/'),
         ('Technology', 'https://www.newscientist.com/subject/technology/feed/'),
         ('Space', 'https://www.newscientist.com/subject/space/feed/'),
@@ -122,6 +121,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         ('Earth', 'https://www.newscientist.com/subject/earth/feed/'),
         ('Health', 'https://www.newscientist.com/subject/health/feed/'),
         ('Humans', 'https://www.newscientist.com/subject/humans/feed/'),
+        ('News', 'https://www.newscientist.com/section/news/feed/'),
         # ('Other', 'https://www.newscientist.com/feed/home/')
     ]
 
