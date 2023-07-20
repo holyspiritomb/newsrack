@@ -180,7 +180,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         srclink_wrapper.append("Downloaded from ")
         srclink_wrapper.append(srclink)
         orig_url_div.append(srclink_wrapper)
-        self.log(orig_url_div)
+        # self.log(orig_url_div)
         topics.insert_after(orig_url_div)
         topics.extract()
         return soup
@@ -242,7 +242,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         cover_item = div.find('a', attrs={'class': 'ThisWeeksMagazineHero__ImageLink'})
         if cover_item:
             cover_url = cover_item["href"]
-            self.log(cover_url)
+            # self.log(cover_url)
             return cover_url
 
     def parse_feeds(self):
