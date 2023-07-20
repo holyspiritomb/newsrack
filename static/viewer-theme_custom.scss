@@ -1,4 +1,10 @@
 // Define your own custom viewer theme css here
+@font-face {
+    font-display: swap;
+    font-family: "Readex Pro Light";
+    src: url('ReadexPro-Light.ttf') format('truetype');
+    font-weight: 300;
+}
 .viewer-theme {
-  font-family: 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  font-family: 'Readex Pro Light', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
 }
