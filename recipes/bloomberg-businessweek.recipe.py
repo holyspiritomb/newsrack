@@ -12,7 +12,7 @@ import re
 import time
 from urllib.parse import urljoin, urlparse
 
-from calibre import browser, iswindows, random_user_agent
+from calibre import browser, iswindows
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.utils.date import parse_date
 from calibre.web.feeds.news import BasicNewsRecipe
@@ -104,10 +104,6 @@ class BloombergBusinessweek(BasicNewsRecipe):
             self.abort_article(f"Block detected. Skipped {target_url}")
         br = browser()
         br.addheaders = [
-            (
-                "user-agent",
-                random_user_agent(),
-            ),
             ("referer", "https://www.google.com/"),
             (
                 "accept",

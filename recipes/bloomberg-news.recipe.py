@@ -13,7 +13,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
 
-from calibre import browser, iswindows, random_user_agent
+from calibre import browser, iswindows
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.utils.date import parse_date
 from calibre.web.feeds.news import BasicNewsRecipe
@@ -91,6 +91,9 @@ class BloombergNews(BasicNewsRecipe):
     # Sitemap urls can be extracted from https://www.bloomberg.com/robots.txt
     feeds = [
         ("News", "https://www.bloomberg.com/feeds/sitemap_news.xml"),
+        ("Business", "https://www.bloomberg.com/feeds/bbiz/sitemap_news.xml"),
+        ("Technology", "https://www.bloomberg.com/feeds/technology/sitemap_news.xml"),
+        ("Equality", "https://www.bloomberg.com/feeds/equality/sitemap_news.xml"),
     ]
 
     # We send no cookies to avoid triggering bot detection
@@ -110,10 +113,6 @@ class BloombergNews(BasicNewsRecipe):
             self.abort_article(f"Block detected. Skipped {target_url}")
         br = browser()
         br.addheaders = [
-            (
-                "user-agent",
-                random_user_agent(),
-            ),
             ("referer", "https://www.google.com/"),
             (
                 "accept",

@@ -27,9 +27,6 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
     )
     publication_type = "magazine"
     language = "en"
-    encoding = "utf-8"
-
-    ignore_duplicate_articles = {"url"}
     compress_news_images = False
     scale_news_images = (800, 1200)
 
@@ -66,7 +63,7 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
         for img in soup.select("div.o-mediaEnclosure img"):
             if not img.get("srcset"):
                 continue
-            img["src"] = img["srcset"].split(",")[-1].strip().split(" ")[0]
+            img["src"] = self.extract_from_img_srcset(img["srcset"], max_width=1000)
         return soup
 
     def parse_index(self):

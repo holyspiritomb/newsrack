@@ -1,6 +1,5 @@
 import os
 import sys
-from datetime import datetime, timezone
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -22,15 +21,12 @@ class Aeon(BasicNewsrackRecipe, BasicNewsRecipe):
         "the freshest, most original answers, provided by leading thinkers on "
         "science, philosophy, society and the arts. https://aeon.co/"
     )
-    use_embedded_content = False
     encoding = "utf-8"
     publication_type = "blog"
     masthead_url = "https://aeon.co/logo.png"
-    auto_cleanup = False
     oldest_article = 30
     max_articles_per_feed = 30
     compress_news_images_auto_size = 10
-    remove_empty_feeds = True
 
     keep_only_tags = [prefixed_classes("styled__MainColumn-sc-")]
     remove_tags = [

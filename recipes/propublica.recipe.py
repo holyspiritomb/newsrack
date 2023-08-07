@@ -30,11 +30,9 @@ class ProPublica(BasicNewsrackRecipe, BasicNewsRecipe):
     oldest_article = 30  # days
     max_articles_per_feed = 25
     use_embedded_content = False
-    encoding = "utf-8"
     masthead_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/ProPublica_text_logo.svg/1280px-ProPublica_text_logo.svg.png"
 
     scale_news_images = (800, 1200)
-    auto_cleanup = False
     timeout = 60
 
     keep_only_tags = [dict(name="article")]
@@ -89,9 +87,24 @@ class ProPublica(BasicNewsrackRecipe, BasicNewsRecipe):
             self.title = format_title(_name, article.utctime)
 
     def preprocess_html(self, soup):
-        for img in soup.select(".bb-image img.lazyload[data-srcset]"):
-            img["src"] = img["data-srcset"].split(",")[-1].strip().split(" ")[0]
+        for img in soup.select("img[srcset]"):
+            img["src"] = self.extract_from_img_srcset(img["srcset"], max_width=1000)
         lead_img = soup.find(class_="opener__art-wrapper")
         if lead_img:
             soup.find(class_="article-body").insert_before(lead_img)
+        for picture in soup.find_all("picture"):
+            src_set = ",".join(
+                [
+                    src["srcset"]
+                    for src in picture.find_all("source", attrs={"srcset": True})
+                ]
+            )
+            if src_set:
+                for img in picture.find_all("img"):
+                    img.decompose()
+                for src in picture.find_all("source"):
+                    src.decompose()
+                img = soup.new_tag("img")
+                img["src"] = self.extract_from_img_srcset(src_set)
+                picture.append(img)
         return soup
