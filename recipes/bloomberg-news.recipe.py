@@ -28,9 +28,7 @@ class BloombergNews(BasicNewsRecipe):
         "to the world, featuring stories from Bloomberg News. https://www.bloomberg.com"
     )
     language = "en"
-    masthead_url = (
-        "https://upload.wikimedia.org/wikipedia/commons/5/5d/New_Bloomberg_Logo.svg"
-    )
+    masthead_url = "https://assets.bbhub.io/company/sites/70/2022/09/logoBBGblck.svg"
     ignore_duplicate_articles = {"url"}
     auto_cleanup = False
     remove_javascript = True
@@ -44,8 +42,9 @@ class BloombergNews(BasicNewsRecipe):
     # - limit the number of feeds
     # - or max_articles_per_feed
     # - or increase delay
-    # delay = 0.1
-    simultaneous_downloads = 2
+    delay = 5
+    simultaneous_downloads = 1
+    delay_range = range(5, 10)
     oldest_article = 1
     max_articles_per_feed = 25
 
@@ -105,7 +104,7 @@ class BloombergNews(BasicNewsRecipe):
 
     def get_url_specific_delay(self, url):
         if urlparse(url).hostname != "assets.bwbx.io":
-            return random.choice([r * 0.5 for r in range(1, 5)])
+            return random.choice(self.delay_range)
         return 0
 
     def open_novisit(self, *args, **kwargs):
