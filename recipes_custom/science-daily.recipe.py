@@ -58,6 +58,8 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(name='div', attrs={'class': 'mobile-top-rectangle'}),
         dict(name='div', attrs={'class': 'display-none'}),
         dict(name='div', attrs={'class': 'mobile-end-rectangle'}),
+        dict(name='div', attrs={'class': 'mobile-bottom-rectangle'}),
+        dict(name='div', attrs={'class': 'mobile-middle-rectangle'}),
         dict(name='ul', attrs={'class': 'topics'}),
     ]
     remove_tags_before = [
@@ -185,14 +187,32 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
             match = regex.search(self.tag_to_string(div))
             # pyright yells about the group method unless we ignore its type
             uri = match.group(0)  # type: ignore
+            self.log(uri)
             link = soup.new_tag("a")
             link["id"] = "article_url"
             link["href"] = 'https://{}'.format(uri)
-            link.string = uri
-            retrived_old = div.contents.pop(-1)
-            retrieved_date = retrived_old.split("www")[0]
-            div.append(retrieved_date)
-            div.append(link)
+            uri_sep = uri.split("/")
+            link.append("https:/")
+            for piece in uri_sep:
+                wbr = soup.new_tag("wbr")
+                link.append("/")
+                link.append(wbr)
+                link.append(piece)
+            # link.string = 'https://{}'.format(uri)
+            self.log(div)
+            new_citation_content = div.contents[0:3]
+            new_citation_content[-1] = new_citation_content[-1].split("www")[0]
+            new_div = soup.new_tag("div")
+            new_div["class"] = "tab_pane"
+            div["id"] = "citation_apa_old"
+            new_div["id"] = "citation_apa"
+            new_div["role"] = "tabpanel"
+            for thing in new_citation_content:
+                new_div.append(thing)
+            new_div.append(link)
+            self.log(new_div)
+            div.insert_after(new_div)
+            div.extract()
         return soup
 
     def get_browser(self, *a, **kw):
