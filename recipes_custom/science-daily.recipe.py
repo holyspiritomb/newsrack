@@ -127,7 +127,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         ("Sports Medicine", "https://www.sciencedaily.com/rss/health_medicine/sports_medicine.xml"),
         ('Health and Medicine', 'https://www.sciencedaily.com/rss/health_medicine.xml'),
         ('Computers and Math', 'https://www.sciencedaily.com/rss/computers_math.xml'),
-        ("Educatiom and Learning", "https://www.sciencedaily.com/rss/education_learning.xml"),
+        ("Education and Learning", "https://www.sciencedaily.com/rss/education_learning.xml"),
         ("Severe Weather", "https://www.sciencedaily.com/rss/earth_climate/severe_weather.xml"),
         ('Earth and Climate', 'https://www.sciencedaily.com/rss/earth_climate.xml'),
         ('Fossils and Ruins', 'https://www.sciencedaily.com/rss/fossils_ruins.xml'),
