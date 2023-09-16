@@ -77,9 +77,12 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         #date_posted,
         #source,
         #citations,
-        #journal_references
+        #citation_apa,
+        #journal_references,
+        #metadata
         {
             font-size:0.8rem;
+            line-height:normal;
         }
         h1#headline{
             font-size:1.75rem;
@@ -142,7 +145,6 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         feeds = BasicNewsRecipe.parse_feeds(self)
         for feed in feeds:
             for article in feed.articles[:]:
-                # self.log.info(f"article.title is: {article.title}")
                 if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or 'LOSE WEIGHT' in article.title.upper():
                     self.log.warn(f"removing {article.title} from feed")
                     feed.articles.remove(article)
