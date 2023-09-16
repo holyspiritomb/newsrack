@@ -189,7 +189,6 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
             match = regex.search(self.tag_to_string(div))
             # pyright yells about the group method unless we ignore its type
             uri = match.group(0)  # type: ignore
-            self.log(uri)
             link = soup.new_tag("a")
             link["id"] = "article_url"
             link["href"] = 'https://{}'.format(uri)
@@ -200,8 +199,6 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
                 link.append("/")
                 link.append(wbr)
                 link.append(piece)
-            # link.string = 'https://{}'.format(uri)
-            self.log(div)
             new_citation_content = div.contents[0:3]
             new_citation_content[-1] = new_citation_content[-1].split("www")[0]
             new_div = soup.new_tag("div")
@@ -212,7 +209,6 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
             for thing in new_citation_content:
                 new_div.append(thing)
             new_div.append(link)
-            self.log(new_div)
             div.insert_after(new_div)
             div.extract()
         return soup
