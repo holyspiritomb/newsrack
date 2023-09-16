@@ -30,4 +30,7 @@
 }
 .viewer-theme {
   font-family: 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  hr + p > span {
+      line-height: normal;
+  }
 }
