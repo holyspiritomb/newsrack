@@ -67,22 +67,6 @@ def bimonthly_even(offset: float = 0.0):
 
 recipes: List[Recipe] = [
     CustomOptionsRecipe(
-        recipe="additude",
-        slug="additude",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Blogs",
-        tags=["magazine"],
-        overwrite_cover=True,
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/additude.png"
-        ),
-        # enable_on=lambda recipe: every_x_hours(
-        #     last_run=recipe.last_run, hours=24, drift=60
-        # ),
-    ),
-    CustomOptionsRecipe(
         recipe="advocate",
         slug="advocate",
         src_ext="mobi",
@@ -140,33 +124,6 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
-        recipe="atlantic",
-        slug="atlantic",
-        src_ext="mobi",
-        target_ext=["epub"],
-        overwrite_cover=True,
-        category="Editorial",
-        tags=["editorial", "commentary"],
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_days(
-        #     last_run=recipe.last_run, days=1, drift=0
-        # ),
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Atlantic_Logo_11.2019.svg/1200px-The_Atlantic_Logo_11.2019.svg.png"
-        ),
-    ),
-    CustomMonthlyRecipe(
-        recipe="atlantic-magazine",
-        slug="atlantic-magazine",
-        src_ext="mobi",
-        target_ext=["epub"],
-        overwrite_cover=False,
-        category="Editorial",
-        tags=["editorial", "commentary"],
-        enable_on=False,
-        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -4) and last_n_days_of_month(14, -4),
-    ),
-    CustomOptionsRecipe(
         recipe="duolingo-blog",
         slug="duolingo-blog",
         src_ext="mobi",
@@ -191,21 +148,6 @@ recipes: List[Recipe] = [
         tags=["news", "trans", "lgbtq"],
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Transgender_Pride_flag.svg/1024px-Transgender_Pride_flag.svg.png"
-        ),
-    ),
-    CustomOptionsRecipe(
-        recipe="fivethirtyeight",
-        slug="fivethirtyeight",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Politics",
-        tags=["politics"],
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_days(
-        #     last_run=recipe.last_run, days=1, drift=0
-        # ),
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/FiveThirtyEight_Logo.svg/1024px-FiveThirtyEight_Logo.svg.png"
         ),
     ),
     CustomOptionsRecipe(
@@ -303,38 +245,6 @@ recipes: List[Recipe] = [
         enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 15)), -4),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mother_Jones_Logo_2019.svg/1024px-Mother_Jones_Logo_2019.svg.png"
-        ),
-    ),
-    CustomOptionsRecipe(
-        recipe="msf",
-        slug="msf",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="News",
-        overwrite_cover=True,
-        tags=["news"],
-        # enable_on=lambda recipe: every_x_days(
-        #     last_run=recipe.last_run, days=1, drift=0
-        # ),
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/en/thumb/b/bd/Msf_logo.svg/1024px-Msf_logo.svg.png"
-        ),
-    ),
-    CustomOptionsRecipe(
-        recipe="nasa",
-        slug="nasa",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Science",
-        tags=["science", "space"],
-        overwrite_cover=True,
-        # enable_on=lambda recipe: every_x_days(
-        #     last_run=recipe.last_run, days=1, drift=0
-        # ),
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/NASA_Worm_logo.svg/1024px-NASA_Worm_logo.svg.png",
         ),
     ),
     CustomOptionsRecipe(
@@ -574,22 +484,6 @@ recipes: List[Recipe] = [
         tags=["news", "politics", "weekly"],
     ),
     CustomOptionsRecipe(
-        recipe="universe-today",
-        slug="universe-today",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Science",
-        tags=["science", "space"],
-        overwrite_cover=True,
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_days(
-            # last_run=recipe.last_run, days=1, drift=60
-        # ),
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/universe-today.png",
-        ),
-    ),
-    CustomOptionsRecipe(
         recipe="wtfjht",
         slug="wtfjht",
         src_ext="epub",
@@ -597,9 +491,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="News",
         tags=["daily"],
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=12, drift=0
-        ),
+        enable_on=False,
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/wtfjht-t.jpg"
         ),

@@ -17,8 +17,7 @@ class QuantaMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "lui1"
     description = (
-        '''Quanta Magazine is committed to in-depth, accurate journalism that serves the public interest. Each article braids the complexities of science with the malleable art of storytelling and is meticulously reported, edited and fact-checked.
-        https://www.quantamagazine.org/'''
+        '''Quanta Magazine is committed to in-depth, accurate journalism that serves the public interest. Each article braids the complexities of science with the malleable art of storytelling and is meticulously reported, edited and fact-checked. https://www.quantamagazine.org/'''
     )
     conversion_options = {
         'tags' : 'Quanta Magazine, Science, News, Periodical',
@@ -60,7 +59,7 @@ class QuantaMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
             self.title = format_title(_name, article.utctime)
 
     def parse_feeds(self):
-        feeds = self.group_feeds_by_date(timezone_offset_hours=9)  # Seoul
+        feeds = self.group_feeds_by_date()
         for feed in feeds:
             for article in feed.articles[:]:
                 if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():

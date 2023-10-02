@@ -24,8 +24,7 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "ping"
     description = (
-        '''Founded in Chicago by Harriet Monroe in 1912, Poetry is the oldest monthly devoted to verse in the English-speaking world.
-        https://www.poetryfoundation.org/poetrymagazine'''
+        '''Founded in Chicago by Harriet Monroe in 1912, Poetry is the oldest monthly devoted to verse in the English-speaking world. https://www.poetryfoundation.org/poetrymagazine'''
     )
     conversion_options = {
         'tags' : 'Poetry, Poetry Magazine, Literature, Periodical',
@@ -34,7 +33,6 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
     publication_type = "magazine"
     language = "en"
     encoding = "utf-8"
-
     ignore_duplicate_articles = {"url"}
     compress_news_images = False
     scale_news_images = (800, 1200)
@@ -72,7 +70,7 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
         for img in soup.select("div.o-mediaEnclosure img"):
             if not img.get("srcset"):
                 continue
-            img["src"] = img["srcset"].split(",")[-1].strip().split(" ")[0]
+            img["src"] = self.extract_from_img_srcset(img["srcset"], max_width=1000)
         return soup
 
     def parse_index(self):
@@ -95,9 +93,10 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
                 self.abort_recipe_processing("We have this issue already.")
         self.title = f"{_name}: {issue_edition}"
         try:
-            self.pub_date = datetime.strptime(issue_edition, "%B %Y").replace(
-                tzinfo=timezone.utc
-            )
+            self.pub_date = self.parse_date(issue_edition)
+            # self.pub_date = datetime.strptime(issue_edition, "%B %Y").replace(
+                # tzinfo=timezone.utc
+            # )
         except ValueError:
             # 2-month issue e.g. "July/August 2021"
             mobj = re.match(
@@ -105,9 +104,10 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
             )
             if not mobj:
                 self.abort_recipe_processing("Unable to parse issue date")
-            self.pub_date = datetime.strptime(
-                f'{mobj.group("mth")} {mobj.group("yr")}', "%B %Y"
-            ).replace(tzinfo=timezone.utc)
+            self.pub_date = self.parse_date(f'{mobj.group("mth")} {mobj.group("yr")}')
+            # self.pub_date = datetime.strptime(
+                # f'{mobj.group("mth")} {mobj.group("yr")}', "%B %Y"
+            # ).replace(tzinfo=timezone.utc)
 
         cover_image = soup.select("div.c-issueBillboard-cover-media img")[0]
         parsed_cover_url = urlparse(
