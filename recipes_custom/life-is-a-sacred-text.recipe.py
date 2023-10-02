@@ -7,6 +7,7 @@ sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 from calibre.utils.date import utcnow, parse_date
 from calibre.web.feeds import Feed
+from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 _name = "Life is a Sacred Text"
 
@@ -59,10 +60,19 @@ class LifeIsASacredText(BasicNewsrackRecipe, BasicNewsRecipe):
         desc_el.string = article.summary
         # article_img = soup.find("img")
 
+    def parse_feeds(self):
+        feeds = BasicNewsRecipe.parse_feeds(self)
+        for feed in feeds:
+            for article in feed.articles[:]:
+                raw_soup = BeautifulSoup(article.content)
+                p = raw_soup.find("p")
+                ptxt = self.tag_to_string(p)
+                if "Read more" in ptxt:
+                    self.log.warn(f"removing subscriber-only article {article.title} from feed")
+                    feed.articles.remove(article)
+        return feeds
+
     def preprocess_html(self, soup):
-        paras = soup.find_all("p")
-        if paras and len(paras) < 4:
-            self.abort_article("Subscription required")
         headline = soup.find("h2")
         a_date = soup.new_tag("div")
         a_desc = soup.new_tag("h3")

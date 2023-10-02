@@ -26,3 +26,13 @@ class AIWeirdness(BasicNewsrackRecipe, BasicNewsRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+
+    def parse_feeds(self):
+        feeds = BasicNewsRecipe.parse_feeds(self)
+        for feed in feeds:
+            for article in feed.articles[:]:
+                self.log(article)
+                if not article.content:
+                    self.log.warn(f"removing subscriber-only article {article.title} from feed")
+                    feed.articles.remove(article)
+        return feeds
