@@ -92,9 +92,9 @@ class BloombergNews(BasicNewsRecipe):
     # Sitemap urls can be extracted from https://www.bloomberg.com/robots.txt
     feeds = [
         ("News", "https://www.bloomberg.com/feeds/sitemap_news.xml"),
-        ("Business", "https://www.bloomberg.com/feeds/bbiz/sitemap_news.xml"),
-        ("Technology", "https://www.bloomberg.com/feeds/technology/sitemap_news.xml"),
-        ("Equality", "https://www.bloomberg.com/feeds/equality/sitemap_news.xml"),
+        # ("Business", "https://www.bloomberg.com/feeds/bbiz/sitemap_news.xml"),
+        # ("Technology", "https://www.bloomberg.com/feeds/technology/sitemap_news.xml"),
+        # ("Equality", "https://www.bloomberg.com/feeds/equality/sitemap_news.xml"),
     ]
 
     # We send no cookies to avoid triggering bot detection
@@ -140,7 +140,7 @@ class BloombergNews(BasicNewsRecipe):
             ("connection", "keep-alive"),
             ("host", urlparse(target_url).hostname),
             ("upgrade-insecure-requests", "1"),
-            ("user-agent", random_user_agent(0, allow_ie=False)),
+            ("user-agent", random_user_agent(allow_ie=False)),
         ]
         br.set_handle_redirect(False)
         try:
@@ -199,7 +199,7 @@ class BloombergNews(BasicNewsRecipe):
         if content_type == "aside":
             return soup.new_tag("blockquote")
         if content_type == "embed" and content.get("iframeData", {}).get("html"):
-            return BeautifulSoup(content["iframeData"]["html"], features="html.parser")
+            return self.soup(content["iframeData"]["html"])
         if content_type == "link" and content.get("data", {}).get(
             "destination", {}
         ).get("web"):
@@ -310,7 +310,7 @@ class BloombergNews(BasicNewsRecipe):
     def preprocess_raw_html(self, raw_html, url):
         self.download_count += 1
         article = None
-        soup = BeautifulSoup(raw_html)
+        soup = self.soup(raw_html)
         for script in soup.find_all(
             "script",
             attrs={
@@ -345,7 +345,7 @@ class BloombergNews(BasicNewsRecipe):
             self.abort_article(err_msg)
 
         date_published = parse_date(article["publishedAt"], assume_utc=True)
-        soup = BeautifulSoup(
+        soup = self.soup(
             """<html>
         <head><title></title></head>
         <body>
@@ -366,12 +366,7 @@ class BloombergNews(BasicNewsRecipe):
 
         soup.head.title.append(article.get("headlineText") or article["headline"])
         h1_title = soup.find("h1")
-        h1_title.append(
-            BeautifulSoup(
-                article.get("headlineText") or article["headline"],
-                features="html.parser",
-            )
-        )
+        h1_title.append(self.soup(article.get("headlineText") or article["headline"]))
         if article.get("summaryText") or article.get("abstract"):
             sub_headline = soup.new_tag("div", attrs={"class": "sub-headline"})
             if article.get("summaryText"):
@@ -386,10 +381,7 @@ class BloombergNews(BasicNewsRecipe):
         if article.get("byline"):
             soup.find(class_="article-meta").insert(
                 0,
-                BeautifulSoup(
-                    f'<span class="author">{article["byline"]}</span>',
-                    features="html.parser",
-                ),
+                self.soup(f'<span class="author">{article["byline"]}</span>'),
             )
         else:
             try:
@@ -397,9 +389,8 @@ class BloombergNews(BasicNewsRecipe):
                 if post_authors:
                     soup.find(class_="article-meta").insert(
                         0,
-                        BeautifulSoup(
-                            f'<span class="author">{", ".join(post_authors)}</span>',
-                            features="html.parser",
+                        self.soup(
+                            f'<span class="author">{", ".join(post_authors)}</span>'
                         ),
                     )
             except (KeyError, TypeError):
@@ -409,9 +400,8 @@ class BloombergNews(BasicNewsRecipe):
         if categories:
             soup.body.article.insert(
                 0,
-                BeautifulSoup(
-                    f'<span class="article-section">{" / ".join(categories)}</span>',
-                    features="html.parser",
+                self.soup(
+                    f'<span class="article-section">{" / ".join(categories)}</span>'
                 ),
             )
         # inject lede image
@@ -425,14 +415,12 @@ class BloombergNews(BasicNewsRecipe):
                 caption_ele = soup.new_tag(
                     "div", attrs={"class": "news-figure-caption-text"}
                 )
-                caption_ele.append(
-                    BeautifulSoup(lede_img_caption_html), features="html.parser"
-                )
+                caption_ele.append(self.soup(lede_img_caption_html))
                 img_container.append(caption_ele)
             soup.body.article.append(img_container)
 
         if type(article["body"]) == str:
-            body_soup = BeautifulSoup(article["body"], features="html.parser")
+            body_soup = self.soup(article["body"])
             for img_div in body_soup.find_all(
                 name="figure", attrs={"data-type": "image"}
             ):
@@ -442,7 +430,7 @@ class BloombergNews(BasicNewsRecipe):
                 img["src"] = img["src"]
             soup.body.article.append(body_soup)
         else:
-            body_soup = BeautifulSoup(features="html.parser")
+            body_soup = self.soup("")
             self.nested_render(article["body"], body_soup, body_soup)
             soup.body.article.append(body_soup)
         return str(soup)

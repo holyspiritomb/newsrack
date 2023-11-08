@@ -1,14 +1,18 @@
+import json
 import os
+import re
 import sys
 from collections import OrderedDict
-from urllib.parse import urljoin
+from urllib.parse import urlencode, urljoin
+
+from calibre import browser, random_user_agent
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicCookielessNewsrackRecipe, get_date_format
 
-from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe, classes
+from mechanize import Request
 
 # Original https://github.com/kovidgoyal/calibre/blob/49a1d469ce4f04f79ce786a75b8f4bdcfd32ad2c/recipes/hbr.recipe
 
@@ -18,17 +22,17 @@ _issue_url = ""
 
 class HBR(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
     title = _name
-    __author__ = "unkn0wn"
+    __author__ = "ping"
     description = (
-        "Harvard Business Review is the leading destination for smart management thinking."
-        " Through its flagship magazine, books, and digital content and tools published on HBR.org,"
-        " Harvard Business Review aims to provide professionals around the world with rigorous insights"
-        " and best practices to help lead themselves and their organizations more effectively and to make a positive impact."
-        " https://hbr.org/magazine"
+        "Harvard Business Review is the leading destination for smart management thinking. "
+        "Through its flagship magazine, books, and digital content and tools published on HBR.org, "
+        "Harvard Business Review aims to provide professionals around the world with rigorous insights "
+        "and best practices to help lead themselves and their organizations more effectively and to "
+        "make a positive impact. https://hbr.org/magazine"
     )
     language = "en"
     base_url = "https://hbr.org"
-    masthead_url = "http://hbr.org/resources/css/images/hbr_logo.svg"
+    masthead_url = "https://hbr.org/resources/css/images/hbr_logo.svg"
     publication_type = "magazine"
 
     remove_attributes = ["height", "width", "style"]
@@ -43,7 +47,6 @@ class HBR(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             box-sizing: border-box;
         }
         .container--caption-credits-hero, .container--caption-credits-inline, span.credit { font-size: 0.8rem; }
-        .article-sidebar { border: 1px solid #000; padding: 0.8rem; display: block; }
         .question { font-weight: bold; }
         .description-text {
             margin: 1rem 0;
@@ -55,19 +58,21 @@ class HBR(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
 
     keep_only_tags = [
         classes(
-            "headline-container article-dek-group pub-date hero-image-content article-body standard-content"
+            "headline-container article-dek-group pub-date hero-image-content "
+            "article-body standard-content"
         ),
-        dict(name="article-sidebar"),
     ]
 
     remove_tags = [
         classes(
-            "left-rail--container translate-message follow-topic newsletter-container by-prefix"
+            "left-rail--container translate-message follow-topic "
+            "newsletter-container by-prefix related-topics--common"
         ),
+        dict(name=["article-sidebar"]),
     ]
 
-    def preprocess_raw_html(self, raw_html, _):
-        soup = BeautifulSoup(raw_html)
+    def preprocess_raw_html(self, raw_html, article_url):
+        soup = self.soup(raw_html)
 
         # set article date
         pub_datetime = soup.find("meta", attrs={"property": "article:published_time"})
@@ -80,7 +85,6 @@ class HBR(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         post_date_ele = soup.new_tag("span")
         post_date_ele["class"] = "article-pub-date"
         post_date_ele.append(f"{post_date:{get_date_format()}}")
-        # pub_date_ele.append(post_date_ele)    # set this below together with the byline logic
 
         # break author byline out of list
         byline_list = soup.find("ul", class_="article-byline-list")
@@ -99,6 +103,50 @@ class HBR(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         else:
             pub_date_ele.append(post_date_ele)  # attach post date to issue
 
+        # Extract full article content
+        content_ele = soup.find(
+            "content",
+            attrs={
+                "data-index": True,
+                "data-page-year": True,
+                "data-page-month": True,
+                "data-page-seo-title": True,
+                "data-page-slug": True,
+            },
+        )
+        endpoint_url = "https://hbr.org/api/article/piano/content?" + urlencode(
+            {
+                "year": content_ele["data-page-year"],
+                "month": content_ele["data-page-month"],
+                "seotitle": content_ele["data-page-seo-title"],
+            }
+        )
+        data = {
+            "contentKey": content_ele["data-index"],
+            "pageSlug": content_ele["data-page-slug"],
+        }
+        headers = {
+            "User-Agent": random_user_agent(),
+            "Pragma": "no-cache",
+            "Cache-Control": "no-cache",
+            "Content-Type": "application/json",
+            "Referer": article_url,
+        }
+        br = browser()
+        req = Request(
+            endpoint_url,
+            headers=headers,
+            data=json.dumps(data),
+            method="POST",
+            timeout=self.timeout,
+        )
+        res = br.open(req)
+        article = json.loads(res.read())
+        new_soup = self.soup(article["content"])
+        # clear out existing partial content
+        for c in list(content_ele.children):
+            c.extract()  # use extract() instead of decompose() because of strings
+        content_ele.append(new_soup.body)
         return str(soup)
 
     def populate_article_metadata(self, article, soup, _):
@@ -115,8 +163,10 @@ class HBR(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             self.cover_url = urljoin(self.base_url, cov_url)
             issue_url = urljoin(self.base_url, a["href"])
         else:
-            # no cover if custom issue url is specified
             issue_url = _issue_url
+            mobj = re.search(r"archive-toc/(?P<issue>(BR)?\d+)\b", issue_url)
+            if mobj:
+                self.cover_url = f'https://hbr.org/resources/images/covers/{mobj.group("issue")}_500.png'
 
         self.log("Downloading issue:", issue_url)
         soup = self.index_to_soup(issue_url)
@@ -125,7 +175,6 @@ class HBR(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             self.title = f"{_name}: {self.tag_to_string(issue_title)}"
 
         feeds = OrderedDict()
-
         for h3 in soup.find_all("h3", attrs={"class": "hed"}):
             article_link_ele = h3.find("a")
             if not article_link_ele:
@@ -137,7 +186,6 @@ class HBR(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             if not article_ele:
                 continue
 
-            articles = []
             title = self.tag_to_string(article_link_ele)
             url = urljoin(self.base_url, article_link_ele["href"])
 
@@ -154,15 +202,7 @@ class HBR(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
                 .find("h4")
             )
             section_title = self.tag_to_string(section_ele).title()
-            self.log(section_title)
-            self.log("\t", title)
-            self.log("\t", article_desc)
-            self.log("\t\t", url)
-
-            articles.append({"title": title, "url": url, "description": article_desc})
-            if articles:
-                if section_title not in feeds:
-                    feeds[section_title] = []
-                feeds[section_title] += articles
-        ans = [(key, val) for key, val in feeds.items()]
-        return ans
+            feeds.setdefault(section_title, []).append(
+                {"title": title, "url": url, "description": article_desc}
+            )
+        return feeds.items()

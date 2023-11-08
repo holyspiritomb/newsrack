@@ -40,6 +40,14 @@ categories_sort: List[str] = ["News", "Magazines", "Online Magazines", "Arts & C
 # Keep this list in alphabetical order
 recipes: List[Recipe] = [
     Recipe(
+        recipe="aeon",
+        slug="aeon",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Online Magazines",
+        cover_options=CoverOptions(logo_path_or_url="https://aeon.co/logo.png"),
+    ),
+    Recipe(
         recipe="asahi-shimbun",
         slug="asahi-shimbun",
         src_ext="mobi",
@@ -161,17 +169,6 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://fivebooks.com/app/themes/five-books/assets/images/logo.png"
         ),
         tags=["literature", "books"],
-    ),
-    Recipe(
-        recipe="fivethirtyeight",
-        slug="fivethirtyeight",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Online Magazines",
-        tags=["politics"],
-        cover_options=CoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/FiveThirtyEight_Logo.svg/1024px-FiveThirtyEight_Logo.svg.png"
-        ),
     ),
     # Not reading this
     # Recipe(
@@ -306,7 +303,7 @@ recipes: List[Recipe] = [
         tags=["books", "reviews"],
         overwrite_cover=False,
         enable_on=onlyat_hours(list(range(0, 6)))
-        and (first_n_days_of_month(3) or last_n_days_of_month(3)),
+        and onlyon_days([1, 2, 3, 4, 15, 16, 17, 18]),
     ),
     Recipe(
         recipe="knowable-magazine",
@@ -395,6 +392,28 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         enable_on=first_n_days_of_month(7, -5) or last_n_days_of_month(7, -5),
         tags=["technology"],
+    ),
+    Recipe(
+        recipe="mollywhite-newsletter",
+        slug="mollywhite-newsletter",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Blogs/Newsletters",
+        tags=["technology"],
+        cover_options=CoverOptions(
+            logo_path_or_url="https://substackcdn.com/image/fetch/w_256,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F3b6a58dc-123a-492b-a1e2-b46138add2b9_856x856.png"
+        ),
+    ),
+    Recipe(
+        recipe="natesilver",
+        slug="natesilver",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Blogs/Newsletters",
+        tags=["commentary"],
+        cover_options=CoverOptions(
+            logo_path_or_url="https://substackcdn.com/image/fetch/w_256,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F9798f361-e880-406c-9ed4-29229df02c27_256x256.png"
+        ),
     ),
     Recipe(
         recipe="nature",
