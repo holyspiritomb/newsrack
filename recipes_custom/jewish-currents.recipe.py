@@ -31,8 +31,9 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
     max_articles_per_feed = 50
     no_stylesheets = True
     remove_attributes = ["style"]
+    auto_cleanup = False
     # recursions = 1
-    simultaneous_downloads = 1
+    # simultaneous_downloads = 1
     masthead_url = "https://jewishcurrents.org/img/jewish-currents.svg"
     description = (
         '''Breaking news, analysis, art, and culture from a progressive Jewish perspective.'''
@@ -131,8 +132,8 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
         if date_el:
             date_el["href"] = article.url
             date_local = datetime.strptime(article_pubdate_str, "%Y-%m-%dT%H:%M:%S%z")
-            self.log(article_pubdate_str, date_local)
-            self.log(date_local.tzinfo)
+            # self.log(article_pubdate_str, date_local)
+            # self.log(date_local.tzinfo)
             date_el.string = date.strftime(date_local, "%d %B %Y, %-I:%M %p %Z")
         article.utctime = article_dt
         article.date = article_dt
@@ -147,7 +148,7 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
             head_authors = lockup.findAll("a", href=re.compile("author"))
             date_el = lockup.find("div", string=re.compile(r"[0-9]{4}$"))
             if date_el:
-                self.log(date_el)
+                # self.log(date_el)
                 date_el["id"] = "article_date"
                 date_el.name = "a"
                 date_el.extract()
@@ -205,11 +206,12 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def parse_index(self):
         # self.log("running parse_index function")
-        br = self.get_browser()
-        raw_html = (
-            br.open("https://jewishcurrents.org/archive", timeout=self.timeout).read().decode("utf-8")
-        )
-        soup = BeautifulSoup(raw_html)
+        # br = self.get_browser()
+        soup = self.index_to_soup("https://jewishcurrents.org/archive")
+        # raw_html = (
+        #     br.open("https://jewishcurrents.org/archive", timeout=self.timeout).read().decode("utf-8")
+        # )
+        # soup = BeautifulSoup(raw_html)
         sectioned_feeds = OrderedDict()
         for article_card in soup.findAll("a", attrs={'class': 'leading-snug'}):
             card_url = article_card['href']
@@ -221,7 +223,7 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
             block = article_card.find("span", attrs={'class': 'block'})
             auths = block.contents[0].strip()
             article_date_span = self.tag_to_string(block.find("span"))
-            article_date = datetime.strptime(article_date_span, "%B %d, %Y")
+            # article_date = datetime.strptime(article_date_span, "%B %d, %Y")
             # self.log(f"Found article: {section_title}, {card_title}")
             sectioned_feeds[section_title].append(
                 {
