@@ -207,7 +207,7 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
         # self.log("running parse_index function")
         br = self.get_browser()
         raw_html = (
-            br.open_novisit("https://jewishcurrents.org/archive", timeout=self.timeout).read().decode("utf-8")
+            br.open("https://jewishcurrents.org/archive", timeout=self.timeout).read().decode("utf-8")
         )
         soup = BeautifulSoup(raw_html)
         sectioned_feeds = OrderedDict()
@@ -235,9 +235,6 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
         return sectioned_feeds.items()
 
     def get_browser(self, *a, **kw):
-        kw[
-            "user_agent"
-        ] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
         br = BasicNewsRecipe.get_browser(self, *a, **kw)
         return br
 
@@ -248,7 +245,7 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
         br = browser()
         return br.open_novisit(*args, **kwargs)
 
-    open = open_novisit
+    # open = open_novisit
 
 
 calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
