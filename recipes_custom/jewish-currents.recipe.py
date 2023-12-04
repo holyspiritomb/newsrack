@@ -31,6 +31,7 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
     no_stylesheets = True
     remove_attributes = ["style"]
     # recursions = 1
+    simultaneous_downloads = 1
     masthead_url = "https://jewishcurrents.org/img/jewish-currents.svg"
     description = (
         '''Breaking news, analysis, art, and culture from a progressive Jewish perspective.'''
