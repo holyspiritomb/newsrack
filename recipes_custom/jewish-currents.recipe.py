@@ -25,10 +25,10 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
     # max_articles_per_feed = 50
     publication_type = 'magazine'
     resolve_internal_links = False
-    # use_embedded_content = False
+    use_embedded_content = False
     remove_empty_feeds = True
     remove_javascript = False
-    # max_articles_per_feed = 50
+    max_articles_per_feed = 50
     no_stylesheets = True
     remove_attributes = ["style"]
     # recursions = 1
@@ -234,17 +234,21 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
             )
         return sectioned_feeds.items()
 
-    # def get_browser(self, *args, **kwargs):
-    #     return self
+    def get_browser(self, *a, **kw):
+        kw[
+            "user_agent"
+        ] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+        br = BasicNewsRecipe.get_browser(self, *a, **kw)
+        return br
 
-    # def clone_browser(self, *args, **kwargs):
-    #     return self.get_browser()
+    def clone_browser(self, *args, **kwargs):
+        return self.get_browser()
 
-    # def open_novisit(self, *args, **kwargs):
-    #     br = browser()
-    #     return br.open_novisit(*args, **kwargs)
+    def open_novisit(self, *args, **kwargs):
+        br = browser()
+        return br.open_novisit(*args, **kwargs)
 
-    # open = open_novisit
+    open = open_novisit
 
 
 calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
