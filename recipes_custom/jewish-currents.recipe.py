@@ -229,9 +229,9 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
         return sectioned_feeds.items()
 
     def get_browser(self, *a, **kw):
-        # kw[
-        #     "user_agent"
-        # ] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+        kw[
+            "user_agent"
+        ] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
         br = BasicNewsRecipe.get_browser(self, *a, **kw)
         return br
 
