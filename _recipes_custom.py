@@ -190,9 +190,10 @@ recipes: List[Recipe] = [
         tags=["news", "jewish"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/jewish-currents.png"),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        # enable_on=lambda recipe: every_x_days(
+            # last_run=recipe.last_run, days=1, drift=0
+        # ),
+        enable_on=False,
     ),
     CustomOptionsRecipe(
         recipe="knowable",
