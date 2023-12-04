@@ -7,6 +7,7 @@ from datetime import date, datetime
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 from calibre.utils.date import utcnow, parse_date
 from calibre import browser
+from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -204,7 +205,11 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def parse_index(self):
         # self.log("running parse_index function")
-        soup = self.index_to_soup("https://jewishcurrents.org/archive")
+        br = self.get_browser()
+        raw_html = (
+            br.open_novisit("https://jewishcurrents.org/archive", timeout=self.timeout).read().decode("utf-8")
+        )
+        soup = BeautifulSoup(raw_html)
         sectioned_feeds = OrderedDict()
         for article_card in soup.findAll("a", attrs={'class': 'leading-snug'}):
             card_url = article_card['href']
@@ -229,17 +234,17 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
             )
         return sectioned_feeds.items()
 
-    def get_browser(self, *args, **kwargs):
-        return self
+    # def get_browser(self, *args, **kwargs):
+    #     return self
 
-    def clone_browser(self, *args, **kwargs):
-        return self.get_browser()
+    # def clone_browser(self, *args, **kwargs):
+    #     return self.get_browser()
 
-    def open_novisit(self, *args, **kwargs):
-        br = browser()
-        return br.open_novisit(*args, **kwargs)
+    # def open_novisit(self, *args, **kwargs):
+    #     br = browser()
+    #     return br.open_novisit(*args, **kwargs)
 
-    open = open_novisit
+    # open = open_novisit
 
 
 calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
