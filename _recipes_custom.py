@@ -182,6 +182,19 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
+        recipe="jewish-currents",
+        slug="jewish-currents",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="News",
+        tags=["news", "jewish"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/jewish-currents.png"),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="knowable",
         slug="knowable",
         src_ext="mobi",
