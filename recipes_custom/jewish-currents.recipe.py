@@ -3,11 +3,10 @@ import json
 import sys
 import re
 from collections import OrderedDict
-from datetime import date, datetime, timezone, tzinfo
-from urllib.parse import urljoin
+from datetime import date, datetime
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 from calibre.utils.date import utcnow, parse_date
-from calibre.ebooks.BeautifulSoup import BeautifulSoup, Tag
+from calibre import browser
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -183,7 +182,7 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
         bioblocks = soup.findAll(attrs={"class": "bioblock"})
         if bioblocks:
             for bioblock in bioblocks:
-                author_names = bioblock.findAll("a", href=re.compile("author"))
+                # author_names = bioblock.findAll("a", href=re.compile("author"))
                 twitter_handles = bioblock.findAll("a", href=re.compile("twitter"))
                 if twitter_handles:
                     for tw in twitter_handles:
@@ -228,3 +227,19 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
                 }
             )
         return sectioned_feeds.items()
+
+    def get_browser(self, *a, **kw):
+        # kw[
+        #     "user_agent"
+        # ] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+        br = BasicNewsRecipe.get_browser(self, *a, **kw)
+        return br
+
+    def clone_browser(self, *args, **kwargs):
+        return self.get_browser()
+
+    def open_novisit(self, *args, **kwargs):
+        br = browser()
+        return br.open_novisit(*args, **kwargs)
+
+    open = open_novisit
