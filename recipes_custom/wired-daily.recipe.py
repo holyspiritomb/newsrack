@@ -20,7 +20,6 @@ def classes(classes):
     return dict(attrs={
         'class': lambda x: x and frozenset(x.split()).intersection(q)})
 
-
 _name = "Wired Daily Edition"
 
 
@@ -76,6 +75,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(name='article', attrs={'class': 'article main-content'}),
     ]
     remove_attributes = ['srcset', 'sizes', 'media', 'data-event-click', 'data-offer-url']
+    filter_out = ["obesity", "weight loss", "best shows", "review:"]
     handle_gzip = True
 
     # https://www.wired.com/about/rss-feeds/
@@ -102,14 +102,23 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def parse_feeds(self):
         feeds = BasicNewsRecipe.parse_feeds(self)
-        regex = re.compile(r'\d+\WBest')
+        regex = re.compile(r'[B|b]est.+\([0-9]{4}\)')
         for feed in feeds:
+            self.log.debug(feed.title)
             for article in feed.articles[:]:
-                # self.log.info(f"article.title is: {article.title}")
-                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or regex.match(article.title):
-                    self.log.warn(f"removing {article.title} from feed")
-                    # feed.articles.remove(article)
+                self.log(article.title)
+                if re.search(regex, article.title):
+                    self.log.warn(f"removing {article.title} from feed (regex)")
+                    feed.articles.remove(article)
                     continue
+                else:
+                    for word in self.filter_out:
+                        if word.upper() in article.title.upper():
+                            self.log.warn(f"removing {article.title} from feed (keyword {word})")
+                            feed.articles.remove(article)
+                            break
+                        else:
+                            continue
         return feeds
 
     def populate_article_metadata(self, article, __, _):
@@ -121,20 +130,22 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         a_soup = soup.find(class_='article main-content')
         headline = a_soup.find(attrs={'data-testid': "ContentHeaderHed"})
         subhead = a_soup.find(attrs={'data-testid': 'ContentHeaderAccreditation'})
-        subhead["id"] = "subhead"
-        subhead.name = "h2"
-        subhead_text = self.tag_to_string(subhead)
-        subhead.clear()
-        subhead.append(subhead_text)
+        if subhead:
+            subhead["id"] = "subhead"
+            subhead.name = "h2"
+            subhead_text = self.tag_to_string(subhead)
+            subhead.clear()
+            subhead.append(subhead_text)
         category = a_soup.find("a", class_='rubric__link')
         category["class"] = 'rubric__link'
         author = a_soup.find("p", attrs={'itemprop': 'author'})
         author["class"] = 'byline bylines__byline'
         lead_pic = a_soup.find("div", class_='lead-asset')
-        lead_img = lead_pic.find('img')
-        lead_cap = lead_pic.find(attrs={'class': 'caption__credit'})
-        lead_img["id"] = "lead-image"
-        lead_cap["id"] = "lead-image-credit"
+        if lead_pic:
+            lead_img = lead_pic.find('img')
+            lead_cap = lead_pic.find(attrs={'class': 'caption__credit'})
+            lead_img["id"] = "lead-image"
+            lead_cap["id"] = "lead-image-credit"
         a_date = a_soup.find("time")
         content = a_soup.find_all("div", class_='body__inner-container')
         cat_time = soup.new_tag("div")
@@ -146,9 +157,11 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         new_soup.append(cat_time)
         new_soup.append(headline)
         new_soup.append(author)
-        new_soup.append(subhead)
-        new_soup.append(lead_img)
-        new_soup.append(lead_cap)
+        if subhead:
+            new_soup.append(subhead)
+        if lead_pic:
+            new_soup.append(lead_img)
+            new_soup.append(lead_cap)
         for piece in content:
             new_soup.append(piece)
         new_soup["class"] = 'the_article'
