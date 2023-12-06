@@ -2,22 +2,23 @@ import os
 import json
 import sys
 import re
+
 from collections import OrderedDict
 from datetime import date, datetime
-from calibre.web.feeds.news import BasicNewsRecipe, classes
-from calibre.utils.date import utcnow, parse_date
+
+from calibre.web.feeds.news import BasicNewsRecipe
+from calibre.utils.date import utcnow
 from calibre import browser
-from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import BasicNewsrackRecipe, format_title
+from recipes_shared import format_title, parse_date, BasicCookielessNewsrackRecipe
 
 
 _name = "Jewish Currents"
 
 
-class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
+class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "holyspiritomb"
     language = "en"
@@ -113,6 +114,7 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
 
     BASE_URL = 'https://jewishcurrents.org'
 
+
     def populate_article_metadata(self, article, soup, _):
         # self.log.warn(soup)
         toc_thumb = soup.find("img", attrs={"id": "toc_thumb"})
@@ -132,6 +134,7 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
         if date_el:
             date_el["href"] = article.url
             date_local = datetime.strptime(article_pubdate_str, "%Y-%m-%dT%H:%M:%S%z")
+            # date_local_test = parse_date(article_pubdate_str, as_utc=False)
             # self.log(article_pubdate_str, date_local)
             # self.log(date_local.tzinfo)
             date_el.string = date.strftime(date_local, "%d %B %Y, %-I:%M %p %Z")
