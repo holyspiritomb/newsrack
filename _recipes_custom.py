@@ -124,6 +124,21 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
+        recipe="assigned-media",
+        slug="assigned-media",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="News",
+        tags=["lgbtq"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="recipes_custom/logos/Assigned.jpg"
+        ),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="duolingo-blog",
         slug="duolingo-blog",
         src_ext="mobi",
