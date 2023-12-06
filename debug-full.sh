@@ -21,7 +21,7 @@ do
 done
 
 rm -rf debug
-ebook-convert "$1.recipe" .mobi --test --debug-pipeline debug -vv && \
+ebook-convert "$1.recipe" .mobi --debug-pipeline debug -vv && \
 # open debug/input/index.html
 
 if [ -f "$1.recipe" ]; then

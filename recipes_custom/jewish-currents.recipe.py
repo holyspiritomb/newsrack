@@ -163,13 +163,14 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             if subhead:
                 subhead["id"] = "article_subhead"
             category_link = lockup.find("a", href=re.compile("category"))
-            category_link["id"] = "article_category"
-            if category_link.string != "Comic / ":
-                tinyheader = soup.new_tag("div")
-                tinyheader["id"] = "category_date"
-                category_link.wrap(tinyheader)
-                category_link.insert_after(date_el)
-                category_link.insert_after(" | ")
+            if category_link:
+                category_link["id"] = "article_category"
+                if category_link.string != "Comic / ":
+                    tinyheader = soup.new_tag("div")
+                    tinyheader["id"] = "category_date"
+                    category_link.wrap(tinyheader)
+                    category_link.insert_after(date_el)
+                    category_link.insert_after(" | ")
         toc_thumb = content.find("img")
         toc_thumb["id"] = "toc_thumb"
         imgcap = toc_thumb.find_next_sibling("div", class_="text-sm")
