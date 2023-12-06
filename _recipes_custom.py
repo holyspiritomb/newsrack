@@ -128,8 +128,8 @@ recipes: List[Recipe] = [
         slug="assigned-media",
         src_ext="mobi",
         target_ext=["epub"],
-        category="News",
-        tags=["lgbtq"],
+        category="Blogs",
+        tags=["lgbtq", "trans"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/Assigned.jpg"
@@ -202,13 +202,12 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="News",
-        tags=["news", "jewish"],
+        tags=["news", "jewish", "commentary", "politics"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/jewish-currents.png"),
-        # enable_on=lambda recipe: every_x_days(
-            # last_run=recipe.last_run, days=1, drift=0
-        # ),
-        enable_on=False,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
     ),
     CustomOptionsRecipe(
         recipe="knowable",
@@ -352,17 +351,6 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png"
         ),
-    ),
-    CustomOptionsRecipe(
-        recipe="newyorker",
-        slug="newyorker",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Magazines",
-        overwrite_cover=False,
-        enable_on=False,
-        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
-        tags=["editorial", "commentary", "weekly"],
     ),
     CustomOptionsRecipe(
         recipe="npr",
