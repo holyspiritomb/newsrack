@@ -8,7 +8,7 @@ from datetime import date, datetime
 
 from calibre.web.feeds.news import BasicNewsRecipe
 from calibre.utils.date import utcnow, strptime
-from calibre import browser
+from calibre import browser, iswindows, random_user_agent
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 # custom include to share code between recipes
@@ -23,20 +23,20 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "holyspiritomb"
     language = "en"
-    oldest_article = 15  # days
+    oldest_article = 7  # days
     # max_articles_per_feed = 50
     publication_type = 'magazine'
     resolve_internal_links = False
     use_embedded_content = False
     remove_empty_feeds = True
     remove_javascript = False
-    max_articles_per_feed = 50
+    max_articles_per_feed = 20
     no_stylesheets = True
     remove_attributes = ["style"]
     auto_cleanup = False
     recursions = 0
     simultaneous_downloads = 1
-    delay = 2
+    delay = 5
     masthead_url = "https://jewishcurrents.org/img/jewish-currents.svg"
     description = (
         '''Breaking news, analysis, art, and culture from a progressive Jewish perspective.'''
@@ -111,7 +111,6 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         '''
 
     BASE_URL = 'https://jewishcurrents.org'
-
 
     def populate_article_metadata(self, article, soup, _):
         # self.log.warn(soup)
@@ -263,9 +262,8 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             )
         return sectioned_feeds.items()
 
-    def get_browser(self, *a, **kw):
-        br = BasicNewsRecipe.get_browser(self, *a, **kw)
-        return br
+    def get_browser(self, *args, **kwargs):
+        return self
 
     def clone_browser(self, *args, **kwargs):
         return self.get_browser()
