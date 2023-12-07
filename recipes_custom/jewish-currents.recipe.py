@@ -7,8 +7,9 @@ from collections import OrderedDict
 from datetime import date, datetime
 
 from calibre.web.feeds.news import BasicNewsRecipe
-from calibre.utils.date import utcnow
+from calibre.utils.date import utcnow, strptime
 from calibre import browser
+from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -34,19 +35,16 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
     remove_attributes = ["style"]
     auto_cleanup = False
     # recursions = 1
-    # simultaneous_downloads = 1
+    simultaneous_downloads = 1
+    delay = 1
     masthead_url = "https://jewishcurrents.org/img/jewish-currents.svg"
     description = (
         '''Breaking news, analysis, art, and culture from a progressive Jewish perspective.'''
     )
     conversion_options = {
-        'tags' : 'Jewish Currents, Jewish',
+        'tags' : 'Jewish Currents, Jewish, Politics, News',
         'authors' : 'newsrack',
     }
-    # feeds = [
-        # ("Duolingo Blog", "https://blog.duolingo.com/rss/"),
-    # ]
-
     # keep_only_tags = [
         # dict(name="div", attrs={"id": "content"})
     # ]
@@ -126,6 +124,13 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         # self.log.warn(article_data["@graph"])
         article_pubdate_str = article_data["@graph"][0]["datePublished"]
         article_mod_str = article_data["@graph"][0]["dateModified"]
+
+        post_date = strptime(article_mod_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+        article_age = utcnow() - post_date
+        days_old = article_age.days
+        if days_old > self.oldest_article:
+            self.abort_article(f"Aborting article that is {days_old} days old.")
+
         if article_pubdate_str == article_mod_str:
             article_dt = parse_date(article_pubdate_str)
         else:
@@ -143,6 +148,20 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+
+    def preprocess_raw_html(self, raw_html, url):
+        soup = BeautifulSoup(raw_html, from_encoding='utf-8')
+        json_info = soup.find("script", attrs={"type": "application/ld+json"})
+        article_data = json.loads(json_info.string)
+        # self.log.warn(article_data["@graph"])
+        article_pubdate_str = article_data["@graph"][0]["datePublished"]
+        article_mod_str = article_data["@graph"][0]["dateModified"]
+        post_date = parse_date(article_mod_str, as_utc=True)
+        article_age = utcnow() - post_date
+        days_old = article_age.days
+        if days_old > self.oldest_article:
+            self.abort_article(f"Aborting article that is {days_old} days old.")
+        return str(soup)
 
     def preprocess_html(self, soup):
         content = soup.find("div", attrs={"id": "content"})
@@ -209,13 +228,18 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         return soup
 
     def parse_index(self):
-        # self.log("running parse_index function")
+        self.log.debug("running parse_index function")
         # br = self.get_browser()
         soup = self.index_to_soup("https://jewishcurrents.org/archive")
         # raw_html = (
         #     br.open("https://jewishcurrents.org/archive", timeout=self.timeout).read().decode("utf-8")
         # )
         # soup = BeautifulSoup(raw_html)
+        if soup:
+            self.log.info("index soup fetched, hooray!")
+        else:
+            self.log.error("no index soup")
+            self.abort_recipe_processing("Couldn't get the soup.")
         sectioned_feeds = OrderedDict()
         for article_card in soup.findAll("a", attrs={'class': 'leading-snug'}):
             card_url = article_card['href']
@@ -251,7 +275,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         br = browser()
         return br.open_novisit(*args, **kwargs)
 
-    # open = open_novisit
+    open = open_novisit
 
 
 calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
