@@ -23,7 +23,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "holyspiritomb"
     language = "en"
-    oldest_article = 7  # days
+    oldest_article = 14  # days
     # max_articles_per_feed = 50
     publication_type = 'magazine'
     resolve_internal_links = False
@@ -124,7 +124,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         article_pubdate_str = article_data["@graph"][0]["datePublished"]
         article_mod_str = article_data["@graph"][0]["dateModified"]
 
-        post_date = strptime(article_mod_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+        post_date = parse_date(article_mod_str)
         article_age = utcnow() - post_date
         days_old = article_age.days
         if days_old > self.oldest_article:
@@ -136,7 +136,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         date_el = soup.find(attrs={"id": "article_date"})
         if date_el:
             date_el["href"] = article.url
-            date_local = datetime.strptime(article_pubdate_str, "%Y-%m-%dT%H:%M:%S%z")
+            date_local = parse_date(article_pubdate_str)
             # date_local_test = parse_date(article_pubdate_str, as_utc=False)
             # self.log(article_pubdate_str, date_local)
             # self.log(date_local.tzinfo)
@@ -226,11 +226,12 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         return soup
 
     def parse_index(self):
+        google_cache_url = "https://webcache.googleusercontent.com/search?q=cache:https://jewishcurrents.org/archive"
         self.log.debug("running parse_index function")
         br = self.get_browser()
-        # soup = self.index_to_soup("https://jewishcurrents.org/archive")
+        # live_index = "https://jewishcurrents.org/archive"
         raw_html = (
-            br.open("https://jewishcurrents.org/archive", timeout=self.timeout).read().decode("utf-8")
+            br.open(google_cache_url, timeout=self.timeout).read().decode("utf-8")
         )
         soup = BeautifulSoup(raw_html)
         if soup:
@@ -270,11 +271,11 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
 
     def open_novisit(self, *args, **kwargs):
         br = browser()
-        br.set_handle_robots(False)
-        br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36')]
+        # br.set_handle_robots(False)
+        # br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36')]
         return br.open_novisit(*args, **kwargs)
 
     open = open_novisit
 
 
-# calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
+calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
