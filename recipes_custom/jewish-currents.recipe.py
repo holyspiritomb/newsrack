@@ -23,7 +23,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "holyspiritomb"
     language = "en"
-    oldest_article = 31  # days
+    oldest_article = 15  # days
     # max_articles_per_feed = 50
     publication_type = 'magazine'
     resolve_internal_links = False
@@ -34,9 +34,9 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
     no_stylesheets = True
     remove_attributes = ["style"]
     auto_cleanup = False
-    # recursions = 1
+    recursions = 0
     simultaneous_downloads = 1
-    delay = 1
+    delay = 2
     masthead_url = "https://jewishcurrents.org/img/jewish-currents.svg"
     description = (
         '''Breaking news, analysis, art, and culture from a progressive Jewish perspective.'''
@@ -73,7 +73,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             font-family: Lato, "Readex Pro Light", sans-serif;
         }
         img {
-            max-width: 100%;
+            max-width: 98vw;
             height: auto;
         }
 
@@ -130,7 +130,6 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         days_old = article_age.days
         if days_old > self.oldest_article:
             self.abort_article(f"Aborting article that is {days_old} days old.")
-
         if article_pubdate_str == article_mod_str:
             article_dt = parse_date(article_pubdate_str)
         else:
@@ -229,12 +228,12 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
 
     def parse_index(self):
         self.log.debug("running parse_index function")
-        # br = self.get_browser()
-        soup = self.index_to_soup("https://jewishcurrents.org/archive")
-        # raw_html = (
-        #     br.open("https://jewishcurrents.org/archive", timeout=self.timeout).read().decode("utf-8")
-        # )
-        # soup = BeautifulSoup(raw_html)
+        br = self.get_browser()
+        # soup = self.index_to_soup("https://jewishcurrents.org/archive")
+        raw_html = (
+            br.open("https://jewishcurrents.org/archive", timeout=self.timeout).read().decode("utf-8")
+        )
+        soup = BeautifulSoup(raw_html)
         if soup:
             self.log.info("index soup fetched, hooray!")
         else:
