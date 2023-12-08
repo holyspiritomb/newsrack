@@ -4,16 +4,26 @@ import sys
 import re
 
 from collections import OrderedDict
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 
 from calibre.web.feeds.news import BasicNewsRecipe
-from calibre.utils.date import utcnow, strptime
-from calibre import browser, iswindows, random_user_agent
+# from calibre.utils.date import utcnow, strptime, strftime
+from calibre import browser
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import format_title, parse_date, BasicCookielessNewsrackRecipe
+
+# convenience switches for when I'm developing
+if "spiritomb" in os.environ["recipes_includes"]:
+    github_runner = False
+    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/jewish-currents.svg"
+    _oldest_article = 31
+else:
+    github_runner = True
+    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/jewish-currents.svg"
+    _oldest_article = 15
 
 
 _name = "Jewish Currents"
@@ -23,23 +33,22 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
     title = _name
     __author__ = "holyspiritomb"
     language = "en"
-    oldest_article = 14  # days
-    # max_articles_per_feed = 50
     publication_type = 'magazine'
+    oldest_article = _oldest_article  # days
+    use_google_cache = github_runner
+    masthead_url = _masthead
     resolve_internal_links = False
     use_embedded_content = False
     remove_empty_feeds = True
     remove_javascript = False
-    max_articles_per_feed = 20
+    max_articles_per_feed = 50
     no_stylesheets = True
-    remove_attributes = ["style"]
     auto_cleanup = False
     recursions = 0
     simultaneous_downloads = 1
     delay = 5
-    masthead_url = "https://jewishcurrents.org/img/jewish-currents.svg"
     description = (
-        '''Breaking news, analysis, art, and culture from a progressive Jewish perspective.'''
+        '''Breaking news, analysis, art, and culture from a progressive Jewish perspective. https://jewishcurrents.org'''
     )
     conversion_options = {
         'tags' : 'Jewish Currents, Jewish, Politics, News',
@@ -63,10 +72,13 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         dict(attrs={"class": "hidden"}),
         dict(name="svg", attrs={"height": False}),
         dict(name="script", attrs={"type": False}),
+        dict(name="script", attrs={"type": "text/javascript"}),
         dict(name="script", attrs={"src": True}),
         dict(name="iframe"),
         dict(name="footer"),
     ]
+
+    remove_attributes = ["style"]
 
     extra_css = '''
         * {
@@ -77,17 +89,20 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             height: auto;
         }
 
-        #article_headline {}
-
         .image-caption p {
             font-size: 0.8rem;
+            font-style: italic;
+            font-family: Lato, "Readex Pro Light", sans-serif, sans;
         }
         .image-credit {
             font-size: 0.7rem;
+            font-style: italic;
+            font-family: Lato, "Readex Pro Light", sans-serif, sans;
         }
 
         .bodytext p:not(.pullquote) {
             font-size: 1rem;
+            font-family: Lato, "Readex Pro Light", sans-serif, sans;
         }
 
         p.pullquote {
@@ -100,47 +115,71 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             padding-right: 10vw;
         }
 
-        .bioblock p, .bioblock span {
+        .bioblock p, .bioblock span, #downloaded_from {
             font-size: 0.8rem;
+            font-family: Lato, "Readex Pro Light", sans-serif, sans;
         }
 
         #category_date {
             font-size:0.8rem;
             text-transform: uppercase;
+            font-family: Lato, "Readex Pro Light", sans-serif, sans;
         }
         '''
 
-    BASE_URL = 'https://jewishcurrents.org'
+    def google_cache_uri(self, uri):
+        g_uri = f"https://webcache.googleusercontent.com/search?q=cache:{uri}"
+        return g_uri
+
+    def ungoogle_uri(self, uri: str):
+        ungoogled_uri = uri.removeprefix("https://webcache.googleusercontent.com/search?q=cache:")
+        return ungoogled_uri
 
     def populate_article_metadata(self, article, soup, _):
         # self.log.warn(soup)
         toc_thumb = soup.find("img", attrs={"id": "toc_thumb"})
         thumb_src = toc_thumb["src"]
         self.add_toc_thumbnail(article, thumb_src)
-        json_info = soup.find("script", attrs={"type": "application/ld+json"})
-        json_data = json_info.string
-        article_data = json.loads(json_data)
-        # self.log.warn(article_data["@graph"])
-        article_pubdate_str = article_data["@graph"][0]["datePublished"]
-        article_mod_str = article_data["@graph"][0]["dateModified"]
-
-        post_date = parse_date(article_mod_str)
-        article_age = utcnow() - post_date
-        days_old = article_age.days
-        if days_old > self.oldest_article:
-            self.abort_article(f"Aborting article that is {days_old} days old.")
-        if article_pubdate_str == article_mod_str:
-            article_dt = parse_date(article_pubdate_str)
+        content = soup.find("div", attrs={"id": "content"})
+        article_pubdate_str = content["data-pub"]
+        article_mod_str = content["data-mod"]
+        pub_dt = parse_date(article_pubdate_str)
+        mod_dt = parse_date(article_mod_str)
+        if pub_dt == mod_dt:
+            article_dt = pub_dt
         else:
-            article_dt = parse_date(article_mod_str)
+            article_dt = mod_dt
         date_el = soup.find(attrs={"id": "article_date"})
         if date_el:
-            date_el["href"] = article.url
-            date_local = parse_date(article_pubdate_str)
-            # date_local_test = parse_date(article_pubdate_str, as_utc=False)
-            # self.log(article_pubdate_str, date_local)
-            # self.log(date_local.tzinfo)
-            date_el.string = date.strftime(date_local, "%d %B %Y, %-I:%M %p %Z")
+            date_el.string = date.strftime(pub_dt, "%-d %b %Y, %-I:%M %p %Z")
+            if pub_dt != mod_dt:
+                mod_span = soup.new_tag("span")
+                mod_span["id"] = "article_updated"
+                mod_span.string = date.strftime(mod_dt, "%-d %b %Y, %-I:%M %p %Z")
+                date_el.parent.append(" | Updated ")
+                date_el.parent.append(mod_span)
+        if "googleusercontent" in article.url:
+            article_url = self.ungoogle_uri(article.url)
+        else:
+            article_url = article.url
+        bioblock = soup.findAll(attrs={"class": "bioblock"})[-1]
+        source_div = soup.new_tag("div")
+        source_div["id"] = "downloaded_from"
+        article_link = soup.new_tag("a")
+        article_link["href"] = article_url
+        article_link.string = article_url
+        current_dt = datetime.now(tz=timezone.utc)
+        # self.log.warn(current_dt)
+        current_dt_str = date.strftime(current_dt, "%-d %B %Y, %-I:%M %p %Z")
+        source_div.append("This article was downloaded from ")
+        if "googleusercontent" in article.url:
+            source_div.append("google's cached page for ")
+        source_div.append(article_link)
+        source_div.append(f" at {current_dt_str}")
+        source_div.append(".")
+        hr = soup.new_tag("hr")
+        bioblock.insert_after(source_div)
+        bioblock.insert_after(hr)
         article.utctime = article_dt
         article.date = article_dt
         if (not self.pub_date) or article.utctime > self.pub_date:
@@ -151,43 +190,60 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         soup = BeautifulSoup(raw_html, from_encoding='utf-8')
         json_info = soup.find("script", attrs={"type": "application/ld+json"})
         article_data = json.loads(json_info.string)
-        # self.log.warn(article_data["@graph"])
         article_pubdate_str = article_data["@graph"][0]["datePublished"]
         article_mod_str = article_data["@graph"][0]["dateModified"]
-        post_date = parse_date(article_mod_str, as_utc=True)
-        article_age = utcnow() - post_date
-        days_old = article_age.days
-        if days_old > self.oldest_article:
-            self.abort_article(f"Aborting article that is {days_old} days old.")
+        content = soup.find("div", attrs={"id": "content"})
+        content["data-pub"] = article_pubdate_str
+        content["data-mod"] = article_mod_str
+        json_info.extract()
+        headline = content.find("h1")
+        headline["id"] = "article_headline"
+        lockup = content.find("div", attrs={"class": "lockup"})
+        if lockup:
+            date_el = lockup.find("div", string=re.compile(r"[0-9]{4}$"))
+            if date_el:
+                date_el["id"] = "article_date"
+            head_authors = lockup.findAll("a", href=re.compile("author"))
+            for auth in head_authors:
+                auth["class"] = "header-author"
+            subhead = lockup.find("h2")
+            if subhead:
+                subhead["id"] = "article_subhead"
+        img_auth = content.findAll("img", attrs={"data-srcset": True})
+        for img in img_auth:
+            if "/imager/cloud/authors" in img["data-srcset"]:
+                img.extract()
         return str(soup)
 
     def preprocess_html(self, soup):
         content = soup.find("div", attrs={"id": "content"})
-        lockup = content.find("div", attrs={"class": "lockup"})
-        if lockup:
-            head_authors = lockup.findAll("a", href=re.compile("author"))
-            date_el = lockup.find("div", string=re.compile(r"[0-9]{4}$"))
-            if date_el:
-                # self.log(date_el)
-                date_el["id"] = "article_date"
-                date_el.name = "a"
-                date_el.extract()
+        headline = content.find("h1", attrs={"id": "article_headline"})
+        date_el = content.find("div", attrs={"id": "article_date"})
+        if date_el:
+            date_el.name = "span"
+            date_el.extract()
+        else:
+            date_el = soup.new_tag("span")
+            date_el["id"] = "article_date"
+        tinyheader = soup.new_tag("div")
+        tinyheader["id"] = "category_date"
+        category_link = content.find("a", href=re.compile(r"jewishcurrents\.org\/category"))
+        category_link["id"] = "article_category"
+        if "Comic" in category_link.string:
+            category_link.string = "Comic"
+            category_link.extract()
+            tinyheader.append(category_link)
+            head_authors = headline.parent.findAll("a", href=re.compile(r"\/author"))
             for auth in head_authors:
                 auth["class"] = "header-author"
-            headline = lockup.find("h1")
-            headline["id"] = "article_headline"
-            subhead = lockup.find("h2")
-            if subhead:
-                subhead["id"] = "article_subhead"
-            category_link = lockup.find("a", href=re.compile("category"))
-            if category_link:
-                category_link["id"] = "article_category"
-                if category_link.string != "Comic / ":
-                    tinyheader = soup.new_tag("div")
-                    tinyheader["id"] = "category_date"
-                    category_link.wrap(tinyheader)
-                    category_link.insert_after(date_el)
-                    category_link.insert_after(" | ")
+            old_date = headline.parent.find("span", string=re.compile(r"^[A-Z][a-z]* [0-9]+\, [0-9]{4}$"))
+            if old_date:
+                old_date.extract()
+        else:
+            category_link.wrap(tinyheader)
+        category_link.insert_after(date_el)
+        category_link.insert_after(" | ")
+        content.insert(0, tinyheader)
         toc_thumb = content.find("img")
         toc_thumb["id"] = "toc_thumb"
         imgcap = toc_thumb.find_next_sibling("div", class_="text-sm")
@@ -198,15 +254,11 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             imgcred["class"] = "image-credit"
         for img in content.findAll("img", attrs={"height": True}):
             del img["height"]
+        for img in content.findAll("img", attrs={"width": True}):
             del img["width"]
-        img_auth = content.findAll("img", attrs={"data-srcset": True})
-        for img in img_auth:
-            if "/imager/cloud/authors" in img["data-srcset"]:
-                img.extract()
         bioblocks = soup.findAll(attrs={"class": "bioblock"})
         if bioblocks:
             for bioblock in bioblocks:
-                # author_names = bioblock.findAll("a", href=re.compile("author"))
                 twitter_handles = bioblock.findAll("a", href=re.compile("twitter"))
                 if twitter_handles:
                     for tw in twitter_handles:
@@ -222,26 +274,31 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             if pull_par:
                 pull_par["class"] = "pullquote"
                 pull_par.parent.unwrap()
-        # self.log.warn(content)
         return soup
 
     def parse_index(self):
-        google_cache_url = "https://webcache.googleusercontent.com/search?q=cache:https://jewishcurrents.org/archive"
+        live_index = "https://jewishcurrents.org/archive"
+        if self.use_google_cache:
+            index_page = self.google_cache_uri(live_index)
+        else:
+            index_page = live_index
         self.log.debug("running parse_index function")
         br = self.get_browser()
-        # live_index = "https://jewishcurrents.org/archive"
         raw_html = (
-            br.open(google_cache_url, timeout=self.timeout).read().decode("utf-8")
+            br.open(index_page, timeout=self.timeout).read().decode("utf-8")
         )
         soup = BeautifulSoup(raw_html)
         if soup:
             self.log.info("index soup fetched, hooray!")
         else:
-            self.log.error("no index soup")
-            self.abort_recipe_processing("Couldn't get the soup.")
+            self.abort_recipe_processing("Couldn't get soup.")
         sectioned_feeds = OrderedDict()
         for article_card in soup.findAll("a", attrs={'class': 'leading-snug'}):
-            card_url = article_card['href']
+            source_url = article_card['href']
+            if self.use_google_cache:
+                card_url = self.google_cache_uri(source_url)
+            else:
+                card_url = source_url
             card_title = self.tag_to_string(article_card.find("div", attrs={'class': 'font-display'}))
             section_title = self.tag_to_string(article_card.find("span", attrs={'class': 'pr-3'}))
             if section_title not in sectioned_feeds:
@@ -250,17 +307,23 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             block = article_card.find("span", attrs={'class': 'block'})
             auths = block.contents[0].strip()
             article_date_span = self.tag_to_string(block.find("span"))
-            # article_date = datetime.strptime(article_date_span, "%B %d, %Y")
-            # self.log(f"Found article: {section_title}, {card_title}")
-            sectioned_feeds[section_title].append(
-                {
-                    "title": card_title,
-                    "url": card_url,
-                    "description": description,
-                    "date": article_date_span,
-                    "author": auths,
-                }
-            )
+            post_date = datetime.strptime(article_date_span, "%B %d, %Y")
+            self.log(f"Found article: {section_title}, {card_title}")
+            article_age = datetime.today() - post_date
+            days_old = article_age.days
+            if days_old > self.oldest_article:
+                self.log(f"Article {card_title} is {days_old} days old, which is older than we want.")
+                continue
+            else:
+                sectioned_feeds[section_title].append(
+                    {
+                        "title": card_title,
+                        "url": card_url,
+                        "description": description,
+                        "date": article_date_span,
+                        "author": auths,
+                    }
+                )
         return sectioned_feeds.items()
 
     def get_browser(self, *args, **kwargs):
