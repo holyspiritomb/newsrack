@@ -4,7 +4,7 @@ from typing import List
 from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days, every_x_hours, get_local_now
 
 # Define the categories display order, optional
-categories_sort: List[str] = ["Science", "Blogs", "Arts & Culture", "News", "Magazines", "Politics", "Editorial"]
+categories_sort: List[str] = ["Science", "Blogs", "Arts & Culture", "News", "Magazines", "Politics", "Jewish"]
 
 # Define your custom recipes list here
 # Example: https://github.com/ping/newsrack-fork-test/blob/custom/_recipes_custom.py
@@ -72,7 +72,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="News",
-        tags=["lgbtq"],
+        tags=["lgbtq", "news"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/advocate.png"
@@ -129,7 +129,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="Blogs",
-        tags=["lgbtq", "trans"],
+        tags=["lgbtq", "trans", "news"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/Assigned.jpg"
@@ -170,7 +170,7 @@ recipes: List[Recipe] = [
         slug="the-forward",
         src_ext="mobi",
         target_ext=["epub"],
-        category="News",
+        category="Jewish",
         tags=["editorial", "commentary", "news", "jewish", "religion"],
         overwrite_cover=True,
         enable_on=lambda recipe: every_x_days(
@@ -187,7 +187,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Blogs",
         overwrite_cover=True,
-        tags=["science", "trans", "lgbtq"],
+        tags=["science", "trans", "lgbtq", "news"],
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=0
         ),
@@ -201,8 +201,8 @@ recipes: List[Recipe] = [
         slug="jewish-currents",
         src_ext="mobi",
         target_ext=["epub"],
-        category="News",
-        tags=["news", "jewish", "commentary", "politics"],
+        category="Jewish",
+        tags=["news", "jewish", "commentary", "politics", "editorial"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/jewish-currents.png"),
         enable_on=lambda recipe: every_x_days(
@@ -225,7 +225,7 @@ recipes: List[Recipe] = [
         slug="life-is-a-sacred-text",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Blogs",
+        category="Jewish",
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/life-is-a-sacred-text.png"
         ),
@@ -240,8 +240,9 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="Arts & Culture",
-        enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
-        and onlyat_hours(list(range(10, 17)), -5),
+        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
+        # and onlyat_hours(list(range(10, 17)), -5),
+        enable_on=False,
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://s26162.pcdn.co/wp-content/themes/rigel/images/social_logo.png"
         ),
@@ -296,9 +297,10 @@ recipes: List[Recipe] = [
         category="Magazines",
         tags=["daily", "history", "science"],
         overwrite_cover=True,
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        # enable_on=lambda recipe: every_x_days(
+        #     last_run=recipe.last_run, days=1, drift=0
+        # ),
+        enable_on=False,
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png"
         ),
@@ -401,20 +403,6 @@ recipes: List[Recipe] = [
         enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
         tags=["literature", "arts", "monthly"],
     ),
-    CustomMonthlyRecipe(
-        recipe="psychology-today",
-        slug="psychology-today",
-        src_ext="mobi",
-        target_ext=["epub"],
-        overwrite_cover=False,
-        category="Magazines",
-        title_date_format="%b %Y",
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_days(
-            # last_run=recipe.last_run, days=7, drift=60
-        # ),
-        tags=["science", "monthly"],
-    ),
     CustomOptionsRecipe(
         recipe="quanta-magazine",
         slug="quanta-magazine",
@@ -438,6 +426,9 @@ recipes: List[Recipe] = [
         tags=["science", "tech", "daily"],
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/science-daily.png"
+        ),
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=12, drift=0
         ),
     ),
     CustomMonthlyRecipe(
@@ -482,36 +473,12 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="News",
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=12, drift=15
+            last_run=recipe.last_run, hours=24, drift=0
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Teen_Vogue_logo.svg/1024px-Teen_Vogue_logo.svg.png"
         ),
         tags=["news", "politics"],
-    ),
-    CustomOptionsRecipe(
-        recipe="time-magazine",
-        slug="time-magazine",
-        src_ext="mobi",
-        target_ext=["epub"],
-        overwrite_cover=False,
-        category="Magazines",
-        # enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
-        enable_on=False,
-        tags=["news", "politics", "weekly"],
-    ),
-    CustomOptionsRecipe(
-        recipe="wtfjht",
-        slug="wtfjht",
-        src_ext="epub",
-        target_ext=["mobi"],
-        overwrite_cover=True,
-        category="News",
-        tags=["daily"],
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/wtfjht-t.jpg"
-        ),
     ),
     CustomMonthlyRecipe(
         recipe="wired",
@@ -535,7 +502,10 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Science",
         tags=["science", "tech", "daily"],
-        enable_on=onlyat_hours(list(range(10, 18))),
+        # enable_on=onlyat_hours(list(range(10, 18))),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
