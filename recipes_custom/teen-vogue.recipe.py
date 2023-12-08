@@ -3,8 +3,8 @@ import os
 import re
 import sys
 from collections import OrderedDict
-from urllib.parse import urlparse
 from urllib.parse import urljoin
+
 from calibre import browser
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds.news import BasicNewsRecipe, classes

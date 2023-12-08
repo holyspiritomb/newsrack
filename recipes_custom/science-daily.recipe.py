@@ -18,6 +18,13 @@ sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 
 
+# convenience switches for when I'm developing
+if "spiritomb" in os.environ["recipes_includes"]:
+    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/science-daily.png"
+else:
+    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/science-daily.png"
+
+
 _name = "Science Daily"
 
 
@@ -29,7 +36,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         'tags' : 'Science, Science Daily, Periodical',
         'authors' : 'newsrack',
     }
-    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/science-daily.png"
+    masthead_url = _masthead
     oldest_article = 7
     remove_empty_feeds = True
     max_articles_per_feed = 20

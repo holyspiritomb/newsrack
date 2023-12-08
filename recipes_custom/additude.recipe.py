@@ -12,6 +12,12 @@ from calibre.ebooks.BeautifulSoup import BeautifulSoup
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import format_title, WordPressNewsrackRecipe
 
+# convenience switches for when I'm developing
+if "spiritomb" in os.environ["recipes_includes"]:
+    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/additude.svg"
+else:
+    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/additude.svg"
+
 _name = "ADDitude"
 
 
@@ -21,6 +27,7 @@ class ADDitude(WordPressNewsrackRecipe, BasicNewsRecipe):
     language = 'en'
     __author__ = 'holyspiritomb'
     max_articles_per_feed = 100
+    masthead_url = _masthead
     # no_stylesheets = True
     # no_javascript = True
     remove_empty_feeds = True

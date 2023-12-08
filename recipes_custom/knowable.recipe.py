@@ -17,6 +17,11 @@ from calibre.utils.date import utcnow, parse_date
 from calibre.web.feeds import Feed
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 
+# convenience switches for when I'm developing
+if "spiritomb" in os.environ["recipes_includes"]:
+    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/knowable.svg"
+else:
+    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/knowable.svg"
 
 _name = "Knowable Magazine"
 
@@ -33,7 +38,7 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     }
     # masthead_url = "https://knowablemagazine.org/pb-assets/knowable-assets/images/logo-1586554394067.svg"
     # masthead_url = "https://www.annualreviews.org/pb-assets/knowable-assets/knowablelogo.png"
-    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/knowable.svg"
+    masthead_url = _masthead
     language = "en"
     encoding = "utf-8"
     publication_type = "magazine"

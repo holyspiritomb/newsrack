@@ -12,6 +12,12 @@ sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 
 
+# convenience switches for when I'm developing
+if "spiritomb" in os.environ["recipes_includes"]:
+    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/duolingo.svg"
+else:
+    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/duolingo.svg"
+
 _name = "Duolingo Blog"
 
 
@@ -30,7 +36,7 @@ class Duolingo(BasicNewsrackRecipe, BasicNewsRecipe):
     no_stylesheets = True
     remove_attributes = ["style"]
     # recursions = 1
-    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/duolingo.svg"
+    masthead_url = _masthead
     description = (
         '''Read about how Duolingo works, and how our learning scientists are working to make education fun and accessible to everyone. Generated from https://blog.duolingo.com'''
     )

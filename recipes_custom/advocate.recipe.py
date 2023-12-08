@@ -8,6 +8,13 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
+
+# convenience switches for when I'm developing
+if "spiritomb" in os.environ["recipes_includes"]:
+    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/advocate.png"
+else:
+    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/advocate.png"
+
 _name = 'The Advocate'
 
 
@@ -18,7 +25,7 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     recursions = 0
     remove_empty_feeds = True
-    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/advocate.png"
+    masthead_url = _masthead
 
     description = "Gay, lesbian, bisexual, transgender, queer news leader including politics, commentary, arts and entertainment - your source for LGBTQ news for over 50 years."
     __author__ = 'holyspiritomb'

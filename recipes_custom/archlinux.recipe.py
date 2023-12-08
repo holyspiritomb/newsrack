@@ -10,6 +10,13 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 from calibre.web.feeds import Feed
 from calibre.web.feeds.news import BasicNewsRecipe
 
+# convenience switches for when I'm developing
+if "spiritomb" in os.environ["recipes_includes"]:
+    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/archlinux.svg"
+else:
+    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/archlinux.svg"
+
+
 _name = "Arch Linux"
 
 
@@ -20,7 +27,7 @@ class ArchLinux(BasicNewsrackRecipe, BasicNewsRecipe):
     auto_cleanup = True
     description = "Arch Linux updates and news."
     use_embedded_content = True
-    masthead_url = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/archlinux.svg"
+    masthead_url = _masthead
     conversion_options = {
         'tags': 'Arch Linux',
         'authors': 'newsrack',

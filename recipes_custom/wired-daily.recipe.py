@@ -20,17 +20,26 @@ def classes(classes):
     return dict(attrs={
         'class': lambda x: x and frozenset(x.split()).intersection(q)})
 
+# convenience switches for when I'm developing
+if "spiritomb" in os.environ["recipes_includes"]:
+    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/wired-daily-masthead.png"
+    _cover = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/wired.png"
+else:
+    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/wired-daily-masthead.png"
+    _cover = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/wired.png"
+
+
 _name = "Wired Daily Edition"
 
 
 class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
-    __author__ = 'Darko Miletic, PatStapleton(update 2020-05-24), modified for newsrack by holyspiritomb'
+    __author__ = 'Darko Miletic, PatStapleton(update 2020-05-24), modified further for newsrack by holyspiritomb'
     description = (
         '''Wired is a full-color monthly American magazine, published in both print and online editions, that reports on how emerging technologies affect culture, the economy and politics. Daily edition that scrapes from the website. https://www.wired.com/'''
     )
-    masthead_url = 'https://www.wired.com/images/logos/apple-touch-icon.png'
-    cover_url = 'https://www.wired.com/images/logos/wired.png'
+    masthead_url = _masthead
+    cover_url = _cover
     publisher = 'Conde Nast'
     category = 'news, IT, computers, technology'
     oldest_article = 2
