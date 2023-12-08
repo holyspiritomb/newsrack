@@ -19,11 +19,11 @@ from recipes_shared import format_title, parse_date, BasicCookielessNewsrackReci
 if "spiritomb" in os.environ["recipes_includes"]:
     github_runner = False
     _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/jewish-currents.svg"
-    _oldest_article = 31
+    _oldest_article = 7
 else:
     github_runner = True
     _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/jewish-currents.svg"
-    _oldest_article = 15
+    _oldest_article = 31
 
 
 _name = "Jewish Currents"
