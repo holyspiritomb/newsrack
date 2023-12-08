@@ -1,4 +1,5 @@
 {
     "typeCheckingMode": "off",
-    "reportMissingImports": false
+    "reportMissingImports": false,
+    "reportGeneralTypeIssues": false
 }
