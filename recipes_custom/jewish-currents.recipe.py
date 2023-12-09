@@ -19,7 +19,7 @@ from recipes_shared import format_title, parse_date, BasicCookielessNewsrackReci
 if "spiritomb" in os.environ["recipes_includes"]:
     _github_runner = False
     _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/jewish-currents.svg"
-    _oldest_article = 45
+    _oldest_article = 15
 else:
     _github_runner = True
     _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/jewish-currents.svg"
@@ -115,7 +115,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             padding-right: 10vw;
         }
 
-        .bioblock p, .bioblock span, #downloaded_from {
+        .bioblock p, .bioblock span, #downloaded_from, #footnotes span, #footnotes p {
             font-size: 0.8rem;
             font-family: Lato, "Readex Pro Light", sans-serif, sans;
         }
@@ -187,12 +187,31 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
 
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html, from_encoding='utf-8')
+        # new_soup = BeautifulSoup(
+        #     """<html><head></head><body><main id="new-soup-by-calibre"></main></body></html>"""
+        # )
         for div in soup.findAll("div", attrs={"class": "bodytext"}):
             div["class"] = ["bodytext"]
         for div in soup.findAll("div", attrs={"class": "typography"}):
             div["class"] = ["typography"]
         for div in soup.findAll("div", attrs={"class": "footnotes"}):
             div["class"] = ["footnotes"]
+        footnotes = soup.findAll("div", attrs={"class": "footnotes"})
+        if footnotes:
+            footnotes_container = soup.new_tag("div")
+            footnotes_container["id"] = "footnotes"
+            footnotes_heading = soup.new_tag("h4")
+            footnotes_heading["id"] = "footnotes_header"
+            footnotes_heading.string = "Footnotes"
+            footnotes_container.append(footnotes_heading)
+            footnotes[0].insert_before(footnotes_container)
+            footnotes_container = soup.find("div", attrs={"id": "footnotes"})
+            for fn in footnotes:
+                fn.extract()
+                footnotes_container.append(fn)
+            for div in footnotes_container.findAll("div", attrs={"id": False}):
+                if "footnotes" not in div["class"]:
+                    div.unwrap()
         json_info = soup.find("script", attrs={"type": "application/ld+json"})
         article_data = json.loads(json_info.string)
         article_pubdate_str = article_data["@graph"][0]["datePublished"]
@@ -202,7 +221,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         content["data-mod"] = article_mod_str
         json_info.extract()
         for js in soup.findAll("script"):
-            js.extract()
+            js.decompose()
         headline = content.find("h1")
         headline["id"] = "article_headline"
         headline["class"] = ["headline"]
@@ -319,10 +338,6 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             br.open(index_page, timeout=self.timeout).read().decode("utf-8")
         )
         soup = BeautifulSoup(raw_html)
-        if soup:
-            self.log.info("index soup fetched, hooray!")
-        else:
-            self.abort_recipe_processing("Couldn't get soup.")
         sectioned_feeds = OrderedDict()
         for article_card in soup.findAll("a", attrs={'class': 'leading-snug'}):
             source_url = article_card['href']
