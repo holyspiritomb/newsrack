@@ -17,11 +17,11 @@ from recipes_shared import format_title, parse_date, BasicCookielessNewsrackReci
 
 # convenience switches for when I'm developing
 if "spiritomb" in os.environ["recipes_includes"]:
-    github_runner = False
+    _github_runner = False
     _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/jewish-currents.svg"
-    _oldest_article = 7
+    _oldest_article = 45
 else:
-    github_runner = True
+    _github_runner = True
     _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/jewish-currents.svg"
     _oldest_article = 31
 
@@ -35,7 +35,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
     language = "en"
     publication_type = 'magazine'
     oldest_article = _oldest_article  # days
-    use_google_cache = github_runner
+    use_google_cache = _github_runner
     masthead_url = _masthead
     resolve_internal_links = False
     use_embedded_content = False
@@ -89,12 +89,12 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             height: auto;
         }
 
-        .image-caption p {
+        .image-caption p, img + div p {
             font-size: 0.8rem;
             font-style: italic;
             font-family: Lato, "Readex Pro Light", sans-serif, sans;
         }
-        .image-credit {
+        .image-credit, .image-caption span.opacity-50, img + div + div{
             font-size: 0.7rem;
             font-style: italic;
             font-family: Lato, "Readex Pro Light", sans-serif, sans;
@@ -169,7 +169,6 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         article_link["href"] = article_url
         article_link.string = article_url
         current_dt = datetime.now(tz=timezone.utc)
-        # self.log.warn(current_dt)
         current_dt_str = date.strftime(current_dt, "%-d %B %Y, %-I:%M %p %Z")
         source_div.append("This article was downloaded from ")
         if "googleusercontent" in article.url:
@@ -188,6 +187,12 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
 
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html, from_encoding='utf-8')
+        for div in soup.findAll("div", attrs={"class": "bodytext"}):
+            div["class"] = ["bodytext"]
+        for div in soup.findAll("div", attrs={"class": "typography"}):
+            div["class"] = ["typography"]
+        for div in soup.findAll("div", attrs={"class": "footnotes"}):
+            div["class"] = ["footnotes"]
         json_info = soup.find("script", attrs={"type": "application/ld+json"})
         article_data = json.loads(json_info.string)
         article_pubdate_str = article_data["@graph"][0]["datePublished"]
@@ -196,10 +201,14 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         content["data-pub"] = article_pubdate_str
         content["data-mod"] = article_mod_str
         json_info.extract()
+        for js in soup.findAll("script"):
+            js.extract()
         headline = content.find("h1")
         headline["id"] = "article_headline"
+        headline["class"] = ["headline"]
         lockup = content.find("div", attrs={"class": "lockup"})
         if lockup:
+            lockup["class"] = ["lockup"]
             date_el = lockup.find("div", string=re.compile(r"[0-9]{4}$"))
             if date_el:
                 date_el["id"] = "article_date"
@@ -209,10 +218,29 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             subhead = lockup.find("h2")
             if subhead:
                 subhead["id"] = "article_subhead"
+                subhead["class"] = "subhead"
+            lockup.extract()
+            content.insert(0, lockup)
+        for bug_div in soup.findAll("div", attrs={"class": "bug"}):
+            bug_div.unwrap()
         img_auth = content.findAll("img", attrs={"data-srcset": True})
         for img in img_auth:
             if "/imager/cloud/authors" in img["data-srcset"]:
                 img.extract()
+        date_spans = content.findAll("span", string=re.compile(r"^[A-Z][a-z]* [0-9]+\, [0-9]{4}$"), attrs={"id": False})
+        if date_spans:
+            for span in date_spans:
+                parent_el = span.parent
+                span.extract()
+                parent_el.smooth()
+                for thing in parent_el.contents:
+                    if not thing.name:
+                        if re.search(r"^\W*$", thing.string):
+                            thing.extract()
+                if len(parent_el.contents) == 0:
+                    parent_el.extract()
+        for div in soup.findAll("div", attrs={"id": False, "class": ""}):
+            div.unwrap()
         return str(soup)
 
     def preprocess_html(self, soup):
@@ -236,9 +264,10 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             head_authors = headline.parent.findAll("a", href=re.compile(r"\/author"))
             for auth in head_authors:
                 auth["class"] = "header-author"
-            old_date = headline.parent.find("span", string=re.compile(r"^[A-Z][a-z]* [0-9]+\, [0-9]{4}$"))
-            if old_date:
-                old_date.extract()
+            # old_date = headline.parent.find("span", string=re.compile(r"^[A-Z][a-z]* [0-9]+\, [0-9]{4}$"))
+            # if old_date:
+            #     self.log("found old date", old_date)
+            #     old_date.extract()
         else:
             category_link.wrap(tinyheader)
         category_link.insert_after(date_el)
@@ -259,6 +288,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
         bioblocks = soup.findAll(attrs={"class": "bioblock"})
         if bioblocks:
             for bioblock in bioblocks:
+                bioblock["class"] = ["bioblock"]
                 twitter_handles = bioblock.findAll("a", href=re.compile("twitter"))
                 if twitter_handles:
                     for tw in twitter_handles:
@@ -270,6 +300,7 @@ class JewishCurrents(BasicCookielessNewsrackRecipe, BasicNewsRecipe):
             article_main.insert_after(hr)
         pullquotes = content.findAll(class_="pullquote")
         for pq in pullquotes:
+            pq["class"] = ["pullquote"]
             pull_par = pq.find("p")
             if pull_par:
                 pull_par["class"] = "pullquote"
