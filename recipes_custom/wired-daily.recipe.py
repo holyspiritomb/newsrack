@@ -85,7 +85,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(name='article', attrs={'class': 'article main-content'}),
     ]
     remove_attributes = ['srcset', 'sizes', 'media', 'data-event-click', 'data-offer-url']
-    filter_out = ["obesity", "weight loss", "best shows", "review:", "best movies"]
+    filter_out = ["obesity", "weight loss", "best shows", "review:", "best movies", "great deals"]
     handle_gzip = True
 
     # https://www.wired.com/about/rss-feeds/
