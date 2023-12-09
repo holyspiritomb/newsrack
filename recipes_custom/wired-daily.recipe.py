@@ -20,6 +20,7 @@ def classes(classes):
     return dict(attrs={
         'class': lambda x: x and frozenset(x.split()).intersection(q)})
 
+
 # convenience switches for when I'm developing
 if "spiritomb" in os.environ["recipes_includes"]:
     _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/wired-daily-masthead.png"
@@ -116,6 +117,10 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
             self.log.debug(feed.title)
             for article in feed.articles[:]:
                 self.log(article.title)
+                if "GEAR" in feed.title.upper() and "DEALS" in article.title.upper():
+                    self.log.warn(f"removing {article.title} from Gear feed (product deals)")
+                    feed.articles.remove(article)
+                    continue
                 if re.search(regex, article.title):
                     self.log.warn(f"removing {article.title} from feed (regex)")
                     feed.articles.remove(article)
