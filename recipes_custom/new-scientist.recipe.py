@@ -179,9 +179,12 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         srclink_wrapper = soup.new_tag("span")
         srclink_wrapper.append("Downloaded from ")
         srclink_wrapper.append(srclink)
+        srclink_wrapper.append(".")
         orig_url_div.append(srclink_wrapper)
         # self.log(orig_url_div)
         topics.insert_after(orig_url_div)
+        hr = soup.new_tag("hr")
+        topics.insert_after(hr)
         topics.extract()
         return soup
 

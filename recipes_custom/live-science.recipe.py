@@ -61,18 +61,30 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         div.gallery-el{max-width:90vw;}
         img{max-width:90vw;}
         .gallery-el img{max-width:90vw;}
-        div.image-caption,span.caption-text,span.credit{font-size:0.8rem;}
+        div.image-caption,span.caption-text,span.credit,div#article_source{font-size:0.8rem;}
         #article-body p{font-size:1rem;}
         h1{font-size:1.75rem;}
         h2{font-size:1.5rem;}
         p.strapline{font-size:1.5rem;font-style:italic;}
     """
 
-    def populate_article_metadata(self, article, __, _):
-
+    def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        article_body = soup.find("div", attrs={"id": "article-body"})
+        source_link_div = soup.new_tag("div")
+        source_link_div["id"] = "article_source"
+        source_link = soup.new_tag("a")
+        source_link["href"] = article.url
+        source_link.string = article.url
+        source_link_div.append("This article was downloaded from ")
+        source_link_div.append(source_link)
+        source_link_div.append(".")
+        hr = soup.new_tag("hr")
+        article_body.append(hr)
+        article_body.append(source_link_div)
+
 
     def parse_feeds(self):
         parsed_feeds = BasicNewsRecipe.parse_feeds(self)
