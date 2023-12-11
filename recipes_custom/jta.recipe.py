@@ -8,10 +8,16 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 sys.path.append(os.environ["recipes_includes"])
-
 from recipes_shared import BasicNewsrackRecipe, format_title
 # from calibre.utils.date import utcnow, parse_date
 # from calibre.web.feeds import Feed
+
+# convenience switches for when I'm developing
+if "runner" in os.environ["recipes_includes"]:
+    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/jta-masthead.svg"
+else:
+    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/jta-masthead.svg"
+
 
 _name = "Jewish Telegraphic Agency"
 
@@ -27,8 +33,9 @@ class JTA(BasicNewsrackRecipe, BasicNewsRecipe):
     remove_empty_feeds = True
     resolve_internal_links = False
     use_embedded_content = True
-    scale_news_images_to_device = True
-    test = True
+    # scale_news_images_to_device = True
+    masthead_url = _masthead
+    # test = True
 
     feeds = [("All", "https://www.jta.org/feed")]
 

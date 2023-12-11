@@ -16,7 +16,7 @@ _name = "National Public Radio"
 
 class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
-    oldest_article = 2
+    oldest_article = 3
     language = 'en'
     __author__ = 'holyspiritomb'
     max_articles_per_feed = 100

@@ -26,7 +26,7 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     __author__ = 'Darko Miletic, Sujata Raman, Alexis Rohou, Tom Sparks, holyspiritomb'
     description = 'Ars Technica: Serving the technologist for 1.2 decades'
     publisher = 'Conde Nast Publications'
-    oldest_article = 3
+    oldest_article = 5
     max_articles_per_feed = 100
     no_stylesheets = True
     encoding = 'utf-8'

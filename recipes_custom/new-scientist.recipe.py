@@ -54,7 +54,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     language = 'en'
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
-    oldest_article = 5
+    oldest_article = 7
     max_articles_per_feed = 50
     no_stylesheets = True
     use_embedded_content = False
