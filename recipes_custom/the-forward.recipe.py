@@ -33,7 +33,7 @@ class TheForward(BasicNewsRecipe, BasicNewsrackRecipe):
     ignore_duplicate_articles = {"url"}
     no_javascript = True
     no_stylesheets = True
-    oldest_article = 4
+    oldest_article = 3
     max_articles_per_feed = 50
     use_embedded_content = False
     auto_cleanup = False
