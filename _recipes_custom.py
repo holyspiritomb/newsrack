@@ -217,7 +217,7 @@ recipes: List[Recipe] = [
         category="Jewish",
         tags=["news", "jewish", "politics"],
         overwrite_cover=True,
-        cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/jewish-currents.png"),
+        cover_options=CustomCoverOptions(logo_path_or_url="https://www.jta.org/wp-content/uploads/2018/12/cropped-homeicon-square@2x-1-270x270.png"),
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=0
         ),
