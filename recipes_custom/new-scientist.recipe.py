@@ -29,9 +29,11 @@ import os
 import re
 import sys
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from calibre import browser
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
+from calibre.web.feeds import Feed
 from calibre.web.feeds.news import BasicNewsRecipe
 
 sys.path.append(os.environ["recipes_includes"])
@@ -54,7 +56,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     language = 'en'
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
-    oldest_article = 7
+    oldest_article = 2
     max_articles_per_feed = 50
     no_stylesheets = True
     use_embedded_content = False
@@ -128,7 +130,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
         if soup.find(name="meta", attrs={"name": "ob_page_type", "content": "paywall"}):
-            self.log.warn("Paywall encountered.")
+            # self.log.warn("Paywall encountered.")
             self.abort_article("Article is paywalled. Aborting.")
         if soup.find('meta', {'property': 'og:type', 'content': 'video'}) or soup.find("div", attrs={"class": "ArticleVideo"}):
             self.abort_article("Video article aborted.")
@@ -251,6 +253,8 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     def parse_feeds(self):
         feeds = BasicNewsRecipe.parse_feeds(self)
         for feed in feeds:
+            # self.log.warn(type(feed))
+            # self.log.warn(feed.title, len(feed.articles[:]))
             for article in feed.articles[:]:
                 # self.log.info(f"article.title is: {article.title}")
                 if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or "Watch" in article.title:
@@ -265,13 +269,20 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                     self.log.warn(f"removing {article.url} from feed")
                     feed.articles.remove(article)
                     continue
-        # new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
-        return feeds
+            self.log.warn(f"{feed.title} has {len(feed.articles[:])} articles")
+        new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
+        return new_feeds
 
     def populate_article_metadata(self, article, soup, _):
         # self.log(article.title)
         # self.log(article.url)
         # self.log(article.utctime)
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt = datetime.astimezone(article.utctime, nyc)
+        datestring = datetime.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
+        header = soup.find(attrs={"class": "ArticleHeader__Category"})
+        article_date = header.find(attrs={"class": "ArticleHeader__Date"})
+        article_date.string = datestring
         auths = []
         for a in soup.find_all("a"):
             if "author" in a["href"]:
