@@ -445,8 +445,8 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomMonthlyRecipe(
-        recipe="scientific-american",
-        slug="scientific-american",
+        recipe="sci-am",
+        slug="sci-am",
         src_ext="mobi",
         target_ext=["epub"],
         category="Magazines",
