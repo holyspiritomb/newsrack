@@ -6,6 +6,7 @@ __license__ = "GPL v3"
 import os
 import sys
 import json
+import re
 from datetime import datetime, timezone, timedelta
 from os.path import splitext
 from urllib.parse import urljoin
@@ -24,7 +25,7 @@ _issue_url = ""
 class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     description = (
-        "Popular Science. Monthly magazine. Should be downloaded around the middle of each month. "
+        "Popular Science. Monthly magazine. Downloaded around the middle of each month. "
         "https://www.scientificamerican.com/"
     )
     category = "science"
@@ -34,9 +35,9 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
     masthead_url = (
         "https://static.scientificamerican.com/sciam/assets/Image/newsletter/salogo.png"
     )
-    compress_news_images_auto_size = 8
+    compress_news_images_auto_size = 2
 
-    remove_attributes = ["width", "height"]
+    remove_attributes = ["width", "height", "style", "decoding", "loading", "fetchpriority", "sizes"]
     keep_only_tags = [
         prefixed_classes(
             'article_hed- article_dek- article_authors- lead_image- article__content- bio-'
@@ -53,7 +54,7 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         [class^="article_authors-"] {font-size:small; color:#202020; }
         [class^="article__image-"] { font-size:small; text-align:center; }
         [class^="lead_image-"] { font-size:small; text-align:center; }
-        [class^="bio-"] { font-size:small; color:#404040; }
+        [class^="bio-"], #downloaded_from { font-size:small; color:#404040; }
         em { color:#202020; }
     """
 
@@ -64,47 +65,59 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         br = BasicNewsRecipe.get_browser(self, *a, **kw)
         return br
 
-    def preprocess_html(self, soup):
-        for fig in soup.findAll('figcaption'):
-            for p in fig.findAll('p'):
-                p.name = 'span'
-        return soup
-
     def preprocess_raw_html(self, raw_html, url):
         soup = self.soup(raw_html)
         art_json = soup.find("script", attrs={"type": "application/ld+json"})
         if art_json:
             info = json.loads(art_json.string)
-            # self.log.warn(info)
             soup.find("h1")["modified_at"] = info["dateModified"]
             soup.find("h1")["published_at"] = info["datePublished"]
-            # soup.find("h1")["author"] = info["author"]
-            # soup.find("h1")["title"] = info["headline"]
-
-        # # shift article media to after heading
-        # article_media = soup.find(class_="article-media")
-        # article_heading = soup.find(name="h1")
-        # if article_heading and article_media:
-        #     article_heading.parent.append(article_media)
-
-        # # unset author meta ul li
-        # for ul in soup.find_all("ul", class_="meta-list"):
-        #     for li in ul.find_all("li"):
-        #         li.name = "div"
-        #     ul.name = "div"
+        for a in soup.findAll("a", attrs={"aria_label": "Open image in new tab"}):
+            a.unwrap()
         return str(soup)
+
+    def preprocess_html(self, soup):
+        for fig in soup.findAll('figcaption'):
+            for p in fig.findAll('p'):
+                p.name = 'span'
+                p["class"] = ["caption"]
+        for pic in soup.findAll("picture"):
+            pic.unwrap()
+        return soup
+
+    def postprocess_html(self, soup, first_fetch):
+        hr = soup.new_tag("hr")
+        hr["id"] = "end"
+        soup.append(hr)
+        return soup
 
     def populate_article_metadata(self, article, soup, first):
         published_ele = soup.find(attrs={"published_at": True})
         if published_ele:
             pub_date = parse_date(published_ele["published_at"])
             article.utctime = pub_date
-
             # pub date is always 1st of the coming month
             if pub_date > datetime.utcnow().replace(tzinfo=timezone.utc):
                 pub_date = (pub_date - timedelta(days=1)).replace(day=1)
             if not self.pub_date or pub_date > self.pub_date:
                 self.pub_date = pub_date
+        source_div = soup.new_tag("div")
+        source_div["id"] = "downloaded_from"
+        article_link = soup.new_tag("a")
+        article_link["href"] = article.url
+        article_link.string = article.url
+        current_dt = datetime.now(tz=timezone.utc)
+        current_dt_str = datetime.strftime(current_dt, "%-d %B %Y, %-I:%M %p %Z")
+        source_div.append("This article was downloaded from ")
+        source_div.append(article_link)
+        source_div.append(f" at {current_dt_str}")
+        source_div.append(".")
+        hr = soup.find("hr", attrs={"id": "end"})
+        hr.insert_after(source_div)
+        toc_img = soup.find("img", attrs={"class": re.compile(r"^lead_image")})
+        if toc_img:
+            self.log.warn(toc_img)
+            self.add_toc_thumbnail(article, toc_img["src"])
 
     def parse_index(self):
         if not _issue_url:
