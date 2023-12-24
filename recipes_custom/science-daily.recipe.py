@@ -118,6 +118,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         ('ADHD', 'https://www.sciencedaily.com/rss/mind_brain/add_and_adhd.xml'),
         ("Alzheimer's", "https://www.sciencedaily.com/rss/mind_brain/alzheimer's.xml"),
         ("Autism", "https://www.sciencedaily.com/rss/mind_brain/autism.xml"),
+        ("Dyslexia", "https://www.sciencedaily.com/rss/mind_brain/dyslexia.xml"),
         ("Behavior", "https://www.sciencedaily.com/rss/mind_brain/behavior.xml"),
         ("Gender Difference", "https://www.sciencedaily.com/rss/mind_brain/gender_difference.xml"),
         ("Language Acquisition", "https://www.sciencedaily.com/rss/mind_brain/language_acquisition.xml"),
