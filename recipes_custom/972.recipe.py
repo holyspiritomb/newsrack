@@ -30,8 +30,8 @@ class NineSevenTwoMag(BasicNewsRecipe, BasicNewsrackRecipe):
     ignore_duplicate_articles = {"url"}
     no_javascript = True
     no_stylesheets = True
-    oldest_article = 3
-    max_articles_per_feed = 25
+    oldest_article = 14
+    max_articles_per_feed = 50
     use_embedded_content = False
     auto_cleanup = False
     resolve_internal_links = False
