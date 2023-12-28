@@ -381,6 +381,19 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
+        recipe="newvoices",
+        slug="newvoices",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Jewish",
+        tags=["news", "arts", "jewish", "commentary", "editorial"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/newvoices-logo.png"),
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=7, drift=0
+        ),
+    ),
+    CustomOptionsRecipe(
         recipe="npr",
         slug="npr",
         src_ext="mobi",
