@@ -90,12 +90,11 @@ class JTA(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def parse_feeds(self):
         feeds = BasicNewsRecipe.parse_feeds(self)
-        self.log.warn(feeds)
-        for feed in feeds:
-            self.log.warn(type(feed))
-            for article in feed.articles[:]:
-                self.log(type(article))
-                # self.log(f"article.title is: {article.title}")
+        # self.log.warn(feeds)
+        # for feed in feeds:
+            # self.log.warn(type(feed))
+            # for article in feed.articles[:]:
+                # do something
         return feeds
 
 
