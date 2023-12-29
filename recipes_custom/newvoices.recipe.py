@@ -66,7 +66,6 @@ class NewVoices(BasicNewsrackRecipe, BasicNewsRecipe):
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html, from_encoding='utf-8')
         for img in soup.findAll("img", attrs={"data-lazy-src": True}):
-            self.log.warn(img)
             img["src"] = img["data-lazy-src"]
         for a in soup.findAll("a", href=re.compile(r"^https\:\/\/newvoices\.org\/author\/")):
             authpic = a.find("img")
