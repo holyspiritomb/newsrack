@@ -17,6 +17,13 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 
 # heavily based on the recipe for wired
 
+# convenience switches for when I'm developing
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+else:
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/teen-vogue.svg"
+
 _name = "Teen Vogue"
 
 
@@ -37,7 +44,8 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     resolve_internal_links = False
     # use_embedded_content = False
     publisher = "Conde Nast"
-    masthead_url = "https://www.teenvogue.com/verso/static/teen-vogue/assets/logo.ba28e9df68104824291913727893bf4aaf22e564.svg"
+    # masthead_url = "https://www.teenvogue.com/verso/static/teen-vogue/assets/logo.ba28e9df68104824291913727893bf4aaf22e564.svg"
+    masthead_url = _masthead
     no_stylesheets = True
     filter_out = ["horoscope", "zodiac", "retrograde", "astrological", "tampon"]
     keep_only_tags = [

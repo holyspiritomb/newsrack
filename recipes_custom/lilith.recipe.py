@@ -13,10 +13,10 @@ from recipes_shared import WordPressNewsrackRecipe, format_title
 
 # convenience switches for when I'm developing
 if "runner" in os.environ["recipes_includes"]:
-    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/lilith-masthead.svg"
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
 else:
-    _masthead = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos/lilith-masthead.svg"
-
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/lilith-masthead.svg"
 
 _name = "Lilith"
 

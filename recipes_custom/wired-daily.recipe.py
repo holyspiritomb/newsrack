@@ -12,23 +12,16 @@ sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 
 from calibre import browser
-from calibre.web.feeds.news import BasicNewsRecipe
-
-
-def classes(classes):
-    q = frozenset(classes.split(' '))
-    return dict(attrs={
-        'class': lambda x: x and frozenset(x.split()).intersection(q)})
+from calibre.web.feeds.news import BasicNewsRecipe, classes
 
 
 # convenience switches for when I'm developing
-if "spiritomb" in os.environ["recipes_includes"]:
-    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/wired-daily-masthead.png"
-    _cover = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/wired.png"
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
 else:
-    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/wired-daily-masthead.png"
-    _cover = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/wired.png"
-
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/wired-daily-masthead.png"
+_cover = f"{_masthead_prefix}/wired.png"
 
 _name = "Wired Daily Edition"
 

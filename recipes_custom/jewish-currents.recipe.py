@@ -16,15 +16,16 @@ sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import format_title, parse_date, BasicCookielessNewsrackRecipe
 
 # convenience switches for when I'm developing
-if "spiritomb" in os.environ["recipes_includes"]:
-    _github_runner = False
-    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/jewish-currents.svg"
-    _oldest_article = 15
-else:
+if "runner" in os.environ["recipes_includes"]:
     _github_runner = True
-    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/jewish-currents.svg"
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
     _oldest_article = 31
+else:
+    _github_runner = False
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+    _oldest_article = 15
 
+_masthead = f"{_masthead_prefix}/jewish-currents.svg"
 
 _name = "Jewish Currents"
 

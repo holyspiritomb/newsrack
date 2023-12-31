@@ -14,9 +14,10 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 
 # convenience switches for when I'm developing
 if "runner" in os.environ["recipes_includes"]:
-    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/newvoices-logo.png"
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
 else:
-    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/newvoices-logo.png"
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/newvoices-logo.png"
 
 
 _name = "New Voices"
@@ -82,6 +83,9 @@ class NewVoices(BasicNewsrackRecipe, BasicNewsRecipe):
             col.unwrap()
         for col in soup.findAll("div", class_="fl-col-group"):
             col.unwrap()
-        # for col in soup.findAll("div", class_="fl-module"):
-            # col.unwrap()
         return str(soup)
+
+    def postprocess_html(self, soup, _):
+        for el in soup.findAll("div", class_="fl-module"):
+            el.unwrap()
+        return soup

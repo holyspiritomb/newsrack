@@ -11,6 +11,13 @@ from calibre.ebooks.BeautifulSoup import BeautifulSoup
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 
+# convenience switches for when I'm developing
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+else:
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/npr.svg"
+
 _name = "National Public Radio"
 
 
@@ -26,7 +33,8 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     publication_type = 'newspaper'
     # simultaneous_downloads = 1
-    masthead_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/National_Public_Radio_logo.svg/1024px-National_Public_Radio_logo.svg.png"
+    # masthead_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/National_Public_Radio_logo.svg/1024px-National_Public_Radio_logo.svg.png"
+    masthead_url = _masthead
     auto_cleanuo = True
     description = (
         '''National Public Radio is an American nonprofit media organization that serves as a national syndicator to a network of over 1,000 public radio stations in the United States.'''

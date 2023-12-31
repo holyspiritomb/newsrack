@@ -21,6 +21,13 @@ def absurl(url):
     return url
 
 
+# convenience switches for when I'm developing
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+else:
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/nature.svg"
+
 _name = "Nature"
 _issue_url = ""
 
@@ -33,7 +40,8 @@ class Nature(BasicNewsrackRecipe, BasicNewsRecipe):
     )
     language = "en"
     encoding = "utf-8"
-    masthead_url = "https://media.springernature.com/full/nature-cms/uploads/product/nature/header-86f1267ea01eccd46b530284be10585e.svg"
+    # masthead_url = "https://media.springernature.com/full/nature-cms/uploads/product/nature/header-86f1267ea01eccd46b530284be10585e.svg"
+    masthead_url = _masthead
 
     conversion_options = {
         'tags' : 'Science, Nature, Periodical',

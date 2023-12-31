@@ -10,10 +10,11 @@ from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 
 # convenience switches for when I'm developing
-if "spiritomb" in os.environ["recipes_includes"]:
-    _masthead = "file:///home/spiritomb/git/newsrack/recipes_custom/logos/advocate.png"
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
 else:
-    _masthead = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos/advocate.png"
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/advocate.svg"
 
 _name = 'The Advocate'
 

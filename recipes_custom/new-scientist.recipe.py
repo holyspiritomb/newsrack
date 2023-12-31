@@ -34,17 +34,18 @@ from zoneinfo import ZoneInfo
 from calibre import browser
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds import Feed
-from calibre.web.feeds.news import BasicNewsRecipe
+from calibre.web.feeds.news import BasicNewsRecipe, classes
 
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 
 
-def classes(classes):
-    q = frozenset(classes.split(' '))
-    return dict(attrs={
-        'class': lambda x: x and frozenset(x.split()).intersection(q)})
-
+# convenience switches for when I'm developing
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+else:
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/new-scientist.svg"
 
 _name = "New Scientist"
 
@@ -52,11 +53,11 @@ _name = "New Scientist"
 class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     title = _name
     description = '''Science news and science articles from New Scientist. https://www.newscientist.com/'''
-    masthead_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png'
+    masthead_url = _masthead
     language = 'en'
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
-    oldest_article = 2
+    oldest_article = 7
     max_articles_per_feed = 50
     no_stylesheets = True
     use_embedded_content = False

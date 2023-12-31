@@ -12,6 +12,13 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 
+# convenience switches for when I'm developing
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+else:
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/nautilus.svg"
+
 _name = "Nautilus"
 
 
@@ -29,7 +36,7 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
         'authors' : 'newsrack',
     }
     use_embedded_content = False
-    masthead_url = "https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
+    masthead_url = _masthead
     remove_attributes = ["height", "width"]
     ignore_duplicate_articles = {"title", "url"}
     remove_empty_feeds = True

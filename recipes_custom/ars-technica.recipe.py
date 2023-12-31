@@ -1,5 +1,6 @@
 __license__ = 'GPL v3'
 __copyright__ = '2008-2012, Darko Miletic <darko.miletic at gmail.com>'
+# modified by spiritomb for newserack use
 '''
 arstechnica.com
 '''
@@ -10,14 +11,17 @@ import sys
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
-from calibre.web.feeds.news import BasicNewsRecipe
+from calibre.web.feeds.news import BasicNewsRecipe, classes
+
+
+# convenience switches for when I'm developing
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+else:
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/arstechnica.svg"
 
 _name = "Ars Technica"
-
-def classes(classes):
-    q = frozenset(classes.split(' '))
-    return dict(attrs={
-        'class': lambda x: x and frozenset(x.split()).intersection(q)})
 
 
 class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
@@ -26,7 +30,8 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     __author__ = 'Darko Miletic, Sujata Raman, Alexis Rohou, Tom Sparks, holyspiritomb'
     description = 'Ars Technica: Serving the technologist for 1.2 decades'
     publisher = 'Conde Nast Publications'
-    oldest_article = 5
+    masthead_url = _masthead
+    oldest_article = 7
     max_articles_per_feed = 100
     no_stylesheets = True
     encoding = 'utf-8'
@@ -35,7 +40,7 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     conversion_options = {
         'tags': 'Technology, Science, Periodical, Ars Technica',
     }
-    extra_css             = '''
+    extra_css = '''
     body {font-family: Lato, Roboto, Arial,sans-serif}
     .heading{font-family: Lato, Roboto, Arial,sans-serif}
     .byline{font-weight: bold; line-height: 1em; font-size: 0.625em; text-decoration: none}

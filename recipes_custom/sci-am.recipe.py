@@ -18,6 +18,13 @@ from recipes_shared import BasicNewsrackRecipe, parse_date
 from calibre.web.feeds.news import BasicNewsRecipe, prefixed_classes
 
 
+# convenience switches for when I'm developing
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+else:
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/sci-am.svg"
+
 _name = "Scientific American"
 _issue_url = ""
 
@@ -32,9 +39,10 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
     __author__ = "Kovid Goyal"
     language = "en"
     publisher = "Nature Publishing Group"
-    masthead_url = (
-        "https://static.scientificamerican.com/sciam/assets/Image/newsletter/salogo.png"
-    )
+    # masthead_url = (
+    #     "https://static.scientificamerican.com/sciam/assets/Image/newsletter/salogo.png"
+    # )
+    masthead_url = _masthead
     compress_news_images_auto_size = 2
 
     remove_attributes = ["width", "height", "style", "decoding", "loading", "fetchpriority", "sizes"]

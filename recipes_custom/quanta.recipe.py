@@ -10,6 +10,13 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 
 from calibre.web.feeds.news import BasicNewsRecipe
 
+# convenience switches for when I'm developing
+if "runner" in os.environ["recipes_includes"]:
+    _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+else:
+    _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+_masthead = f"{_masthead_prefix}/quanta.svg"
+
 _name = "Quanta Magazine"
 
 
@@ -26,7 +33,8 @@ class QuantaMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     publication_type = "magazine"
     language = "en"
     encoding = "UTF-8"
-    masthead_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/320px-Quanta_Magazine_Logo_05.2022.svg.png"
+    # masthead_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/320px-Quanta_Magazine_Logo_05.2022.svg.png"
+    masthead_url = _masthead
     auto_cleanup = False
     use_embedded_content = False
 
