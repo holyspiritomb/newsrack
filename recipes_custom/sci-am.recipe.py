@@ -55,15 +55,16 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(id=["seeAlsoLinks"]),
         dict(alt="author-avatar"),
         dict(name=['button', 'svg', 'iframe', 'source']),
+        prefixed_classes('breakoutContainer- readThisNext- newsletterSignup-')
     ]
 
     extra_css = """
-        [class^="article_dek-"] { font-style:italic; color:#202020; }
-        [class^="article_authors-"] {font-size:small; color:#202020; }
-        [class^="article__image-"] { font-size:small; text-align:center; }
-        [class^="lead_image-"] { font-size:small; text-align:center; }
-        [class^="bio-"], #downloaded_from { font-size:small; color:#404040; }
-        em { color:#202020; }
+    h1[class^="article_hed-"] { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    [class^="article_dek-"] p { font-size: 1.2rem; font-style: italic; margin-bottom: 1rem; }
+    [class^="article_authors-"] { padding-left: 0; margin-bottom: 1rem; }
+    [class^="lead_image-"] img, [class^="article_image-"] img, [class^="article__image-"] img { max-width: 100%; height: auto; }
+    div[class^="lead_image__figcaption"], .t_caption, .caption { font-size: 0.8rem; margin-top: 0.2rem; margin-bottom: 0.5rem; }
+    [class^="bio-"], #downloaded_from { font-size:0.8rem; }
     """
 
     def get_browser(self, *a, **kw):
@@ -75,11 +76,17 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def preprocess_raw_html(self, raw_html, url):
         soup = self.soup(raw_html)
-        art_json = soup.find("script", attrs={"type": "application/ld+json"})
-        if art_json:
-            info = json.loads(art_json.string)
-            soup.find("h1")["modified_at"] = info["dateModified"]
+        info = self.get_ld_json(soup, lambda d: d.get("dateModified"))
+        if info:
             soup.find("h1")["published_at"] = info["datePublished"]
+            soup.find("h1")["modified_at"] = info["dateModified"]
+
+        # shift article media to after heading
+        article_media = soup.find(class_=re.compile("lead_image-"))
+        article_heading = soup.find(name="h1")
+        if article_heading and article_media:
+            article_heading.parent.append(article_media)
+
         for a in soup.findAll("a", attrs={"aria_label": "Open image in new tab"}):
             a.unwrap()
         return str(soup)
