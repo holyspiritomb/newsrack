@@ -85,7 +85,6 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         article_body.append(hr)
         article_body.append(source_link_div)
 
-
     def parse_feeds(self):
         parsed_feeds = BasicNewsRecipe.parse_feeds(self)
         for feed in parsed_feeds:
@@ -138,6 +137,14 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
         head = soup.find("head")
+        ld_jsons = head.findAll("script", attrs={"type": "application/ld+json"})
+        for jsontag in ld_jsons:
+            jsonstr = jsontag.string
+            # ld_json = json.loads(jsonstr)
+            # self.log(jsonstr)
+            if '"@type": "Product"' in jsonstr:
+                self.abort_article("product review")
+                break
         parselytags = head.find("meta", attrs={"name": "parsely-tags"})
         if parselytags:
             if "type_deal" in parselytags["content"]:
@@ -154,22 +161,23 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
                 imgreg = re.compile("var data = ({.*?});", re.DOTALL)
                 js = div.previous_sibling.string
                 matches = imgreg.search(js)
-                imgjson = matches.group(1)
-                galleryj = json.loads(imgjson)
-                gallerydata = galleryj["galleryData"]
-                img_total = len(gallerydata)
-                newdiv = soup.new_tag("div", attrs={"class": "gallery-el"})
-                for i in range(0, img_total):
-                    imgsrc = gallerydata[i]["image"]["src"]
-                    imgalt = gallerydata[i]["image"]["alt"]
-                    imgcapt = gallerydata[i]["image"]["caption"]
-                    thisimg = soup.new_tag("img", attrs={"src": imgsrc, "alt": imgalt})
-                    cap = soup.new_tag("div", attrs={"class": "image-caption"})
-                    cap.string = imgcapt
-                    newdiv.append(thisimg)
-                    newdiv.append(cap)
-                div.insert_before(newdiv)
-                div.extract()
+                if matches:
+                    imgjson = matches.group(1)
+                    galleryj = json.loads(imgjson)
+                    gallerydata = galleryj["galleryData"]
+                    img_total = len(gallerydata)
+                    newdiv = soup.new_tag("div", attrs={"class": "gallery-el"})
+                    for i in range(0, img_total):
+                        imgsrc = gallerydata[i]["image"]["src"]
+                        imgalt = gallerydata[i]["image"]["alt"]
+                        imgcapt = gallerydata[i]["image"]["caption"]
+                        thisimg = soup.new_tag("img", attrs={"src": imgsrc, "alt": imgalt})
+                        cap = soup.new_tag("div", attrs={"class": "image-caption"})
+                        cap.string = imgcapt
+                        newdiv.append(thisimg)
+                        newdiv.append(cap)
+                    div.insert_before(newdiv)
+                    div.extract()
         return str(soup)
 
     def get_browser(self, *a, **kw):
