@@ -117,6 +117,7 @@ recipes: List[Recipe] = [
         category="News",
         tags=["tech"],
         overwrite_cover=True,
+        enable_on=False,
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/archlinux.png"
         ),
@@ -159,9 +160,10 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Blogs",
         tags=["science", "linguistics"],
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        enable_on=False,
+        # enable_on=lambda recipe: every_x_days(
+            # last_run=recipe.last_run, days=1, drift=0
+        # ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/duolingo-green.png"
         ),
@@ -244,7 +246,8 @@ recipes: List[Recipe] = [
         tags=["science"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes/logos/knowable.png"),
-        enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
+        # enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
+        enable_on=False,
     ),
     CustomOptionsRecipe(
         recipe="life-is-a-sacred-text",
@@ -261,20 +264,20 @@ recipes: List[Recipe] = [
         enable_on=False,
         tags=["religion", "jewish"],
     ),
-    CustomOptionsRecipe(
-        recipe="lithub",
-        slug="lithub",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Arts & Culture",
-        # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
-        # and onlyat_hours(list(range(10, 17)), -5),
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://s26162.pcdn.co/wp-content/themes/rigel/images/social_logo.png"
-        ),
-        tags=["literature", "books"],
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="lithub",
+    #     slug="lithub",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Arts & Culture",
+    #     # enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
+    #     # and onlyat_hours(list(range(10, 17)), -5),
+    #     enable_on=False,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://s26162.pcdn.co/wp-content/themes/rigel/images/social_logo.png"
+    #     ),
+    #     tags=["literature", "books"],
+    # ),
     CustomOptionsRecipe(
         recipe="live-science",
         slug="live-science",
@@ -298,7 +301,8 @@ recipes: List[Recipe] = [
         category="Politics",
         tags=["politics", "commentary"],
         overwrite_cover=True,
-        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 15)), -4),
+        enable_on=False,
+        # enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 15)), -4),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mother_Jones_Logo_2019.svg/1024px-Mother_Jones_Logo_2019.svg.png"
         ),
@@ -311,7 +315,8 @@ recipes: List[Recipe] = [
         category="Politics",
         tags=["politics", "commentary"],
         overwrite_cover=True,
-        enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 14)), -4),
+        enable_on=False,
+        # enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 14)), -4),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Nation_logo.svg/1024px-The_Nation_logo.svg.png",
         ),
@@ -487,8 +492,9 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="Magazines",
-        enable_on=onlyon_days(list(range(16, 31)), -5)
-        and onlyat_hours(list(range(10, 19)), -5),
+        enable_on=False,
+        # enable_on=onlyon_days(list(range(16, 31)), -5)
+        # and onlyat_hours(list(range(10, 19)), -5),
         overwrite_cover=False,
         tags=["science", "history", "monthly"],
     ),
