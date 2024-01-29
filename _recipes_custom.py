@@ -255,9 +255,10 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/life-is-a-sacred-text.png"
         ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        # enable_on=lambda recipe: every_x_days(
+            # last_run=recipe.last_run, days=1, drift=0
+        # ),
+        enable_on=False,
         tags=["religion", "jewish"],
     ),
     CustomOptionsRecipe(
