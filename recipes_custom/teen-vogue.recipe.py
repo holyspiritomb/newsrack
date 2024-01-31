@@ -35,8 +35,8 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
     )
     publication_type = 'magazine'
     language = "en"
-    oldest_article = 5
-    max_articles_per_feed = 50
+    oldest_article = 4
+    max_articles_per_feed = 20
     use_embedded_content = False
     remove_empty_feeds = True
     ignore_duplicate_articles = {"url"}
@@ -266,11 +266,11 @@ class TeenVogue(BasicNewsrackRecipe, BasicNewsRecipe):
                 )
             )
         for pagenum in range(1, 2):
-            articles.extend(
-                self.parse_tv_index_page(
-                    f"{self.BASE_URL}/entertainment?page={pagenum}", seen
-                )
-            )
+            # articles.extend(
+            #     self.parse_tv_index_page(
+            #         f"{self.BASE_URL}/entertainment?page={pagenum}", seen
+            #     )
+            # )
             articles.extend(
                 self.parse_tv_index_page(
                     f"{self.BASE_URL}/wellness/health?page={pagenum}", seen

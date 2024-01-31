@@ -31,7 +31,7 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     description = 'Ars Technica: Serving the technologist for 1.2 decades'
     publisher = 'Conde Nast Publications'
     masthead_url = _masthead
-    oldest_article = 7
+    oldest_article = 3
     max_articles_per_feed = 100
     no_stylesheets = True
     encoding = 'utf-8'

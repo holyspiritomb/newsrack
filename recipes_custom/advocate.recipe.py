@@ -31,7 +31,7 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
     description = "Gay, lesbian, bisexual, transgender, queer news leader including politics, commentary, arts and entertainment - your source for LGBTQ news for over 50 years."
     __author__ = 'holyspiritomb'
     no_stylesheets = True
-    oldest_article = 7
+    oldest_article = 3
     # remove_javascript = False
     remove_attributes = [
         "style", "height", "width"

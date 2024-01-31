@@ -109,19 +109,19 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=60
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="archlinux",
-        slug="archlinux",
-        src_ext="epub",
-        target_ext=["mobi"],
-        category="News",
-        tags=["tech"],
-        overwrite_cover=True,
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/archlinux.png"
-        ),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="archlinux",
+    #     slug="archlinux",
+    #     src_ext="epub",
+    #     target_ext=["mobi"],
+    #     category="News",
+    #     tags=["tech"],
+    #     overwrite_cover=True,
+    #     enable_on=False,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="recipes_custom/logos/archlinux.png"
+    #     ),
+    # ),
     CustomOptionsRecipe(
         recipe="ars-technica",
         slug="ars-technica",
@@ -249,21 +249,21 @@ recipes: List[Recipe] = [
         # enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
         enable_on=False,
     ),
-    CustomOptionsRecipe(
-        recipe="life-is-a-sacred-text",
-        slug="life-is-a-sacred-text",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Jewish",
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/life-is-a-sacred-text.png"
-        ),
-        # enable_on=lambda recipe: every_x_days(
-            # last_run=recipe.last_run, days=1, drift=0
-        # ),
-        enable_on=False,
-        tags=["religion", "jewish"],
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="life-is-a-sacred-text",
+    #     slug="life-is-a-sacred-text",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Jewish",
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="recipes_custom/logos/life-is-a-sacred-text.png"
+    #     ),
+    #     # enable_on=lambda recipe: every_x_days(
+    #         # last_run=recipe.last_run, days=1, drift=0
+    #     # ),
+    #     enable_on=False,
+    #     tags=["religion", "jewish"],
+    # ),
     # CustomOptionsRecipe(
     #     recipe="lithub",
     #     slug="lithub",
@@ -321,22 +321,22 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Nation_logo.svg/1024px-The_Nation_logo.svg.png",
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="national-geographic",
-        slug="national-geographic",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Magazines",
-        tags=["daily", "history", "science"],
-        overwrite_cover=True,
-        # enable_on=lambda recipe: every_x_days(
-        #     last_run=recipe.last_run, days=1, drift=0
-        # ),
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png"
-        ),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="national-geographic",
+    #     slug="national-geographic",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Magazines",
+    #     tags=["daily", "history", "science"],
+    #     overwrite_cover=True,
+    #     # enable_on=lambda recipe: every_x_days(
+    #     #     last_run=recipe.last_run, days=1, drift=0
+    #     # ),
+    #     enable_on=False,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/1024px-Natgeologo.svg.png"
+    #     ),
+    # ),
     CustomOptionsRecipe(
         recipe="nature",
         slug="nature",
@@ -411,21 +411,21 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/National_Public_Radio_logo.svg/1024px-National_Public_Radio_logo.svg.png"
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="nytimes-books",
-        slug="nytimes-books",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Arts & Culture",
-        timeout=300,
-        retry_attempts=0,
-        # enable_on=onlyat_hours(list(range(18, 22))),
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
-        ),
-        tags=["literature", "books"],
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="nytimes-books",
+    #     slug="nytimes-books",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Arts & Culture",
+    #     timeout=300,
+    #     retry_attempts=0,
+    #     # enable_on=onlyat_hours(list(range(18, 22))),
+    #     enable_on=False,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
+    #     ),
+    #     tags=["literature", "books"],
+    # ),
     CustomMonthlyRecipe(
         recipe="philosophy-now",
         slug="philosophy-now",
@@ -486,31 +486,31 @@ recipes: List[Recipe] = [
         enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
         tags=["science", "tech", "monthly"],
     ),
-    CustomMonthlyRecipe(
-        recipe="smithsonian-magazine",
-        slug="smithsonian-magazine",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Magazines",
-        enable_on=False,
-        # enable_on=onlyon_days(list(range(16, 31)), -5)
-        # and onlyat_hours(list(range(10, 19)), -5),
-        overwrite_cover=False,
-        tags=["science", "history", "monthly"],
-    ),
-    CustomOptionsRecipe(
-        recipe="strange-horizons",
-        slug="strange-horizons",
-        src_ext="mobi",
-        target_ext=["epub"],
-        # enable_on=onlyon_weekdays([5, 6], -4),
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="http://strangehorizons.com/wordpress/wp-content/themes/strangehorizons/images/sh-logo.jpg"
-        ),
-        category="Arts & Culture",
-        tags=["literature", "arts", "weekly"],
-    ),
+    # CustomMonthlyRecipe(
+    #     recipe="smithsonian-magazine",
+    #     slug="smithsonian-magazine",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Magazines",
+    #     enable_on=False,
+    #     # enable_on=onlyon_days(list(range(16, 31)), -5)
+    #     # and onlyat_hours(list(range(10, 19)), -5),
+    #     overwrite_cover=False,
+    #     tags=["science", "history", "monthly"],
+    # ),
+    # CustomOptionsRecipe(
+    #     recipe="strange-horizons",
+    #     slug="strange-horizons",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     # enable_on=onlyon_weekdays([5, 6], -4),
+    #     enable_on=False,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="http://strangehorizons.com/wordpress/wp-content/themes/strangehorizons/images/sh-logo.jpg"
+    #     ),
+    #     category="Arts & Culture",
+    #     tags=["literature", "arts", "weekly"],
+    # ),
     CustomOptionsRecipe(
         recipe="teen-vogue",
         slug="teen-vogue",
