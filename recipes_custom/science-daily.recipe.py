@@ -78,6 +78,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(name='div', attrs={'id': 'citations'}),
 
     ]
+    filter_out = ["obesity", "weight loss"]
 
     extra_css = """
         dd,dt,
@@ -154,9 +155,13 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         feeds = BasicNewsRecipe.parse_feeds(self)
         for feed in feeds:
             for article in feed.articles[:]:
-                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or 'LOSE WEIGHT' in article.title.upper():
-                    self.log.warn(f"removing {article.title} from feed")
-                    feed.articles.remove(article)
+                for word in self.filter_out:
+                    if word.upper() in article.title.upper():
+                        self.log.warn(f"removing {article.title} from feed (keyword {word})")
+                        feed.articles.remove(article)
+                        break
+                    else:
+                        continue
         return feeds
 
     def populate_article_metadata(self, article, __, _):
