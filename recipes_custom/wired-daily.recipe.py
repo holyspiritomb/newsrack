@@ -6,6 +6,8 @@ www.wired.com
 import os
 import re
 import sys
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -78,7 +80,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(name='article', attrs={'class': 'article main-content'}),
     ]
     remove_attributes = ['srcset', 'sizes', 'media', 'data-event-click', 'data-offer-url']
-    filter_out = ["obesity", "weight loss", "best shows", "review:", "best movies", "great deals"]
+    filter_out = ["obesity", "weight loss", "best shows", "review:", "best movies", "best deals"]
     handle_gzip = True
 
     # https://www.wired.com/about/rss-feeds/
@@ -110,28 +112,46 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
             self.log.debug(feed.title)
             for article in feed.articles[:]:
                 self.log(article.title)
-                if "GEAR" in feed.title.upper() and "DEALS" in article.title.upper():
+                if "GEAR" in feed.title.upper() and "DEAL" in article.title.upper():
                     self.log.warn(f"removing {article.title} from Gear feed (product deals)")
                     feed.articles.remove(article)
                     continue
-                if re.search(regex, article.title):
+                elif re.search(regex, article.title):
                     self.log.warn(f"removing {article.title} from feed (regex)")
                     feed.articles.remove(article)
                     continue
                 else:
                     for word in self.filter_out:
+                        self.log.debug(f"checking {article.title} for {word}")
                         if word.upper() in article.title.upper():
                             self.log.warn(f"removing {article.title} from feed (keyword {word})")
                             feed.articles.remove(article)
                             break
                         else:
                             continue
+                    self.log.debug(f"keeping {article.title} in feed {feed.title}")
         return feeds
 
-    def populate_article_metadata(self, article, souo, _):
+    def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt = datetime.astimezone(datetime.now(), nyc)
+        curr_datestring = datetime.strftime(nyc_dt, "%b %-d, %Y at %-I:%M %p %Z")
+        source_link_div = soup.new_tag("div")
+        source_link_div["id"] = "article_source"
+        source_link = soup.new_tag("a")
+        source_link["href"] = article.url
+        source_link.string = article.url
+        source_link_div.append("This article was downloaded from ")
+        source_link_div.append(source_link)
+        source_link_div.append(" on ")
+        source_link_div.append(curr_datestring)
+        source_link_div.append(".")
+        hr = soup.new_tag("hr")
+        soup.append(hr)
+        soup.append(source_link_div)
 
     def preprocess_html(self, soup):
         a_soup = soup.find(class_='article main-content')
@@ -151,8 +171,9 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         if lead_pic:
             lead_img = lead_pic.find('img')
             lead_cap = lead_pic.find(attrs={'class': 'caption__credit'})
-            lead_img["id"] = "lead-image"
-            lead_cap["id"] = "lead-image-credit"
+            if lead_img and lead_cap:
+                lead_img["id"] = "lead-image"
+                lead_cap["id"] = "lead-image-credit"
         a_date = a_soup.find("time")
         content = a_soup.find_all("div", class_='body__inner-container')
         cat_time = soup.new_tag("div")
@@ -167,8 +188,10 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         if subhead:
             new_soup.append(subhead)
         if lead_pic:
-            new_soup.append(lead_img)
-            new_soup.append(lead_cap)
+            if lead_img:
+                new_soup.append(lead_img)
+                if lead_cap:
+                    new_soup.append(lead_cap)
         for piece in content:
             new_soup.append(piece)
         new_soup["class"] = 'the_article'
