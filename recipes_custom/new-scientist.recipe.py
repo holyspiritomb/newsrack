@@ -262,11 +262,11 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                     self.log.warn(f"removing {article.url} from feed")
                     feed.articles.remove(article)
                     continue
-                if "newscientist.com/video" in article.url:
+                elif "newscientist.com/video" in article.url:
                     self.log.warn(f"removing {article.url} from feed")
                     feed.articles.remove(article)
                     continue
-                if "PREMIUM ARTICLE" in article.summary.upper():
+                elif "PREMIUM ARTICLE" in article.summary.upper():
                     self.log.warn(f"removing {article.url} from feed")
                     feed.articles.remove(article)
                     continue
