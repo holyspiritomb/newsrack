@@ -104,7 +104,7 @@ jobs:
 
       - name: Setup Pages
         id: setup_pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v4
         timeout-minutes: 1
 
       - name: Generate periodicals
@@ -123,7 +123,7 @@ jobs:
 
       # Ref: https://github.com/actions/starter-workflows/blob/main/pages/static.yml
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
 
