@@ -60,7 +60,7 @@ jobs:
         run: |
           npm install --no-fund
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         timeout-minutes: 1
         with:
           python-version: '3.10'
@@ -82,7 +82,7 @@ jobs:
 
       - name: Get calibre binaries cache
         id: cache-bin
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         timeout-minutes: 1
         with:
           path: cache/calibre
@@ -94,7 +94,7 @@ jobs:
 
       - name: Download meta artifacts
         id: download-meta-artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v3
         timeout-minutes: 1
         with:
           name: meta-artifacts
@@ -129,10 +129,10 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v3
         timeout-minutes: 2
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         timeout-minutes: 1
         with:
           name: meta-artifacts
