@@ -106,7 +106,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         dict(name="article", attrs={"id": True})
     ]
     remove_tags = [
-        classes('ArticleHeader__SocialWrapper ReadMore ArticleImageCaption__Icon AdvertWrapper RelatedContentWrapper NewsletterPromotion ArticleHeader__DateTimeIcon ReadMoreWithImage'),
+        classes('ArticleHeader__SocialWrapper ReadMore ArticleImageCaption__Icon AdvertWrapper RelatedContentWrapper NewsletterPromotion ArticleHeader__DateTimeIcon ReadMoreWithImage SidebarNewsletterWrapper'),
         dict(attrs={'alt': ['Calendar icon']}),
         dict(attrs={'title': ['Calendar icon']})
     ]
