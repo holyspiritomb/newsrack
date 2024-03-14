@@ -57,7 +57,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         #lead-image, #lead-image-caption{
                         display: block;
                         }
-        #lead-image-caption, #categ_date, .caption__text, .caption__credit, p.byline, .caption{font-size:0.8em;}
+        #lead-image-caption, #categ_date, .caption__text, .caption__credit, p.byline, .caption, #article_source{font-size:0.8em;}
         span.lead-in-text-callout, .caption__text p {font-size: 1.1em;}
         #categ_date{
                         text-transform: uppercase;
@@ -130,7 +130,8 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
                         else:
                             continue
                     self.log.debug(f"keeping {article.title} in feed {feed.title}")
-        return feeds
+        new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
+        return new_feeds
 
     def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:

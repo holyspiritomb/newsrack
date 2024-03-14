@@ -46,6 +46,7 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
         #article_desc{font-style:italic;font-size:1.2rem}
         p{font-size:1rem}
         .image-caption{font-size:0.8rem;font-style:italic}
+        #article_source{font-size:0.8rem;}
         '''
 
     def populate_article_metadata(self, article, soup, _):
@@ -58,6 +59,17 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
         desc_el = soup.find(attrs={"id": "article_desc"})
         desc_el.string = article.summary
         # article_img = soup.find("img")
+        source_link_div = soup.new_tag("div")
+        source_link_div["id"] = "article_source"
+        source_link = soup.new_tag("a")
+        source_link["href"] = article.url
+        source_link.string = article.url
+        source_link_div.append("This article was downloaded from ")
+        source_link_div.append(source_link)
+        source_link_div.append(".")
+        hr = soup.new_tag("hr")
+        soup.append(hr)
+        soup.append(source_link_div)
 
     def preprocess_html(self, soup):
         headline = soup.find("h2")

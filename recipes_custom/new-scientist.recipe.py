@@ -82,7 +82,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                                  body{font-family: "Lato", "Roboto", sans-serif}
                                  img{margin-bottom: 0.8em; display: block}
                                  h1{font-size:1.75rem;text-align:left}
-                                 #url_div{padding-top:5px;}
+                                 #url_div{padding-top:5px; font-size:0.8em;}
                                  h4 > a + span{font-weight:normal; text-transform: uppercase;font-family:sans-serif}
                                  h1 + p{font-size:1.5rem;font-style:italic;}
                                  h1 + p + p {font-size:1rem;border-bottom:1px dashed black;padding-bottom:0.7rem}

@@ -132,6 +132,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
             if i == len(articles):
                 # last article
                 new_feeds.append(curr_feed)
+        new_feeds = [f for f in new_feeds if len(f.articles[:]) > 0]
         return new_feeds
 
     def preprocess_raw_html(self, raw_html, url):
