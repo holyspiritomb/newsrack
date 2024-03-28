@@ -10,7 +10,7 @@ from calibre import browser
 from datetime import timezone, timedelta
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds import Feed
-from calibre.web.feeds.news import BasicNewsRecipe
+from calibre.web.feeds.news import BasicNewsRecipe, classes
 # from calibre.utils.date import utcnow, parse_date
 
 # custom include to share code between recipes
@@ -52,6 +52,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         dict(name="source", attrs={"type": "image/webp"}),
         dict(name="nav", class_="socialite-widget"),
         dict(name="div", class_="fancy-box"),
+        classes("newsletter-form__wrapper"),
     ]
     remove_attributes = [
         "style"
