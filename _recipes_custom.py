@@ -279,6 +279,19 @@ recipes: List[Recipe] = [
     #     tags=["literature", "books"],
     # ),
     CustomOptionsRecipe(
+        recipe="lingthusiasm",
+        slug="lingthusiasm",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Blogs",
+        tags=["blog", "linguistics"],
+        overwrite_cover=True,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=3, drift=0
+        ),
+        cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/ling.png"),
+    ),
+    CustomOptionsRecipe(
         recipe="live-science",
         slug="live-science",
         src_ext="mobi",
