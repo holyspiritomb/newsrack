@@ -198,7 +198,8 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
                     else:
                         continue
         feeds.append(trans_articles)
-        return feeds
+        new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
+        return new_feeds
 
 
 calibre_most_common_ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'

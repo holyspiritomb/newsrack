@@ -12,7 +12,7 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 _name = "Lingthusiasm"
 
 
-class GenderAnalysis(BasicNewsrackRecipe, BasicNewsRecipe):
+class Lingthusiasm(BasicNewsrackRecipe, BasicNewsRecipe):
     # most of this is borrowed from ping's lithub recipe
     title = _name
     language = 'en'
@@ -20,7 +20,7 @@ class GenderAnalysis(BasicNewsrackRecipe, BasicNewsRecipe):
     __author__ = 'holyspiritomb'
     category = 'blogs, rss'
     oldest_article = 60
-    max_articles_per_feed = 40
+    max_articles_per_feed = 15
     remove_empty_feeds = True
     resolve_internal_links = True
     use_embedded_content = True

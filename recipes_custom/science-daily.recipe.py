@@ -162,7 +162,9 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
                         break
                     else:
                         continue
-        return feeds
+        # return feeds
+        new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
+        return new_feeds
 
     def populate_article_metadata(self, article, __, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
