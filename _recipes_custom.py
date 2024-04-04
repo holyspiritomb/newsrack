@@ -249,21 +249,21 @@ recipes: List[Recipe] = [
         # enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
         enable_on=False,
     ),
-    # CustomOptionsRecipe(
-    #     recipe="life-is-a-sacred-text",
-    #     slug="life-is-a-sacred-text",
-    #     src_ext="mobi",
-    #     target_ext=["epub"],
-    #     category="Jewish",
-    #     cover_options=CustomCoverOptions(
-    #         logo_path_or_url="recipes_custom/logos/life-is-a-sacred-text.png"
-    #     ),
-    #     # enable_on=lambda recipe: every_x_days(
-    #         # last_run=recipe.last_run, days=1, drift=0
-    #     # ),
-    #     enable_on=False,
-    #     tags=["religion", "jewish"],
-    # ),
+    CustomOptionsRecipe(
+        recipe="life-is-a-sacred-text",
+        slug="life-is-a-sacred-text",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Jewish",
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="recipes_custom/logos/life-is-a-sacred-text.png"
+        ),
+        # enable_on=True,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
+        tags=["religion", "jewish"],
+    ),
     # CustomOptionsRecipe(
     #     recipe="lithub",
     #     slug="lithub",
