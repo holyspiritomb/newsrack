@@ -1,12 +1,14 @@
 __license__ = 'GPL v3'
 __copyright__ = '2008-2012, Darko Miletic <darko.miletic at gmail.com>'
-# modified by spiritomb for newserack use
+# modified by spiritomb for newsrack use
 '''
 arstechnica.com
 '''
 import os
 import re
 import sys
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -49,6 +51,7 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     .caption-byline{font-size:small; font-style:italic; font-weight:bold}
     .video, .page-numbers, .story-sidebar { display: none }
     .image { display: block }
+    #article_source{font-size:0.8rem;}
     '''
 
     keep_only_tags = [
@@ -85,10 +88,29 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
         ('Ars Technica', 'http://feeds.arstechnica.com/arstechnica/index'),
     ]
 
-    def populate_article_metadata(self, article, __, _):
+    def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        # nyc = ZoneInfo("America/New_York")
+        # nyc_dt = datetime.astimezone(article.utctime, nyc)
+        # datestring = datetime.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt_now = datetime.astimezone(datetime.now(), nyc)
+        curr_datestring = datetime.strftime(nyc_dt_now, "%b %-d, %Y at %-I:%M %p %Z")
+        source_link_div = soup.new_tag("div")
+        source_link_div["id"] = "article_source"
+        source_link = soup.new_tag("a")
+        source_link["href"] = article.url
+        source_link.string = article.url
+        source_link_div.append("This article was downloaded from ")
+        source_link_div.append(source_link)
+        source_link_div.append(" on ")
+        source_link_div.append(curr_datestring)
+        source_link_div.append(".")
+        hr = soup.new_tag("hr")
+        soup.append(hr)
+        soup.append(source_link_div)
 
     recursions = 1
 
@@ -103,7 +125,8 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
                 if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or 'DEALMASTER' in article.title.upper():
                     self.log.warn(f"removing {article.title} from feed")
                     feed.articles.remove(article)
-        return feeds
+        new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
+        return new_feeds
 
     def postprocess_html(self, soup, first_fetch):
         if not first_fetch:

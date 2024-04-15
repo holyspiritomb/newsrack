@@ -1,6 +1,8 @@
 # TODO: https://lingthusiasm.com/rss
 import os
 import sys
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from calibre.web.feeds.news import BasicNewsRecipe
 # from datetime import timezone, timedelta, datetime, time
 
@@ -22,7 +24,7 @@ class Lingthusiasm(BasicNewsrackRecipe, BasicNewsRecipe):
     oldest_article = 60
     max_articles_per_feed = 15
     remove_empty_feeds = True
-    resolve_internal_links = True
+    resolve_internal_links = False
     use_embedded_content = True
 
     feeds = [("Posts", "https://lingthusiasm.com/rss")]
@@ -44,6 +46,9 @@ class Lingthusiasm(BasicNewsrackRecipe, BasicNewsRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt_now = datetime.astimezone(datetime.now(), nyc)
+        curr_datestring = datetime.strftime(nyc_dt_now, "%b %-d, %Y at %-I:%M %p %Z")
         source_link_div = soup.new_tag("div")
         source_link_div["id"] = "article_source"
         source_link = soup.new_tag("a")
@@ -51,12 +56,14 @@ class Lingthusiasm(BasicNewsrackRecipe, BasicNewsRecipe):
         source_link.string = article.url
         source_link_div.append("This article was downloaded from ")
         source_link_div.append(source_link)
+        source_link_div.append(" on ")
+        source_link_div.append(curr_datestring)
         source_link_div.append(".")
         hr = soup.new_tag("hr")
         soup.append(hr)
         soup.append(source_link_div)
 
-    def preprocess_html(self, soup):
+    def postprocess_html(self, soup):
         links = soup.find_all("a")
         for a in links:
             if a["href"][0:16] == "https://href.li/":
