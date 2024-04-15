@@ -4,11 +4,13 @@ __copyright__ = '2008-2012, Darko Miletic <darko.miletic at gmail.com>'
 '''
 arstechnica.com
 '''
+import json
 import os
 import re
 import sys
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -46,7 +48,7 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     body {font-family: Lato, Roboto, Arial,sans-serif}
     .heading{font-family: Lato, Roboto, Arial,sans-serif}
     .byline{font-weight: bold; line-height: 1em; font-size: 0.625em; text-decoration: none}
-    img{display: block}
+    img{display: block; max-width:98vw}
     .caption-text{font-size:small; font-style:italic}
     .caption-byline{font-size:small; font-style:italic; font-weight:bold}
     .video, .page-numbers, .story-sidebar { display: none }
@@ -60,12 +62,12 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     ]
 
     remove_tags = [
-        classes('site-header video corner-info article-expander left-column related-stories ad_xrail ad_xrail_top ad_xrail_last'),
+        classes('site-header video corner-info article-expander left-column related-stories ad_xrail ad_xrail_top ad_xrail_last ad_notice'),
         dict(name=['object', 'link', 'embed', 'iframe', 'meta']),
         dict(id=['social-left', 'article-footer-wrap']),
         dict(name='nav', attrs={'class': 'subheading'}),
     ]
-    remove_attributes = ['lang', 'style']
+    remove_attributes = ['lang', 'style', 'height', 'width']
 
     # Feed are found here: http://arstechnica.com/rss-feeds/
     feeds = [
@@ -92,7 +94,6 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
-        # nyc = ZoneInfo("America/New_York")
         # nyc_dt = datetime.astimezone(article.utctime, nyc)
         # datestring = datetime.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
         nyc = ZoneInfo("America/New_York")
@@ -111,6 +112,11 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
         hr = soup.new_tag("hr")
         soup.append(hr)
         soup.append(source_link_div)
+        thumb = soup.find("img", attrs={"id": "toc_image"})
+        if thumb:
+            thumb_src = thumb["src"]
+            self.add_toc_thumbnail(article, thumb_src)
+            thumb.extract()
 
     recursions = 1
 
@@ -121,7 +127,6 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
         feeds = BasicNewsRecipe.parse_feeds(self)
         for feed in feeds:
             for article in feed.articles[:]:
-                self.log.info(f"Parsing feed at article: {article.title}")
                 if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or 'DEALMASTER' in article.title.upper():
                     self.log.warn(f"removing {article.title} from feed")
                     feed.articles.remove(article)
@@ -135,3 +140,18 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
             for x in soup.findAll(**classes('post-meta')):
                 x.extract()
         return soup
+
+    def preprocess_raw_html(self, raw_html, url):
+        soup = BeautifulSoup(raw_html)
+        p_metadata = soup.find("meta", attrs={"name": "parsely-metadata"})
+        if p_metadata:
+            p_json = json.loads(p_metadata["content"])
+            imgurl = p_json["listing_image_url"]
+            if imgurl:
+                article_guts = soup.find(attrs={"class": "article-guts"})
+                self.log("***", url, imgurl)
+                toc_img = soup.new_tag("img")
+                toc_img["src"] = imgurl
+                toc_img["id"] = "toc_image"
+                article_guts.append(toc_img)
+        return str(soup)
