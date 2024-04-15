@@ -18,16 +18,21 @@ class Lingthusiasm(BasicNewsrackRecipe, BasicNewsRecipe):
     # most of this is borrowed from ping's lithub recipe
     title = _name
     language = 'en'
-    description = u'Lingthusiasm podcast transcripts and show notes. https://lingthusiasm.com/'
+    description = u'Lingthusiasm podcast transcripts, show notes, and Tumblr posts by the hosts. https://lingthusiasm.com/ https://allthingslinguistic.com/ https://www.superlinguo.com/'
     __author__ = 'holyspiritomb'
     category = 'blogs, rss'
     oldest_article = 60
-    max_articles_per_feed = 15
+    max_articles_per_feed = 10
     remove_empty_feeds = True
     resolve_internal_links = False
     use_embedded_content = True
+    recursions = 0
 
-    feeds = [("Posts", "https://lingthusiasm.com/rss")]
+    feeds = [
+        ("Posts", "https://lingthusiasm.com/rss"),
+        ("All Things Linguistic", "https://allthingslinguistic.com/rss"),
+        ("Superlinguo", "https://www.superlinguo.com/rss")
+    ]
 
     conversion_options = {
         'tags' : 'Blog, Linguistics, Science',
@@ -40,6 +45,7 @@ class Lingthusiasm(BasicNewsrackRecipe, BasicNewsRecipe):
     extra_css = '''
     p img{width:98%}
     #article_source{font-size:0.8rem;}
+    blockquote{border-left:3px solid black; padding-left:7px}
     '''
 
     def populate_article_metadata(self, article, soup, _):
@@ -63,7 +69,7 @@ class Lingthusiasm(BasicNewsrackRecipe, BasicNewsRecipe):
         soup.append(hr)
         soup.append(source_link_div)
 
-    def postprocess_html(self, soup):
+    def preprocess_html(self, soup):
         links = soup.find_all("a")
         for a in links:
             if a["href"][0:16] == "https://href.li/":
@@ -72,3 +78,8 @@ class Lingthusiasm(BasicNewsrackRecipe, BasicNewsRecipe):
             else:
                 continue
         return soup
+
+    def parse_feeds(self):
+        feeds = BasicNewsRecipe.parse_feeds(self)
+        new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
+        return new_feeds
