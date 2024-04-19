@@ -1,7 +1,8 @@
-
 import os
 import re
 import sys
+from datetime import datetime
+from zoneinfo import ZoneInfo
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
@@ -27,7 +28,6 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
     recursions = 0
     remove_empty_feeds = True
     masthead_url = _masthead
-
     description = "Gay, lesbian, bisexual, transgender, queer news leader including politics, commentary, arts and entertainment - your source for LGBTQ news for over 50 years."
     __author__ = 'holyspiritomb'
     no_stylesheets = True
@@ -58,6 +58,7 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
     extra_css = """
         .social-date-modified::before {content:'Updated: '}
         .social-date::before {content:'Published: '}
+        #article_source{font-size:0.8rem;}
     """
 
     feeds = [
@@ -90,8 +91,24 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
                     # twdiv.string = twunescape
         return soup
 
-    def populate_article_metadata(self, article, __, _):
+    def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
             article.title = format_title(article.title, article.utctime)
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt_now = datetime.astimezone(datetime.now(), nyc)
+        curr_datestring = datetime.strftime(nyc_dt_now, "%b %-d, %Y at %-I:%M %p %Z")
+        source_link_div = soup.new_tag("div")
+        source_link_div["id"] = "article_source"
+        source_link = soup.new_tag("a")
+        source_link["href"] = article.url
+        source_link.string = article.url
+        source_link_div.append("This article was downloaded from ")
+        source_link_div.append(source_link)
+        source_link_div.append(" on ")
+        source_link_div.append(curr_datestring)
+        source_link_div.append(".")
+        hr = soup.new_tag("hr")
+        soup.append(hr)
+        soup.append(source_link_div)
