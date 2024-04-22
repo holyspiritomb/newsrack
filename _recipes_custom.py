@@ -256,7 +256,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Jewish",
         cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/life-is-a-sacred-text.png"
+            logo_path_or_url="recipes_custom/logos/life.png"
         ),
         # enable_on=True,
         enable_on=lambda recipe: every_x_days(
