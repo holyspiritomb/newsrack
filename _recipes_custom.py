@@ -4,7 +4,7 @@ from typing import List
 from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days, every_x_hours, get_local_now
 
 # Define the categories display order, optional
-categories_sort: List[str] = ["Science", "Blogs", "Arts & Culture", "News", "Magazines", "Politics", "Jewish"]
+categories_sort: List[str] = ["Science", "Blogs", "Arts & Culture", "News", "Magazines", "Politics", "Podcasts", "Jewish"]
 
 # Define your custom recipes list here
 # Example: https://github.com/ping/newsrack-fork-test/blob/custom/_recipes_custom.py
@@ -153,6 +153,19 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
+        recipe="conspirituality",
+        slug="conspirituality",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Podcasts",
+        tags=["science"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="recipes_custom/logos/conspirituality.jpg"
+        ),
+        enable_on=True
+    ),
+    CustomOptionsRecipe(
         recipe="duolingo-blog",
         slug="duolingo-blog",
         src_ext="mobi",
@@ -233,9 +246,7 @@ recipes: List[Recipe] = [
         tags=["news", "jewish", "politics"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="https://www.jta.org/wp-content/uploads/2018/12/cropped-homeicon-square@2x-1-270x270.png"),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        enable_on=False
     ),
     CustomOptionsRecipe(
         recipe="knowable",
@@ -283,7 +294,7 @@ recipes: List[Recipe] = [
         slug="lingthusiasm",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Blogs",
+        category="Podcasts",
         tags=["blog", "linguistics"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/ling.png"),
@@ -379,8 +390,9 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Politics",
         overwrite_cover=False,
-        enable_on=(first_n_days_of_month(4) or last_n_days_of_month(6))
-        and onlyat_hours(list(range(8, 16))),
+        # enable_on=(first_n_days_of_month(4) or last_n_days_of_month(6))
+        # and onlyat_hours(list(range(8, 16))),
+        enable_on=False,
         tags=["politics", "commentary"],
     ),
     CustomOptionsRecipe(
@@ -493,8 +505,9 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Magazines",
         overwrite_cover=False,
-        enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
+        # enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
         tags=["science", "tech", "monthly"],
+        enable_on=False
     ),
     # CustomMonthlyRecipe(
     #     recipe="smithsonian-magazine",
@@ -559,8 +572,9 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Magazines",
         tags=["science", "tech", "monthly"],
-        enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
-        and onlyat_hours(list(range(10, 18))),
+        # enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+        # and onlyat_hours(list(range(10, 18))),
+        enable_on=False,
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
