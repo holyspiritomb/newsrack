@@ -165,22 +165,22 @@ recipes: List[Recipe] = [
         ),
         enable_on=True
     ),
-    CustomOptionsRecipe(
-        recipe="duolingo-blog",
-        slug="duolingo-blog",
-        src_ext="mobi",
-        target_ext=["epub"],
-        overwrite_cover=True,
-        category="Blogs",
-        tags=["science", "linguistics"],
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_days(
-            # last_run=recipe.last_run, days=1, drift=0
-        # ),
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/duolingo-green.png"
-        ),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="duolingo-blog",
+    #     slug="duolingo-blog",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     overwrite_cover=True,
+    #     category="Blogs",
+    #     tags=["science", "linguistics"],
+    #     enable_on=False,
+    #     # enable_on=lambda recipe: every_x_days(
+    #         # last_run=recipe.last_run, days=1, drift=0
+    #     # ),
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="recipes_custom/logos/duolingo-green.png"
+    #     ),
+    # ),
     CustomOptionsRecipe(
         recipe="erin",
         slug="erin",
@@ -237,17 +237,17 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=0
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="jta",
-        slug="jta",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Jewish",
-        tags=["news", "jewish", "politics"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(logo_path_or_url="https://www.jta.org/wp-content/uploads/2018/12/cropped-homeicon-square@2x-1-270x270.png"),
-        enable_on=False
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="jta",
+    #     slug="jta",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Jewish",
+    #     tags=["news", "jewish", "politics"],
+    #     overwrite_cover=True,
+    #     cover_options=CustomCoverOptions(logo_path_or_url="https://www.jta.org/wp-content/uploads/2018/12/cropped-homeicon-square@2x-1-270x270.png"),
+    #     enable_on=False
+    # ),
     CustomOptionsRecipe(
         recipe="knowable",
         slug="knowable",
@@ -314,34 +314,34 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Live_Science_logo.svg/1024px-Live_Science_logo.svg.png"
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="mother-jones",
-        slug="mother-jones",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Politics",
-        tags=["politics", "commentary"],
-        overwrite_cover=True,
-        enable_on=False,
-        # enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 15)), -4),
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mother_Jones_Logo_2019.svg/1024px-Mother_Jones_Logo_2019.svg.png"
-        ),
-    ),
-    CustomOptionsRecipe(
-        recipe="nation",
-        slug="nation",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Politics",
-        tags=["politics", "commentary"],
-        overwrite_cover=True,
-        enable_on=False,
-        # enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 14)), -4),
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Nation_logo.svg/1024px-The_Nation_logo.svg.png",
-        ),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="mother-jones",
+    #     slug="mother-jones",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Politics",
+    #     tags=["politics", "commentary"],
+    #     overwrite_cover=True,
+    #     enable_on=False,
+    #     # enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 15)), -4),
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Mother_Jones_Logo_2019.svg/1024px-Mother_Jones_Logo_2019.svg.png"
+    #     ),
+    # ),
+    # CustomOptionsRecipe(
+    #     recipe="nation",
+    #     slug="nation",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Politics",
+    #     tags=["politics", "commentary"],
+    #     overwrite_cover=True,
+    #     enable_on=False,
+    #     # enable_on=onlyon_weekdays([3, 4, 5, 6], -4) and onlyat_hours(list(range(8, 14)), -4),
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Nation_logo.svg/1024px-The_Nation_logo.svg.png",
+    #     ),
+    # ),
     # CustomOptionsRecipe(
     #     recipe="national-geographic",
     #     slug="national-geographic",
@@ -383,18 +383,18 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=3, drift=60
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="new-republic-magazine",
-        slug="new-republic-magazine",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Politics",
-        overwrite_cover=False,
-        # enable_on=(first_n_days_of_month(4) or last_n_days_of_month(6))
-        # and onlyat_hours(list(range(8, 16))),
-        enable_on=False,
-        tags=["politics", "commentary"],
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="new-republic-magazine",
+    #     slug="new-republic-magazine",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Politics",
+    #     overwrite_cover=False,
+    #     # enable_on=(first_n_days_of_month(4) or last_n_days_of_month(6))
+    #     # and onlyat_hours(list(range(8, 16))),
+    #     enable_on=False,
+    #     tags=["politics", "commentary"],
+    # ),
     CustomOptionsRecipe(
         recipe="new-scientist",
         slug="new-scientist",
@@ -498,17 +498,17 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, hours=12, drift=0
         ),
     ),
-    CustomMonthlyRecipe(
-        recipe="sci-am",
-        slug="sci-am",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Magazines",
-        overwrite_cover=False,
-        # enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
-        tags=["science", "tech", "monthly"],
-        enable_on=False
-    ),
+    # CustomMonthlyRecipe(
+    #     recipe="sci-am",
+    #     slug="sci-am",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Magazines",
+    #     overwrite_cover=False,
+    #     # enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
+    #     tags=["science", "tech", "monthly"],
+    #     enable_on=False
+    # ),
     # CustomMonthlyRecipe(
     #     recipe="smithsonian-magazine",
     #     slug="smithsonian-magazine",
@@ -564,21 +564,21 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Them_wordmark.svg/1024px-Them_wordmark.svg.png"
         ),
     ),
-    CustomMonthlyRecipe(
-        recipe="wired",
-        slug="wired",
-        src_ext="mobi",
-        target_ext=["epub"],
-        overwrite_cover=True,
-        category="Magazines",
-        tags=["science", "tech", "monthly"],
-        # enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
-        # and onlyat_hours(list(range(10, 18))),
-        enable_on=False,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
-        ),
-    ),
+    # CustomMonthlyRecipe(
+    #     recipe="wired",
+    #     slug="wired",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     overwrite_cover=True,
+    #     category="Magazines",
+    #     tags=["science", "tech", "monthly"],
+    #     # enable_on=(first_n_days_of_month(7) or last_n_days_of_month(7))
+    #     # and onlyat_hours(list(range(10, 18))),
+    #     enable_on=False,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
+    #     ),
+    # ),
     CustomOptionsRecipe(
         recipe="wired-daily",
         slug="wired-daily",
