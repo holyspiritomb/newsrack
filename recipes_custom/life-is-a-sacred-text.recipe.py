@@ -8,7 +8,7 @@ sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 # from calibre.utils.date import utcnow, parse_date
 # from calibre.web.feeds import Feed
-# from calibre.ebooks.BeautifulSoup import BeautifulSoup
+from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 # convenience switches for when I'm developing
 if "runner" in os.environ["recipes_includes"]:
@@ -28,7 +28,7 @@ class LifeIsASacredText(BasicNewsrackRecipe, BasicNewsRecipe):
     oldest_article = 30
     max_articles_per_feed = 10
     remove_empty_feeds = True
-    resolve_internal_links = True
+    resolve_internal_links = False
     use_embedded_content = True
     masthead_url = _masthead
 
@@ -87,26 +87,59 @@ class LifeIsASacredText(BasicNewsrackRecipe, BasicNewsRecipe):
         if article_img:
             img_uri = article_img["src"]
             self.add_toc_thumbnail(article, img_uri)
+        paid_link = soup.find("a", attrs={"id": "paid_link"})
+        if paid_link:
+            paid_link["href"] = article.url
+            self.log(soup)
+        else:
+            desc = soup.find(attrs={"id": "article_desc"})
+            if desc:
+                desc.string = article.summary
+                self.log(desc)
 
     def parse_feeds(self):
         feeds = BasicNewsRecipe.parse_feeds(self)
         for feed in feeds:
             for article in feed.articles[:]:
-                # self.log(article)
                 if not article.content:
-                    self.log.warn(f"removing subscriber-only article {article.title} from feed")
-                    feed.articles.remove(article)
+                    self.log.warn(f"{article.title} is subscriber-only, but that's okay")
+                    # feed.articles.remove(article)
         new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
         return new_feeds
+
+    def preprocess_raw_html(self, raw_html, url):
+        soup = BeautifulSoup(raw_html)
+        body = soup.find("body")
+        if not body.find("p"):
+            headline = soup.find("h2")
+            subhead = soup.find("div")
+            subhead["id"] = "article_desc"
+            subhead.name = "h3"
+            title_str = self.tag_to_string(headline)
+            paid_div = soup.new_tag("div")
+            paid_div["id"] = "paid_div"
+            paid_link = soup.new_tag("a")
+            paid_link["id"] = "paid_link"
+            paid_link["href"] = url
+            paid_link.append(title_str)
+            paid_div.append("View this paid post here: ")
+            paid_div.append(paid_link)
+            paid_div.append(".")
+            body.append(paid_div)
+            self.log(soup)
+        return str(soup)
 
     def preprocess_html(self, soup):
         headline = soup.find("h2")
         a_date = soup.new_tag("div")
-        # a_desc = soup.new_tag("h3")
-        # a_desc["id"] = "article_desc"
+        if soup.find("p"):
+            desc = soup.new_tag("h3")
+            desc["id"] = "article_desc"
+            desc.append("description placeholder text")
+            headline.insert_after(desc)
         a_date["id"] = "article_date"
         # headline.insert_after(a_desc)
-        headline.insert_after(a_date)
+        headline.insert_before(a_date)
         heads = soup.find_all("h2")
         for head in heads:
             if "Like this? Get more" in self.tag_to_string(head):
