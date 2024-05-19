@@ -14,7 +14,12 @@ categories_sort: List[str] = ["Science", "Blogs", "Arts & Culture", "News", "Mag
 class CustomConvOptions(Recipe):
     def __post_init__(self):
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'"],
+            "mobi": [
+                "--output-profile=kindle_pw3",
+                "--mobi-file-type=old",
+                "--authors=newsrack",
+                "--publisher='https://holyspiritomb.github.io/newsrack/'"
+            ],
         }
 
 
@@ -24,8 +29,18 @@ class CustomOptionsRecipe(Recipe):
     def __post_init__(self):
         self.title_date_format = "%Y %b %-d"
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'", "--change-justification=left"]
-            # "epub": ["--embed-font-family=Lato"]
+            "mobi": [
+                "--output-profile=kindle_pw3",
+                "--mobi-file-type=old",
+                "--authors=newsrack",
+                "--publisher='https://holyspiritomb.github.io/newsrack/'",
+                "--change-justification=left"
+            ],
+            "epub": [
+                "--output-profile=tablet",
+                # to fix the problem of images having a fixed height after conversion
+                "--extra-css=img{height:auto !important;}",
+            ]
         }
 
 
@@ -314,6 +329,21 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Live_Science_logo.svg/1024px-Live_Science_logo.svg.png"
         ),
     ),
+    CustomOptionsRecipe(
+        recipe="maxfun-pods",
+        slug="maxfun-pods",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Podcasts",
+        tags=["science"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://maximumfun.org/wp-content/uploads/2019/02/cropped-favicon-512x512.png"
+        ),
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=24, drift=15
+        ),
+    ),
     # CustomOptionsRecipe(
     #     recipe="mother-jones",
     #     slug="mother-jones",
@@ -401,7 +431,7 @@ recipes: List[Recipe] = [
         src_ext="mobi",
         target_ext=["epub"],
         category="Science",
-        tags=["weekly", "science"],
+        tags=["science"],
         overwrite_cover=True,
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
         cover_options=CustomCoverOptions(
@@ -428,26 +458,11 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="News",
         overwrite_cover=True,
-        tags=["news", "politics", "science", "daily"],
+        tags=["news", "politics", "daily"],
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/National_Public_Radio_logo.svg/1024px-National_Public_Radio_logo.svg.png"
         ),
     ),
-    # CustomOptionsRecipe(
-    #     recipe="nytimes-books",
-    #     slug="nytimes-books",
-    #     src_ext="mobi",
-    #     target_ext=["epub"],
-    #     category="Arts & Culture",
-    #     timeout=300,
-    #     retry_attempts=0,
-    #     # enable_on=onlyat_hours(list(range(18, 22))),
-    #     enable_on=False,
-    #     cover_options=CustomCoverOptions(
-    #         logo_path_or_url="https://static01.nyt.com/newsgraphics/2015/12/23/masthead-2016/8118277965bda8228105578895f2f4a7aeb22ce2/nyt-logo.png"
-    #     ),
-    #     tags=["literature", "books"],
-    # ),
     CustomMonthlyRecipe(
         recipe="philosophy-now",
         slug="philosophy-now",
@@ -475,6 +490,7 @@ recipes: List[Recipe] = [
         slug="quanta-magazine",
         src_ext="mobi",
         target_ext=["epub"],
+        tags=["science"],
         category="Science",
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
         and onlyat_hours(list(range(8, 14))),
