@@ -490,7 +490,6 @@ recipes: List[Recipe] = [
         slug="quanta-magazine",
         src_ext="mobi",
         target_ext=["epub"],
-        tags=["science"],
         category="Science",
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5)
         and onlyat_hours(list(range(8, 14))),
