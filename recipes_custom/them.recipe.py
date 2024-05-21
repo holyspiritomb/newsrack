@@ -35,7 +35,7 @@ class Them(BasicNewsrackRecipe, BasicNewsRecipe):
     oldest_article = 14
     max_articles_per_feed = 40
     remove_empty_feeds = False
-    resolve_internal_links = True
+    resolve_internal_links = False
     use_embedded_content = False
     publisher = "Conde Nast"
     masthead_url = _masthead
