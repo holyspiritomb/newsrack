@@ -121,7 +121,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://www.aiweirdness.com/content/images/2021/03/ai_weirdness_with_neural_net_box.png"
         ),
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=60
+            last_run=recipe.last_run, days=3, drift=60
         ),
     ),
     # CustomOptionsRecipe(
@@ -272,8 +272,8 @@ recipes: List[Recipe] = [
         tags=["science"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes/logos/knowable.png"),
-        # enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
-        enable_on=False,
+        enable_on=onlyon_weekdays([3, 4, 5, 6], -4),
+        # enable_on=False,
     ),
     CustomOptionsRecipe(
         recipe="life-is-a-sacred-text",
@@ -577,6 +577,21 @@ recipes: List[Recipe] = [
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Them_wordmark.svg/1024px-Them_wordmark.svg.png"
+        ),
+    ),
+    CustomOptionsRecipe(
+        recipe="tpwky",
+        slug="tpwky",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Podcasts",
+        overwrite_cover=True,
+        tags=["science"],
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=7, drift=0
+        ),
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="recipes_custom/logos/TPWKY.jpg"
         ),
     ),
     # CustomMonthlyRecipe(
