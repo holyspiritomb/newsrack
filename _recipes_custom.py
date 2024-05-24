@@ -513,17 +513,16 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, hours=12, drift=0
         ),
     ),
-    # CustomMonthlyRecipe(
-    #     recipe="sci-am",
-    #     slug="sci-am",
-    #     src_ext="mobi",
-    #     target_ext=["epub"],
-    #     category="Magazines",
-    #     overwrite_cover=False,
-    #     # enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
-    #     tags=["science", "tech", "monthly"],
-    #     enable_on=False
-    # ),
+    CustomMonthlyRecipe(
+        recipe="sci-am",
+        slug="sci-am",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Science",
+        overwrite_cover=False,
+        enable_on=onlyon_days(list(range(15, 31)), -5),  # middle of the month?
+        tags=["science", "tech", "monthly"],
+    ),
     # CustomMonthlyRecipe(
     #     recipe="smithsonian-magazine",
     #     slug="smithsonian-magazine",
