@@ -42,7 +42,7 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
     publisher = "Nature Publishing Group"
     remove_empty_feeds = True
     remove_javascript = True
-    timefmt = ": %B %Y"
+    # timefmt = ": %B %Y"
     remove_attributes = ["width", "height", "style", "decoding", "loading", "fetchpriority", "sizes"]
     # masthead_url = (
     #     "https://static.scientificamerican.com/sciam/assets/Image/newsletter/salogo.png"
@@ -116,12 +116,25 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
 
         for a in soup.findAll("a", attrs={"aria_label": "Open image in new tab"}):
             a.unwrap()
+        for p in soup.findAll("p", class_=re.compile("article__block-")):
+            if p.find("a", attrs={"href": re.compile("getsciam")}):
+                # self.log.warn(p)
+                for sib in p.next_siblings:
+                    if sib.name == "hr":
+                        sib.decompose()
+                        break
+                p.decompose()
+                break
+        for h in soup.findAll(class_=re.compile("article__block-"), string=re.compile("On supporting science journalism")):
+            for sib in h.previous_siblings:
+                if sib.name == "hr":
+                    sib.decompose()
+                    break
+            h.decompose()
+            break
         return str(soup)
 
     def postprocess_html(self, soup, _):
-        hr = soup.new_tag("hr")
-        hr["id"] = "end"
-        soup.append(hr)
         return soup
 
     def populate_article_metadata(self, article, soup, _):
@@ -129,9 +142,9 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         if published_ele:
             pub_date = parse_date(published_ele["published_at"])
             article.utctime = pub_date
-        #     # pub date is always 1st of the coming month
-            # if pub_date > datetime.utcnow().replace(tzinfo=timezone.utc):
-                # pub_date = (pub_date - timedelta(days=1)).replace(day=1)
+            # pub date is always 1st of the coming month
+            if pub_date > datetime.now().replace(tzinfo=timezone.utc):
+                pub_date = (pub_date - timedelta(days=1)).replace(day=1)
             if not self.pub_date or pub_date > self.pub_date:
                 self.pub_date = pub_date
         nyc = ZoneInfo("America/New_York")
@@ -140,7 +153,7 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         nyc_dt_now = datetime.astimezone(datetime.now(), nyc)
         curr_datestring = datetime.strftime(nyc_dt_now, "%b %-d, %Y at %-I:%M %p %Z")
         article.title = format_title(article.title, nyc_dt)
-        self.log.warn('\t', article.title, '\n', article.date, '\n', article.utctime)
+        # self.log.warn('\t', article.title, '\n', article.date, '\n', article.utctime)
 
         header = soup.new_tag("div")
         header["id"] = "article_meta"
@@ -171,7 +184,6 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         soup.append(source_link_div)
         toc_img = soup.find("img", attrs={"class": re.compile(r"^lead_image")})
         if toc_img:
-            # self.log.warn(toc_img)
             self.add_toc_thumbnail(article, toc_img["src"])
 
     def parse_index(self):
@@ -208,11 +220,12 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
         edition_date = datetime.strptime(issue_info["issue_date"], "%Y-%m-%d")
         self.timefmt = f" [{edition_date:%B %Y}]"
         # "%Y-%m-%d"
-        # issue_date = self.parse_date(issue_info["issue_date"])
-        # self.title = (
-        #     f"{_name}: {issue_date:%B %Y} "
-        #     f'Vol. {issue_info.get("volume", "")}, Issue {issue_info.get("issue", "")}'
-        # )
+        issue_date = self.parse_date(issue_info["issue_date"])
+        self.title = (
+            f"{_name}: {issue_date:%B %Y} "
+            f'Vol. {issue_info.get("volume", "")}, Issue {issue_info.get("issue", "")}'
+        )
+        self.log('\t', self.title, '\n')
 
         feeds = {}
         for section in ("featured", "departments"):
@@ -236,7 +249,6 @@ class ScientificAmerican(BasicNewsrackRecipe, BasicNewsRecipe):
                     authors.pop(0)
                     for a in authors:
                         author_final = author_final + ", " + a
-
                 feeds[feed_name].append(
                     {
                         "title": article["title"],
