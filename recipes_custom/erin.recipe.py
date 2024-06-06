@@ -2,6 +2,7 @@ import os
 import sys
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 from datetime import timezone, timedelta, datetime, time
+from zoneinfo import ZoneInfo
 
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
@@ -21,7 +22,7 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
     oldest_article = 14
     max_articles_per_feed = 40
     remove_empty_feeds = True
-    resolve_internal_links = True
+    resolve_internal_links = False
     use_embedded_content = True
 
     feeds = [("Posts", "https://www.erininthemorning.com/feed")]
@@ -35,6 +36,7 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
     remove_tags = [
         dict(name="div", attrs={"class": "subscription-widget-wrap"}),
         dict(name="div", attrs={"class": "image-link-expand"}),
+        classes("subscription-widget-wrap-editor")
     ]
 
     remove_attributes = [
@@ -53,12 +55,22 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt = datetime.astimezone(datetime.now(), nyc)
+        curr_datestring = datetime.strftime(nyc_dt, "%b %-d, %Y at %-I:%M %p %Z")
         date_el = soup.find(attrs={"id": "article_date"})
-        datestamp = datetime.strftime(article.utctime, "%b %-d, %Y, %-I:%M %p")
-        date_el.string = f"{article.author} | {datestamp}"
+        nyc_article_dt = datetime.astimezone(article.utctime, nyc)
+        datestamp = datetime.strftime(nyc_article_dt, "%b %-d, %Y, %-I:%M %p %Z")
+        headlink = soup.new_tag("a")
+        headlink["href"] = article.url
+        headlink.string = "Source"
+        date_el.string = f"{article.author} | {datestamp} | "
+        date_el.append(headlink)
         desc_el = soup.find(attrs={"id": "article_desc"})
         desc_el.string = article.summary
-        # article_img = soup.find("img")
+        article_img = soup.find("img")
+        if article_img:
+            self.add_toc_thumbnail(article, article_img["src"])
         source_link_div = soup.new_tag("div")
         source_link_div["id"] = "article_source"
         source_link = soup.new_tag("a")
