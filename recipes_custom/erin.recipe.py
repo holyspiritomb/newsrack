@@ -1,13 +1,13 @@
 import os
 import sys
 from calibre.web.feeds.news import BasicNewsRecipe, classes
-from datetime import timezone, timedelta, datetime, time
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
-from calibre.utils.date import utcnow, parse_date
-from calibre.web.feeds import Feed
+# from calibre.utils.date import utcnow, parse_date
+# from calibre.web.feeds import Feed
 
 _name = "Erin in the Morning"
 
@@ -57,7 +57,7 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
             self.title = format_title(_name, article.utctime)
         nyc = ZoneInfo("America/New_York")
         nyc_dt = datetime.astimezone(datetime.now(), nyc)
-        curr_datestring = datetime.strftime(nyc_dt, "%b %-d, %Y at %-I:%M %p %Z")
+        nyc_now_str = datetime.strftime(nyc_dt, "%b %-d, %Y at %-I:%M %p %Z")
         date_el = soup.find(attrs={"id": "article_date"})
         nyc_article_dt = datetime.astimezone(article.utctime, nyc)
         datestamp = datetime.strftime(nyc_article_dt, "%b %-d, %Y, %-I:%M %p %Z")
@@ -78,6 +78,8 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
         source_link.string = article.url
         source_link_div.append("This article was downloaded from ")
         source_link_div.append(source_link)
+        source_link_div.append(" at ")
+        source_link_div.append(nyc_now_str)
         source_link_div.append(".")
         hr = soup.new_tag("hr")
         soup.append(hr)

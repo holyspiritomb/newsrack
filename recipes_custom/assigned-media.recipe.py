@@ -49,13 +49,13 @@ class Assigned(BasicNewsrackRecipe, BasicNewsRecipe):
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
         thumb = soup.find(attrs={"class": "sqs-block-image-figure"}).find("img")
-        thumb_url = thumb["src"]
-        self.add_toc_thumbnail(article, thumb_url)
-        self.log(article)
+        if thumb:
+            self.add_toc_thumbnail(article, thumb["src"])
         nyc = ZoneInfo("America/New_York")
-        nyc_dt = datetime.astimezone(article.utctime, nyc)
-        # datestr = datetime.strftime(article.utctime, "%b %-d, %Y, %-I:%M %p %Z")
-        datestrny = datetime.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
+        nyc_dt = datetime.astimezone(datetime.now(), nyc)
+        nyc_article_dt = datetime.astimezone(article.utctime, nyc)
+        datestrny = datetime.strftime(nyc_article_dt, "%b %-d, %Y, %-I:%M %p %Z")
+        nyc_now_str = datetime.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
         header = soup.new_tag("div")
         header["id"] = "article_meta"
         datetag = soup.new_tag("span")
@@ -78,6 +78,8 @@ class Assigned(BasicNewsrackRecipe, BasicNewsRecipe):
         source_link.string = article.url
         source_link_div.append("This article was downloaded from ")
         source_link_div.append(source_link)
+        source_link_div.append(" at ")
+        source_link_div.append(nyc_now_str)
         source_link_div.append(".")
         hr = soup.new_tag("hr")
         soup.append(hr)
