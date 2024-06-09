@@ -145,6 +145,8 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         source_link = soup.new_tag("a")
         source_link["href"] = article.url
         source_link.string = article.url
+        header_src_a = soup.find("a", attrs={"id": "header_src_a"})
+        header_src_a["href"] = article.url
         source_link_div.append("This article was downloaded from ")
         source_link_div.append(source_link)
         source_link_div.append(" on ")
@@ -182,6 +184,15 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         cat_time.append(category)
         cat_time.append(" || ")
         cat_time.append(a_date)
+        cat_time.append(" || ")
+        srclink_span = soup.new_tag("span")
+        srclink_span["id"] = "header_src"
+        srclink_a = soup.new_tag("a")
+        srclink_a["href"] = "#"
+        srclink_a["id"] = "header_src_a"
+        srclink_a.append("Source")
+        srclink_span.append(srclink_a)
+        cat_time.append(srclink_span)
         new_soup = soup.new_tag("div")
         new_soup.append(cat_time)
         new_soup.append(headline)

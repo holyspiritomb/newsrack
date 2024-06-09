@@ -1,6 +1,7 @@
 import os
 import sys
-from datetime import date, datetime, timezone
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -10,7 +11,7 @@ from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.utils.date import utcnow, parse_date, strftime, strptime
 
 
-# convenience switches for when I'm developing
+# convenience switches for when I'm developing~
 if "runner" in os.environ["recipes_includes"]:
     _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
 else:
@@ -35,6 +36,7 @@ class NineSevenTwoMag(BasicNewsRecipe, BasicNewsrackRecipe):
     use_embedded_content = False
     auto_cleanup = False
     resolve_internal_links = False
+    scale_news_images_to_device = True
     recursions = 0
     # simultaneous_downloads = 1
     publication_type = 'newspaper'
@@ -63,11 +65,11 @@ class NineSevenTwoMag(BasicNewsRecipe, BasicNewsrackRecipe):
     extra_css = '''
     p{font-size:1em;}
     p img, div img{max-width:98vw}
-    .article-meta{font-size:0.8em;}
-    .wp-caption-text,.caption{font-size:0.7em;}
+    .article-meta,.byline{font-size:0.8em;}
+    .wp-caption-text,.caption{font-size:0.8em;}
     .partnership-logo{max-width:50vw;}
     .tags span{padding-right:5px;}
-    .date{text-transform:uppercase}
+    .byline,.date{text-transform:uppercase}
     '''
 
     def populate_article_metadata(self, article, soup: BeautifulSoup, _):
@@ -76,22 +78,28 @@ class NineSevenTwoMag(BasicNewsRecipe, BasicNewsrackRecipe):
             self.title = format_title(_name, article.utctime)
         headimg = soup.find("img", class_="wp-post-image")
         if headimg:
-            toc_uri = headimg["src"]
-            self.add_toc_thumbnail(article, toc_uri)
-        datestring = datetime.strftime(article.utctime, "%b %-d, %Y, %-I:%M %p %Z")
-        byline_date_el = soup.find(class_="date")
-        byline_date_el.string = datestring
+            self.add_toc_thumbnail(article, headimg["src"])
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt = datetime.astimezone(datetime.now(), nyc)
+        nyc_article_dt = datetime.astimezone(article.utctime, nyc)
+        datestring = datetime.strftime(nyc_article_dt, "%b %-d, %Y, %-I:%M %p %Z")
+        byline = soup.find(class_="byline")
+        byline.append(" || ")
+        byline_src = soup.new_tag("a")
+        byline_src.append("Source")
+        byline_src["href"] = article.url
+        byline.append(byline_src)
+        byline_date_el = byline.find(class_="date")
+        byline_date_el.string = f"|| {datestring}"
         source_div = soup.new_tag("div")
         source_div["id"] = "downloaded_from"
         article_link = soup.new_tag("a")
         article_link["href"] = article.url
         article_link.string = article.url
-        current_dt = datetime.now(tz=timezone.utc)
-        current_dt_str = date.strftime(current_dt, "%-d %B %Y, %-I:%M %p %Z")
+        current_dt_str = date.strftime(nyc_dt, "%-d %B %Y, %-I:%M %p %Z")
         source_div.append("This article was downloaded from ")
         source_div.append(article_link)
-        source_div.append(f" at {current_dt_str}")
-        source_div.append(".")
+        source_div.append(f" at {current_dt_str}.")
         hr = soup.new_tag("hr")
         article_meta = soup.find(class_="article-meta")
         article_meta.append(hr)

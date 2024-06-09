@@ -21,8 +21,12 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 # convenience switches for when I'm developing
 if "runner" in os.environ["recipes_includes"]:
     _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+    _max_per_feed = 15
+    _oldest = 3
 else:
     _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+    _max_per_feed = 1
+    _oldest = 7
 _masthead = f"{_masthead_prefix}/science-daily.png"
 
 
@@ -38,9 +42,9 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         'authors' : 'newsrack',
     }
     masthead_url = _masthead
-    oldest_article = 3
+    oldest_article = _oldest
     remove_empty_feeds = True
-    max_articles_per_feed = 20
+    max_articles_per_feed = _max_per_feed
     use_embedded_content = False
     language = 'en'
     encoding = 'utf-8'
@@ -78,7 +82,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(name='div', attrs={'id': 'citations'}),
 
     ]
-    filter_out = ["obesity", "weight loss"]
+    filter_out = ["obesity", "wegovy", "weight loss"]
 
     extra_css = """
         dd,dt,
@@ -88,7 +92,8 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         #citations,
         #citation_apa,
         #journal_references,
-        #metadata
+        #metadata,
+        #headersrc
         {
             font-size:0.8rem;
             line-height:normal;
@@ -117,38 +122,38 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         # (u'Top Health', u'https://www.sciencedaily.com/rss/top/health.xml'),
         # (u'Top Technology', u'https://www.sciencedaily.com/rss/top/technology.xml'),
         # (u'Top Society', u'https://www.sciencedaily.com/rss/top/society.xml'),
-        ('ADHD', 'https://www.sciencedaily.com/rss/mind_brain/add_and_adhd.xml'),
+        ("ADHD", "https://www.sciencedaily.com/rss/mind_brain/add_and_adhd.xml"),
         ("Alzheimer's", "https://www.sciencedaily.com/rss/mind_brain/alzheimer's.xml"),
         ("Autism", "https://www.sciencedaily.com/rss/mind_brain/autism.xml"),
-        ("Dyslexia", "https://www.sciencedaily.com/rss/mind_brain/dyslexia.xml"),
         ("Behavior", "https://www.sciencedaily.com/rss/mind_brain/behavior.xml"),
+        ("Computers and Math", "https://www.sciencedaily.com/rss/computers_math.xml"),
+        ("Dyslexia", "https://www.sciencedaily.com/rss/mind_brain/dyslexia.xml"),
+        ("Earth and Climate", "https://www.sciencedaily.com/rss/earth_climate.xml"),
+        ("Eating Disorders", "https://www.sciencedaily.com/rss/health_medicine/eating_disorders.xml"),
+        ("Education and Learning", "https://www.sciencedaily.com/rss/education_learning.xml"),
+        ("Fossils and Ruins", "https://www.sciencedaily.com/rss/fossils_ruins.xml"),
         ("Gender Difference", "https://www.sciencedaily.com/rss/mind_brain/gender_difference.xml"),
+        ("Health and Medicine", "https://www.sciencedaily.com/rss/health_medicine.xml"),
+        ("IBS", "https://www.sciencedaily.com/rss/health_medicine/irritable_bowel_syndrome.xml"),
         ("Language Acquisition", "https://www.sciencedaily.com/rss/mind_brain/language_acquisition.xml"),
-        ("Racial Issues", "https://www.sciencedaily.com/rss/mind_brain/racial_issues.xml"),
-        ('Obstructive Sleep Apnea', 'https://www.sciencedaily.com/rss/mind_brain/obstructive_sleep_apnea.xml'),
+        ("Matter and Energy", "https://www.sciencedaily.com/rss/matter_energy.xml"),
+        ("Mind and Brain", "https://www.sciencedaily.com/rss/mind_brain.xml"),
+        ("Obstructive Sleep Apnea", "https://www.sciencedaily.com/rss/mind_brain/obstructive_sleep_apnea.xml"),
+        ("Physics", "https://www.sciencedaily.com/rss/matter_energy/physics.xml"),
+        ("Plants and Animals", "https://www.sciencedaily.com/rss/plants_animals.xml"),
         ("Psychiatry", "https://www.sciencedaily.com/rss/mind_brain/psychiatry.xml"),
         ("Psychology", "https://www.sciencedaily.com/rss/mind_brain/psychology.xml"),
-        ('Schizophrenia', 'https://www.sciencedaily.com/rss/mind_brain/schizophrenia.xml'),
-        ('Sleep Disorders', 'https://www.sciencedaily.com/rss/mind_brain/sleep_disorders.xml'),
-        ('Mind and Brain', 'https://www.sciencedaily.com/rss/mind_brain.xml'),
-        ("Eating Disorders", "https://www.sciencedaily.com/rss/health_medicine/eating_disorders.xml"),
-        ("IBS", "https://www.sciencedaily.com/rss/health_medicine/irritable_bowel_syndrome.xml"),
-        ("Sexual Health", "https://www.sciencedaily.com/rss/health_medicine/sexual_health.xml"),
-        ("Sports Medicine", "https://www.sciencedaily.com/rss/health_medicine/sports_medicine.xml"),
-        ('Health and Medicine', 'https://www.sciencedaily.com/rss/health_medicine.xml'),
-        ('Computers and Math', 'https://www.sciencedaily.com/rss/computers_math.xml'),
-        ("Education and Learning", "https://www.sciencedaily.com/rss/education_learning.xml"),
+        ("Racial Issues", "https://www.sciencedaily.com/rss/mind_brain/racial_issues.xml"),
+        ("Schizophrenia", "https://www.sciencedaily.com/rss/mind_brain/schizophrenia.xml"),
         ("Severe Weather", "https://www.sciencedaily.com/rss/earth_climate/severe_weather.xml"),
-        ('Earth and Climate', 'https://www.sciencedaily.com/rss/earth_climate.xml'),
-        ('Fossils and Ruins', 'https://www.sciencedaily.com/rss/fossils_ruins.xml'),
-        ("Physics", "https://www.sciencedaily.com/rss/matter_energy/physics.xml"),
-        ('Matter and Energy', 'https://www.sciencedaily.com/rss/matter_energy.xml'),
-        ('Plants and Animals', 'https://www.sciencedaily.com/rss/plants_animals.xml'),
-        ('Society News', 'https://www.sciencedaily.com/rss/science_society.xml'),
-        ('Space and Time', 'https://www.sciencedaily.com/rss/space_time.xml'),
-        ('Technology News', 'https://www.sciencedaily.com/rss/top/technology.xml'),
-        ('Top Science News', 'https://www.sciencedaily.com/rss/top/science.xml'),
-        ('All News', 'https://www.sciencedaily.com/rss/all.xml'),
+        ("Sexual Health", "https://www.sciencedaily.com/rss/health_medicine/sexual_health.xml"),
+        ("Sleep Disorders", "https://www.sciencedaily.com/rss/mind_brain/sleep_disorders.xml"),
+        ("Society News", "https://www.sciencedaily.com/rss/science_society.xml"),
+        ("Space and Time", "https://www.sciencedaily.com/rss/space_time.xml"),
+        ("Sports Medicine", "https://www.sciencedaily.com/rss/health_medicine/sports_medicine.xml"),
+        ("Technology News", "https://www.sciencedaily.com/rss/top/technology.xml"),
+        ("Top Science News", "https://www.sciencedaily.com/rss/top/science.xml"),
+        ("All News", "https://www.sciencedaily.com/rss/all.xml"),
     ]
 
     def parse_feeds(self):
@@ -156,8 +161,8 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         for feed in feeds:
             for article in feed.articles[:]:
                 for word in self.filter_out:
-                    if word.upper() in article.title.upper():
-                        self.log.warn(f"removing {article.title} from feed (keyword {word})")
+                    if word.upper() in article.title.upper() or word.upper() in article.summary.upper():
+                        self.log.warn(f"\t\tremoving \"{article.title}\" from _{feed.title}_ feed (keyword: {word})")
                         feed.articles.remove(article)
                         break
                     else:
@@ -166,11 +171,14 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
         return new_feeds
 
-    def populate_article_metadata(self, article, __, _):
+    def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
             article.title = format_title(article.title, article.utctime)
+        srclink = soup.find("a", attrs={"id": "meta_src"})
+        if srclink:
+            srclink["href"] = article.url
 
     def preprocess_html(self, soup):
         meta = soup.new_tag("div")
@@ -182,11 +190,19 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
         art_source.string = "Source: {}".format(art_source.string)
         abstract = soup.find(attrs={"id": "abstract"}).extract()
         abstract.string = "Summary: {}".format(abstract.string)
+        srclink = soup.new_tag("div")
+        srclink["id"] = "headersrc"
+        srclink.append("Article: ")
+        srclink_a = soup.new_tag("a")
+        srclink_a["id"] = "meta_src"
+        srclink_a.append("View on ScienceDaily")
+        srclink.append(srclink_a)
         for el in [date_posted, art_source, abstract]:
             el.name = "div"
         meta.append(date_posted)
         meta.append(art_source)
         meta.append(abstract)
+        meta.append(srclink)
         hr = soup.new_tag("hr")
         subhead = soup.find(attrs={"id": "subtitle"})
         if subhead:
