@@ -58,7 +58,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
     oldest_article = 7
-    max_articles_per_feed = 50
+    max_articles_per_feed = 15
     no_stylesheets = True
     use_embedded_content = False
     encoding = 'utf-8'
@@ -99,6 +99,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                                  div[data-method='caption-shortcode'] ~ div{border-top:1px dashed black;}
                                  div[data-method='caption-shortcode'] ~ div div > p:first-of-type{font-size: 1.2rem;font-weight:bold}
                                  div[data-method='caption-shortcode'] img{max-width:95%;margin-left:auto;margin-right:auto;}
+                                 #article_meta{text-transform:uppercase;font-size:0.8rem}
                                 """
 
     keep_only_tags = [
@@ -117,14 +118,14 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
 
     feeds = [
         ('Features', 'https://www.newscientist.com/section/features/feed/'),
+        ('News', 'https://www.newscientist.com/section/news/feed/'),
         ('Physics', 'https://www.newscientist.com/subject/physics/feed/'),
         ('Technology', 'https://www.newscientist.com/subject/technology/feed/'),
         ('Space', 'https://www.newscientist.com/subject/space/feed/'),
+        ('Humans', 'https://www.newscientist.com/subject/humans/feed/'),
         ('Life', 'https://www.newscientist.com/subject/life/feed/'),
         ('Earth', 'https://www.newscientist.com/subject/earth/feed/'),
         ('Health', 'https://www.newscientist.com/subject/health/feed/'),
-        ('Humans', 'https://www.newscientist.com/subject/humans/feed/'),
-        ('News', 'https://www.newscientist.com/section/news/feed/'),
         # ('Other', 'https://www.newscientist.com/feed/home/')
     ]
 
@@ -158,9 +159,9 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         categ = header.find("a", attrs={"class": "ArticleHeader__CategoryLink"})
         article_date = header.find("p", attrs={"class": "ArticleHeader__Date"})
         article_date.name = "span"
-        article_date.insert(0, ": ")
         date_elem = article_date.extract()
         categ.insert_after(date_elem)
+        categ.insert_after(" | ")
         for img in soup.findAll('img', attrs={'srcset': True}):
             # img['src'] = img['srcset'].split(',')[-1].strip().split()[0].partition('?')[0]
             # self.log(img['alt'])
@@ -252,38 +253,55 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
             return cover_url
 
     def parse_feeds(self):
+        seen_urls = []
         feeds = BasicNewsRecipe.parse_feeds(self)
         for feed in feeds:
-            # self.log.warn(type(feed))
-            # self.log.warn(feed.title, len(feed.articles[:]))
+            initial_art = len(feed.articles[:])
             for article in feed.articles[:]:
-                # self.log.info(f"article.title is: {article.title}")
+                if article.url in seen_urls:
+                    feed.articles.remove(article)
+                    # self.log.warn("\t", article.title, " (already seen)")
+                    continue
+                else:
+                    seen_urls.append(article.url)
                 if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or "Watch" in article.title:
-                    self.log.warn(f"removing {article.url} from feed")
                     feed.articles.remove(article)
                     continue
                 elif "newscientist.com/video" in article.url:
-                    self.log.warn(f"removing {article.url} from feed")
+                    # self.log.warn(f"\t\tremoving {article.url} from feed")
                     feed.articles.remove(article)
                     continue
                 elif "PREMIUM ARTICLE" in article.summary.upper():
-                    self.log.warn(f"removing {article.url} from feed")
                     feed.articles.remove(article)
                     continue
-            self.log.warn(f"{feed.title} has {len(feed.articles[:])} articles")
+                else:
+                    continue
+            final_art = len(feed.articles[:])
+            if initial_art != final_art:
+                removed_articles = initial_art - final_art
+                self.log.debug("removed {} articles from {} feed".format(removed_articles, feed.title))
         new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
+        self.log("\n-----------\nTo Generate:")
+        for feed in new_feeds:
+            self.log("\t", feed.title)
+            for article in feed.articles[:]:
+                self.log("\t\t", article.title)
+            self.log("\n")
         return new_feeds
 
     def populate_article_metadata(self, article, soup, _):
-        # self.log(article.title)
-        # self.log(article.url)
-        # self.log(article.utctime)
         nyc = ZoneInfo("America/New_York")
         nyc_dt = datetime.astimezone(article.utctime, nyc)
         datestring = datetime.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
         header = soup.find(attrs={"class": "ArticleHeader__Category"})
+        header["id"] = "article_meta"
         article_date = header.find(attrs={"class": "ArticleHeader__Date"})
         article_date.string = datestring
+        meta_src = soup.new_tag("a")
+        meta_src["href"] = article.url
+        meta_src.append("View on New Scientist")
+        article_date.insert_after(meta_src)
+        article_date.insert_after(" | ")
         auths = []
         for a in soup.find_all("a"):
             if "author" in a["href"]:
@@ -299,8 +317,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         article.description = headline["data-desc"]
         toc_img = soup.find("img", attrs={"class": "image"})
         if toc_img:
-            thumb_src = toc_img['src']
-            self.add_toc_thumbnail(article, thumb_src)
+            self.add_toc_thumbnail(article, toc_img['src'])
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
