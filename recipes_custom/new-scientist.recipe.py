@@ -58,7 +58,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
     oldest_article = 7
-    max_articles_per_feed = 15
+    max_articles_per_feed = 20
     no_stylesheets = True
     use_embedded_content = False
     encoding = 'utf-8'
@@ -71,7 +71,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     scale_news_images = True
     resolve_internal_links = False
     reverse_article_order = False
-    delay = 2
+    delay = 1
     simultaneous_downloads = 1
     conversion_options = {
         'tags': 'Science, News, New Scientist, Periodical',
@@ -131,13 +131,17 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
 
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
-        if soup.find(name="meta", attrs={"name": "ob_page_type", "content": "paywall"}):
-            # self.log.warn("Paywall encountered.")
-            self.abort_article("Article is paywalled. Aborting.")
         if soup.find('meta', {'property': 'og:type', 'content': 'video'}) or soup.find("div", attrs={"class": "ArticleVideo"}):
             self.abort_article("Video article aborted.")
         header = soup.find(attrs={"class": "ArticleHeader"})
         headline = header.find("h1")
+        if soup.find(name="meta", attrs={"name": "ob_page_type", "content": "paywall"}):
+            self.log.warn("Paywall encountered but that's fine.")
+            paywall_notice = soup.new_tag("div")
+            paywall_notice["id"] = "paywall_jsyk"
+            paywall_notice.append("This is a paywalled article.")
+            headline.insert_after(paywall_notice)
+            # self.abort_article("Article is paywalled. Aborting.")
         headline["data-url"] = url
         meta_desc = soup.find('meta', {'property': 'og:description'})
         if meta_desc:
@@ -260,7 +264,6 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
             for article in feed.articles[:]:
                 if article.url in seen_urls:
                     feed.articles.remove(article)
-                    # self.log.warn("\t", article.title, " (already seen)")
                     continue
                 else:
                     seen_urls.append(article.url)
@@ -268,10 +271,6 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                     feed.articles.remove(article)
                     continue
                 elif "newscientist.com/video" in article.url:
-                    # self.log.warn(f"\t\tremoving {article.url} from feed")
-                    feed.articles.remove(article)
-                    continue
-                elif "PREMIUM ARTICLE" in article.summary.upper():
                     feed.articles.remove(article)
                     continue
                 else:
