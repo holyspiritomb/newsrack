@@ -58,7 +58,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
     oldest_article = 7
-    max_articles_per_feed = 20
+    max_articles_per_feed = 15
     no_stylesheets = True
     use_embedded_content = False
     encoding = 'utf-8'
@@ -72,7 +72,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     resolve_internal_links = False
     reverse_article_order = False
     delay = 1
-    simultaneous_downloads = 1
+    simultaneous_downloads = 0
     conversion_options = {
         'tags': 'Science, News, New Scientist, Periodical',
         'series': 'New Scientist',
@@ -134,14 +134,17 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         if soup.find('meta', {'property': 'og:type', 'content': 'video'}) or soup.find("div", attrs={"class": "ArticleVideo"}):
             self.abort_article("Video article aborted.")
         header = soup.find(attrs={"class": "ArticleHeader"})
-        headline = header.find("h1")
+        headline = soup.find(attrs={"class": "ArticleHeader__Heading"})
+        article_body = soup.find(attrs={"class": "ArticleContent"})
         if soup.find(name="meta", attrs={"name": "ob_page_type", "content": "paywall"}):
             self.log.warn("Paywall encountered but that's fine.")
-            paywall_notice = soup.new_tag("div")
-            paywall_notice["id"] = "paywall_jsyk"
-            paywall_notice.append("This is a paywalled article.")
-            headline.insert_after(paywall_notice)
-            # self.abort_article("Article is paywalled. Aborting.")
+            article_body.clear()
+            article_body.append("This article is paywalled.")
+            if headline:
+                headline["data-paywall"] = "paywall"
+        else:
+            if headline:
+                headline["data-paywall"] = "free"
         headline["data-url"] = url
         meta_desc = soup.find('meta', {'property': 'og:description'})
         if meta_desc:
@@ -160,6 +163,8 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
 
     def preprocess_html(self, soup):
         header = soup.find("section", attrs={"class": "ArticleHeader"})
+        # headline = soup.find(attrs={"class": "ArticleHeader__Heading"})
+        # article_body = soup.find(attrs={"class": "ArticleContent"})
         categ = header.find("a", attrs={"class": "ArticleHeader__CategoryLink"})
         article_date = header.find("p", attrs={"class": "ArticleHeader__Date"})
         article_date.name = "span"
@@ -177,29 +182,14 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                 alt_div = soup.new_tag("div", attrs={"class": "img-alt-text"})
                 alt_div.append(alt_txt)
                 img.insert_after(alt_div)
-        topics = soup.find("section", attrs={"class": "ArticleTopics"})
-        url = soup.find("h1")["data-url"]
-        orig_url_div = soup.new_tag("div")
-        orig_url_div["id"] = "url_div"
-        srclink = soup.new_tag("a")
-        srclink["id"] = "original_url"
-        srclink.append(url)
-        srclink_wrapper = soup.new_tag("span")
-        srclink_wrapper.append("Downloaded from ")
-        srclink_wrapper.append(srclink)
-        srclink_wrapper.append(".")
-        orig_url_div.append(srclink_wrapper)
-        # self.log(orig_url_div)
-        topics.insert_after(orig_url_div)
-        hr = soup.new_tag("hr")
-        topics.insert_after(hr)
-        topics.extract()
+        topics = soup.find(attrs={"class": "ArticleTopics"})
+        if topics:
+            hr = soup.new_tag("hr")
+            topics.insert_after(hr)
+            topics.extract()
         return soup
 
     def postprocess_html(self, soup, _):
-        orig_link = soup.find("a", attrs={"id": "original_url"})
-        a_url = self.tag_to_string(orig_link)
-        orig_link["href"] = a_url
         return soup
 
     def get_article_url(self, article):
@@ -267,13 +257,11 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                     continue
                 else:
                     seen_urls.append(article.url)
-                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or "Watch" in article.title:
-                    feed.articles.remove(article)
-                    continue
-                elif "newscientist.com/video" in article.url:
+                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper() or "newscientist.com/video" in article.url:
                     feed.articles.remove(article)
                     continue
                 else:
+                    # self.log.debug("Adding {} to {} feed\n{}".format(article.title, feed.title, article.url))
                     continue
             final_art = len(feed.articles[:])
             if initial_art != final_art:
@@ -292,9 +280,9 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         nyc = ZoneInfo("America/New_York")
         nyc_dt = datetime.astimezone(article.utctime, nyc)
         datestring = datetime.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
-        header = soup.find(attrs={"class": "ArticleHeader__Category"})
-        header["id"] = "article_meta"
-        article_date = header.find(attrs={"class": "ArticleHeader__Date"})
+        header_category = soup.find(attrs={"class": "ArticleHeader__Category"})
+        header_category["id"] = "article_meta"
+        article_date = header_category.find(attrs={"class": "ArticleHeader__Date"})
         article_date.string = datestring
         meta_src = soup.new_tag("a")
         meta_src["href"] = article.url
