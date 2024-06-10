@@ -71,7 +71,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     scale_news_images = True
     resolve_internal_links = False
     reverse_article_order = False
-    delay = 1
+    delay = 2
     simultaneous_downloads = 1
     conversion_options = {
         'tags': 'Science, News, New Scientist, Periodical',
