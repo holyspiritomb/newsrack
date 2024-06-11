@@ -161,7 +161,8 @@ recipes: List[Recipe] = [
         tags=["lgbtq", "trans", "news"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/Assigned.jpg"
+            # logo_path_or_url="recipes_custom/logos/Assigned.jpg"
+            logo_path_or_url="https://images.squarespace-cdn.com/content/v1/633303d5ccf756402b93f25c/72772a0c-8d81-4f03-8f39-fed9eebd769a/Assigned+Media+Logo+flat.png"
         ),
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=0
