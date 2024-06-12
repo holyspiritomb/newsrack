@@ -8,6 +8,9 @@ import re
 
 from calibre import browser
 from datetime import timezone, timedelta
+from datetime import datetime as dt
+from zoneinfo import ZoneInfo
+
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds import Feed
 from calibre.web.feeds.news import BasicNewsRecipe, classes
@@ -15,7 +18,7 @@ from calibre.web.feeds.news import BasicNewsRecipe, classes
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
-from recipes_shared import BasicNewsrackRecipe, format_title
+from recipes_shared import BasicNewsrackRecipe, format_title, parse_date
 
 
 _name = "Live Science"
@@ -32,6 +35,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
     remove_javascript = False
     auto_cleanup = False
     use_embedded_content = False
+    resolve_internal_links = False
 
     conversion_options = {
         'tags' : 'Science, News, Live Science, Periodical',
@@ -48,31 +52,53 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         dict(name="div", class_="news-article")
     ]
     remove_tags = [
-        dict(name="div", class_="ad-unit"),
         dict(name="source", attrs={"type": "image/webp"}),
-        dict(name="nav", class_="socialite-widget"),
-        dict(name="div", class_="fancy-box"),
-        classes("newsletter-form__wrapper"),
+        dict(attrs={"id": re.compile("taboola")}),
+        dict(attrs={"class": re.compile("jwplayer")}),
+        dict(attrs={"aria-label": "Breadcrumbs"}),
+        classes("newsletter-form__wrapper newsletter-inbodyContent-slice ad-unit socialite-widget fancy-box hawk-nest"),
     ]
     remove_attributes = [
-        "style"
+        "data-before-rewrite-localise",
+        "data-bordeaux-image-check",
+        "data-hl-processed",
+        "data-skip",
+        "referrerpolicy",
+        "style",
+        "target",
     ]
+
+    filter_out = ["obesity", "wegovy", "weight loss"]
 
     extra_css = """
         div.gallery-el{max-width:90vw;}
         img{max-width:90vw;}
         .gallery-el img{max-width:90vw;}
-        div.image-caption,span.caption-text,span.credit,div#article_source{font-size:0.8rem;}
+        .image-caption,
+        .caption-text,
+        .credit,
+        #article_source,#tiny_header{
+            font-size:0.8rem;
+        }
         #article-body p{font-size:1rem;}
         h1{font-size:1.75rem;}
         h2{font-size:1.5rem;}
-        p.strapline{font-size:1.5rem;font-style:italic;}
+        .strapline{font-size:1.25rem;font-style:italic;}
+        #tiny_header{text-transform: uppercase;}
     """
 
     def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt = dt.astimezone(article.utctime, nyc)
+        datestring = dt.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
+
+        article_date = soup.find(class_="author-byline__date")
+        article_date.clear()
+        article_date.string = datestring
+
         article_body = soup.find("div", attrs={"id": "article-body"})
         source_link_div = soup.new_tag("div")
         source_link_div["id"] = "article_source"
@@ -85,14 +111,15 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         hr = soup.new_tag("hr")
         article_body.append(hr)
         article_body.append(source_link_div)
+        headlink = soup.find("a", attrs={"id": "headlink"})
+        if headlink:
+            headlink["href"] = article.url
+        toc_img = soup.find("img", attrs={"class": "image-hero"})
+        if toc_img:
+            self.add_toc_thumbnail(article, toc_img['src'])
 
     def parse_feeds(self):
         parsed_feeds = BasicNewsRecipe.parse_feeds(self)
-        for feed in parsed_feeds:
-            for article in feed.articles[:]:
-                if 'OBESITY' in article.title.upper() or 'WEIGHT LOSS' in article.title.upper():
-                    self.log.warn(f"removing {article.title} from feed")
-                    feed.articles.remove(article)
         articles = []
         for feed in parsed_feeds:
             articles.extend(feed.articles)
@@ -133,25 +160,93 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
             if i == len(articles):
                 # last article
                 new_feeds.append(curr_feed)
+        for feed in new_feeds:
+            for article in feed.articles[:]:
+                for word in self.filter_out:
+                    if word.upper() in article.title.upper() or word.upper() in article.summary.upper():
+                        self.log.warn(f"\t\tremoving \"{article.title}\" from _{feed.title}_ feed (keyword: {word})")
+                        feed.articles.remove(article)
+                        break
+                    else:
+                        continue
         new_feeds = [f for f in new_feeds if len(f.articles[:]) > 0]
         return new_feeds
 
+    def preprocess_html(self, soup):
+        return soup
+
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
-        head = soup.find("head")
-        ld_jsons = head.findAll("script", attrs={"type": "application/ld+json"})
-        for jsontag in ld_jsons:
-            jsonstr = jsontag.string
-            # ld_json = json.loads(jsonstr)
-            # self.log(jsonstr)
-            if '"@type": "Product"' in jsonstr:
-                self.abort_article("product review")
-                break
-        parselytags = head.find("meta", attrs={"name": "parsely-tags"})
-        if parselytags:
-            if "type_deal" in parselytags["content"]:
-                self.abort_article("Aborting article that is just a long ad.")
+
+        ld_json = self.get_ld_json(soup, str)
+        if ld_json["@type"] == "Product":
+            self.abort_article("Aborting product review article.")
+
+        parsely_tags = soup.find(attrs={"name": "parsely-tags"})
+        if "type_deal" in parsely_tags["content"]:
+            self.abort_article("Aborting product review article.")
+
+        article_headline = soup.find("h1")
+
+        section = ld_json["articleSection"]
+
+        new_header_div = soup.new_tag("div", attrs={"id": "tiny_header"})
+
+        if section:
+            section_div = soup.new_tag("div", attrs={"id": "article_section"})
+            section_div.string = section
+            new_header_div.append(section_div)
+
+        section_type = soup.find("a", class_="byline-article-type")
+        if section_type:
+            section_type.extract()
+            new_header_div.append(section_type)
+            new_header_div.append(" | ")
+
+        authors = soup.findAll(class_="author-byline__author-name")
+        if authors:
+            if len(authors) > 1:
+                new_header_div.append(authors[0])
+                for a in authors[1:]:
+                    new_header_div.append(", ")
+                    new_header_div.append(a)
+            else:
+                new_header_div.append(authors[0])
+            new_header_div.append(" | ")
+
+        article_date = soup.find(class_="author-byline__date")
+        if article_date:
+            article_date.extract()
+            new_header_div.append(article_date)
+            new_header_div.append(" | ")
+
+        article_link = soup.new_tag("a")
+        article_link["id"] = "headlink"
+        article_link["href"] = "#"
+        article_link.string = "View on LiveScience"
+        new_header_div.append(article_link)
+
+        article_headline.insert_before(new_header_div)
+
+        strapline = soup.find(class_="strapline")
+        if strapline:
+            strapline.name = "h3"
+
+        bl = soup.find(class_="byline")
+        if bl:
+            bl.extract()
+
         body = soup.find(attrs={"id": "article-body"})
+        for s in soup.find_all("style"):
+            s.decompose()
+        for s in soup.find_all("link", attrs={"rel": "preconnect"}):
+            s.decompose()
+        for s in soup.find_all("link", attrs={"rel": "preload"}):
+            s.decompose()
+        for s in soup.find_all("link", attrs={"rel": "dns-prefetch"}):
+            s.decompose()
+        for news in body.findAll(class_=re.compile("newsletter-form__wrapper")):
+            news.decompose()
         for img in body.find_all("img", attrs={"src": "https://vanilla.futurecdn.net/livescience/media/img/missing-image.svg"}):
             dsrcset = img["data-srcset"]
             if dsrcset:
@@ -180,6 +275,8 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
                         newdiv.append(cap)
                     div.insert_before(newdiv)
                     div.extract()
+        for s in soup.find_all("script"):
+            s.decompose()
         return str(soup)
 
     def get_browser(self, *a, **kw):
