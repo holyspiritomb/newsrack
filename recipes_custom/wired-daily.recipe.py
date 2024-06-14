@@ -15,6 +15,7 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 
 from calibre import browser
 from calibre.web.feeds.news import BasicNewsRecipe, classes
+from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 
 # convenience switches for when I'm developing
@@ -38,7 +39,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     cover_url = _cover
     publisher = 'Conde Nast'
     category = 'news, IT, computers, technology'
-    oldest_article = 2
+    oldest_article = 7
     max_articles_per_feed = 200
     no_stylesheets = True
     encoding = 'utf-8'
@@ -47,6 +48,8 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     ignore_duplicate_articles = {'url'}
     remove_empty_feeds = True
     publication_type = 'newsportal'
+    delay = 2
+    recursions = 0
     extra_css = """
         .entry-header{
                         text-transform: uppercase;
@@ -81,6 +84,15 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     ]
     remove_attributes = ['srcset', 'sizes', 'media', 'data-event-click', 'data-offer-url']
     filter_out = ["obesity", "weight loss", "best shows", "review:", "best movies", "best deals"]
+    keyword_filter = [
+        "deals",
+        "product reviews",
+        "shopping",
+        "apparel",
+        "fashion",
+        "culture guides",
+        "buying guides",
+    ]
     handle_gzip = True
 
     # https://www.wired.com/about/rss-feeds/
@@ -109,20 +121,16 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         feeds = BasicNewsRecipe.parse_feeds(self)
         regex = re.compile(r'[B|b]est.+\([0-9]{4}\)')
         for feed in feeds:
-            self.log.debug(feed.title)
+            # self.log.debug(feed.title)
             for article in feed.articles[:]:
-                self.log(article.title)
-                if "GEAR" in feed.title.upper() and "DEAL" in article.title.upper():
-                    self.log.warn(f"removing {article.title} from Gear feed (product deals)")
-                    feed.articles.remove(article)
-                    continue
-                elif re.search(regex, article.title):
+                self.log(article.title, "\n", article.url)
+                if re.search(regex, article.title):
                     self.log.warn(f"removing {article.title} from feed (regex)")
                     feed.articles.remove(article)
                     continue
                 else:
                     for word in self.filter_out:
-                        self.log.debug(f"checking {article.title} for {word}")
+                        # self.log.debug(f"checking {article.title} for {word}")
                         if word.upper() in article.title.upper():
                             self.log.warn(f"removing {article.title} from feed (keyword {word})")
                             feed.articles.remove(article)
@@ -138,8 +146,14 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
         nyc = ZoneInfo("America/New_York")
-        nyc_dt = datetime.astimezone(datetime.now(), nyc)
-        curr_datestring = datetime.strftime(nyc_dt, "%b %-d, %Y at %-I:%M %p %Z")
+        nyc_dt_now = datetime.astimezone(datetime.now(), nyc)
+        curr_datestring = datetime.strftime(nyc_dt_now, "%b %-d, %Y at %-I:%M %p %Z")
+        article_dt = datetime.astimezone(article.utctime, nyc)
+        article_dt_str = datetime.strftime(article_dt, "%b %-d, %Y at %-I:%M %p %Z")
+        a_date = soup.find(attrs={"id": "article_date"})
+        if a_date:
+            a_date.string = article_dt_str
+
         source_link_div = soup.new_tag("div")
         source_link_div["id"] = "article_source"
         source_link = soup.new_tag("a")
@@ -168,8 +182,10 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
             subhead.append(subhead_text)
         category = a_soup.find("a", class_='rubric__link')
         category["class"] = 'rubric__link'
+
         author = a_soup.find("p", attrs={'itemprop': 'author'})
         author["class"] = 'byline bylines__byline'
+
         lead_pic = a_soup.find("div", class_='lead-asset')
         if lead_pic:
             lead_img = lead_pic.find('img')
@@ -177,26 +193,30 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
             if lead_img and lead_cap:
                 lead_img["id"] = "lead-image"
                 lead_cap["id"] = "lead-image-credit"
+
         a_date = a_soup.find("time")
-        content = a_soup.find_all("div", class_='body__inner-container')
+        a_date["id"] = "article_date"
+        self.log.warn(headline, "\n", a_date)
+
         cat_time = soup.new_tag("div")
         cat_time["id"] = "categ_date"
         cat_time.append(category)
-        cat_time.append(" || ")
+        cat_time.append(" | ")
         cat_time.append(a_date)
-        cat_time.append(" || ")
+        cat_time.append(" | ")
         srclink_span = soup.new_tag("span")
         srclink_span["id"] = "header_src"
         srclink_a = soup.new_tag("a")
         srclink_a["href"] = "#"
         srclink_a["id"] = "header_src_a"
-        srclink_a.append("Source")
+        srclink_a.append("View on Wired")
         srclink_span.append(srclink_a)
         cat_time.append(srclink_span)
         new_soup = soup.new_tag("div")
         new_soup.append(cat_time)
         new_soup.append(headline)
         new_soup.append(author)
+
         if subhead:
             new_soup.append(subhead)
         if lead_pic:
@@ -204,6 +224,8 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
                 new_soup.append(lead_img)
                 if lead_cap:
                     new_soup.append(lead_cap)
+
+        content = a_soup.find_all("div", class_='body__inner-container')
         for piece in content:
             new_soup.append(piece)
         new_soup["class"] = 'the_article'
@@ -215,6 +237,21 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         a_soup.clear()
         a_soup.append(new_soup)
         return soup
+    
+    def preprocess_raw_html(self, raw_html, url):
+        soup = BeautifulSoup(raw_html)
+        head = soup.find("head")
+        t = head.find("title")
+        metas = head.findAll("meta", attrs={"name": re.compile("keyword")})
+        for m in metas:
+            for k in self.keyword_filter:
+                if k in m["content"]:
+                    # self.log.warn(f"Matched keyword {k} in article {t.string}.")
+                    self.abort_article(f"Article '{t.string}' matched keyword filter for {k}.")
+                else:
+                    # self.log.info(f"Didn't find keyword {k} in article {t.string}.")
+                    continue
+        return str(soup)
 
     def get_article_url(self, article):
         return article.get('link', None)
