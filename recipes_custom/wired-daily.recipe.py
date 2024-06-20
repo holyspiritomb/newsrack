@@ -6,7 +6,7 @@ www.wired.com
 import os
 import re
 import sys
-from datetime import datetime
+# from datetime import datetime
 from zoneinfo import ZoneInfo
 
 # custom include to share code between recipes
@@ -16,6 +16,7 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 from calibre import browser
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
+from calibre.utils.date import datetime
 
 
 # convenience switches for when I'm developing
