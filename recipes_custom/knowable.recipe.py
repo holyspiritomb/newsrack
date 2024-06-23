@@ -48,7 +48,7 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     timeout = 60
 
     oldest_article = 45  # days
-    max_articles_per_feed = 15
+    max_articles_per_feed = 20
     scale_news_images = (800, 1200)
 
     keep_only_tags = [
@@ -56,7 +56,7 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     ]
     remove_attributes = ["style"]
     remove_tags = [
-        dict(name=["script", "style", "svg"]),
+        dict(name=["script", "style", "svg", "input"]),
         dict(attrs={"data-widget-def": True}),
         dict(id=["newsletter-promo-item"]),
         dict(
@@ -67,6 +67,7 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
                 "share-icons-box",
                 "article-tags",
                 "article-republish",
+                "newsletter-promo",
             ]
         ),
     ]
@@ -83,16 +84,23 @@ class KnowableMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
     }
     .article-image .caption { font-size: 0.8rem; }
     .pull-quote { font-size: 1.25rem; margin-left: 0; text-align: center; }
+    .eyebrow{ font-size: 0.8rem; text-transform: uppercase;}
     """
 
     feeds = [
         (_name, "https://knowablemagazine.org/rss"),
     ]
 
-    def populate_article_metadata(self, article, __, _):
+    def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        eyebrow = soup.find("div", class_="eyebrow")
+        eyebrow.append(" | ")
+        srclink = soup.new_tag("a")
+        srclink["href"] = article.url
+        srclink.append("View on Website")
+        eyebrow.append(srclink)
 
     def parse_feeds(self):
         feeds = self.group_feeds_by_date(timezone_offset_hours=-7)  # PST
