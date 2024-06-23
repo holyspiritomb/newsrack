@@ -55,16 +55,23 @@ class QuantaMagazine(BasicNewsrackRecipe, BasicNewsRecipe):
         box-sizing: border-box;
     }
     .caption, .attribution { font-size: 0.8rem; margin: 0; }
+    .post__title__kicker {font-size: 0.8rem; text-transform: uppercase;}
     """
 
     feeds = [
         (_name, "https://api.quantamagazine.org/feed/"),
     ]
 
-    def populate_article_metadata(self, article, __, _):
+    def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        eyebrow = soup.find("div", class_="post__title__kicker")
+        eyebrow.append(" | ")
+        srclink = soup.new_tag("a")
+        srclink["href"] = article.url
+        srclink.append("View on Website")
+        eyebrow.append(srclink)
 
     def parse_feeds(self):
         feeds = self.group_feeds_by_date()

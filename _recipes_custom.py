@@ -485,8 +485,8 @@ recipes: List[Recipe] = [
         tags=["literature", "arts", "monthly"],
     ),
     CustomOptionsRecipe(
-        recipe="quanta-magazine",
-        slug="quanta-magazine",
+        recipe="quanta",
+        slug="quanta",
         src_ext="mobi",
         target_ext=["epub"],
         category="Science",
