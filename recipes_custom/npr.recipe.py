@@ -97,6 +97,12 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        header_div = soup.find("div", attrs={"id": "categ-date"})
+        header_div.append(" | ")
+        srclink = soup.new_tag("a")
+        srclink["href"] = article.url
+        srclink.append("View on NPR")
+        header_div.append(srclink)
 
     def get_article_url(self, article):
         # self.log.warn(article.link)
@@ -106,7 +112,7 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         # self.log(article_textonly_url)
         return article_textonly_url
 
-    def preprocess_raw_html(self, raw_html, url):
+    def preprocess_raw_html(self, raw_html, _):
         soup = BeautifulSoup(raw_html, from_encoding='utf-8')
         # self.abort_recipe_processing()
         para_div = soup.find("div", attrs={"class": "paragraphs-container"})
@@ -147,7 +153,7 @@ class NPR(BasicNewsrackRecipe, BasicNewsRecipe):
         categ_ex = category.extract()
         header_div = soup.new_tag("div", attrs={"id": "categ-date"})
         header_div.append(categ_ex)
-        header_div.append(": ")
+        header_div.append(" | ")
         header_div.append(dateline_ex)
         header.insert_before(header_div)
         soup.find('p', attrs={"class": "slug-line"}).decompose()
