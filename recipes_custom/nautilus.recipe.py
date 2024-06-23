@@ -61,6 +61,7 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
     blockquote.wp-block-quote { font-size: 1.25rem; margin-left: 0; text-align: center; }
     div.feature-image img, div.wp-block-image img { display: block; max-width: 100%; height: auto; }
     .article-author { margin-top: 2rem; border-top: solid 1px; padding-top: 0.5rem; font-style: italic; }
+    .breadcrumb { font-size:0.8rem; text-transform:uppercase;}
     """
 
     def get_feeds(self):
@@ -83,16 +84,23 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
                     feed.articles.remove(article)
         return feeds
 
-    def populate_article_metadata(self, article, __, _):
+    def populate_article_metadata(self, article, soup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        srclink = soup.new_tag("a")
+        srclink["href"] = article.url
+        srclink.append("View on Website")
+        breadcrumb = soup.find(attrs={"class": "breadcrumb"})
+        if breadcrumb:
+            breadcrumb.append(srclink)
 
     def preprocess_html(self, soup):
         breadcrumb = soup.find("ul", attrs={"class": "breadcrumb"})
         if breadcrumb:
             for li in breadcrumb.find_all("li"):
-                li.name = "div"
+                li.name = "span"
+                li.append(" | ")
             breadcrumb.name = "div"
 
         byline = soup.find("ul", attrs={"class": "article-list_item-byline"})
