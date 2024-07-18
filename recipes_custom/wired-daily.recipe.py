@@ -141,12 +141,13 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
                             continue
                     self.log.debug(f"keeping {article.title} in feed {feed.title}")
         new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
-        self.log("\n\n--------\n\n")
+        self.log("\n\n\n\n")
         for feed in new_feeds:
             self.log("\n\n--------\n")
             self.log("Feed: ", feed.title)
             for article in feed.articles[:]:
                 self.log("\t", article.title, "\n\t", article.url)
+        self.log("\n\n\n\n")
         return new_feeds
 
     def populate_article_metadata(self, article, soup, _):
@@ -208,7 +209,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
 
             a_date = a_soup.find("time")
             a_date["id"] = "article_date"
-            self.log.warn(headline, "\n", a_date)
+            # self.log.warn(headline, "\n", a_date)
 
             cat_time = soup.new_tag("div")
             cat_time["id"] = "categ_date"
@@ -282,9 +283,6 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
                             continue
                     for s in lead_pic.find_all("source"):
                         s.extract()
-            else:
-                a_soup = soup.find("article")
-                self.log.warn(a_soup)
         return str(soup)
 
     def get_article_url(self, article):
