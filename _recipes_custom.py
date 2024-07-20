@@ -303,16 +303,16 @@ recipes: List[Recipe] = [
     #     ),
     #     tags=["literature", "books"],
     # ),
-    CustomOptionsRecipe(
-        recipe="lingthusiasm",
-        slug="lingthusiasm",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Podcasts",
-        tags=["blog", "linguistics"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/ling.png"),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="lingthusiasm",
+    #     slug="lingthusiasm",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Podcasts",
+    #     tags=["blog", "linguistics"],
+    #     overwrite_cover=True,
+    #     cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/ling.png"),
+    # ),
     CustomOptionsRecipe(
         recipe="live-science",
         slug="live-science",
@@ -481,7 +481,8 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Arts & Culture",
-        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        # enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        enable_on=False,
         tags=["literature", "arts", "monthly"],
     ),
     CustomOptionsRecipe(
@@ -547,21 +548,21 @@ recipes: List[Recipe] = [
     #     category="Arts & Culture",
     #     tags=["literature", "arts", "weekly"],
     # ),
-    CustomOptionsRecipe(
-        recipe="teen-vogue",
-        slug="teen-vogue",
-        src_ext="mobi",
-        target_ext=["epub"],
-        overwrite_cover=True,
-        category="News",
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=0
-        ),
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Teen_Vogue_logo.svg/1024px-Teen_Vogue_logo.svg.png"
-        ),
-        tags=["news", "politics"],
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="teen-vogue",
+    #     slug="teen-vogue",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     overwrite_cover=True,
+    #     category="News",
+    #     enable_on=lambda recipe: every_x_hours(
+    #         last_run=recipe.last_run, hours=24, drift=0
+    #     ),
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Teen_Vogue_logo.svg/1024px-Teen_Vogue_logo.svg.png"
+    #     ),
+    #     tags=["news", "politics"],
+    # ),
     CustomOptionsRecipe(
         recipe="them",
         slug="them",
