@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 from calibre.web.feeds.news import BasicNewsRecipe, classes
-from calibre.ebooks.BeautifulSoup import BeautifulSoup
+# from calibre.ebooks.BeautifulSoup import BeautifulSoup
 
 
 # convenience switches for when I'm developing
@@ -28,10 +28,10 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
     recursions = 0
     remove_empty_feeds = True
     masthead_url = _masthead
-    description = "Gay, lesbian, bisexual, transgender, queer news leader including politics, commentary, arts and entertainment - your source for LGBTQ news for over 50 years."
+    description = "Gay, lesbian, bisexual, transgender, queer news leader including politics, commentary, arts and entertainment - your source for LGBTQ news for over 50 years. https://advocate.com"
     __author__ = 'holyspiritomb'
     no_stylesheets = True
-    oldest_article = 1
+    oldest_article = 3
     # remove_javascript = False
     remove_attributes = [
         "style", "height", "width"
@@ -81,7 +81,7 @@ class TheAdvocate(BasicNewsrackRecipe, BasicNewsRecipe):
         ('Arts', 'https://www.advocate.com/feeds/arts-entertainment.rss'),
         ('Religion', 'https://www.advocate.com/feeds/religion.rss'),
         ('Business', 'https://www.advocate.com/feeds/business.rss'),
-        ('Main', 'https://www.advocate.com/feeds/feed.rss'),
+        ('Other', 'https://www.advocate.com/feeds/feed.rss'),
     ]
 
     def preprocess_html(self, soup):
