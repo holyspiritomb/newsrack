@@ -105,7 +105,7 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/advocate.png"
         ),
-        enable_on=lambda recipe: every_x_hours(
+        enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=0
         ),
     ),
@@ -320,7 +320,7 @@ recipes: List[Recipe] = [
         category="Science",
         tags=["science"],
         overwrite_cover=True,
-        enable_on=lambda recipe: every_x_hours(
+        enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CustomCoverOptions(
@@ -446,7 +446,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/newvoices-logo.png"),
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=7, drift=0
+            last_run=recipe.last_run, days=3, drift=0
         ),
     ),
     CustomOptionsRecipe(
@@ -457,6 +457,9 @@ recipes: List[Recipe] = [
         category="News",
         overwrite_cover=True,
         tags=["news", "politics", "daily"],
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/National_Public_Radio_logo.svg/1024px-National_Public_Radio_logo.svg.png"
         ),
@@ -469,7 +472,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Arts & Culture",
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=7, drift=60
+            last_run=recipe.last_run, days=7, drift=0
         ),
         tags=["philosophy", "commentary", "bimonthly"],
     ),
@@ -583,7 +586,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         tags=["trans", "lgbtq", "news"],
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
+            last_run=recipe.last_run, days=2, drift=0
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Them_wordmark.svg/1024px-Them_wordmark.svg.png"
@@ -597,7 +600,9 @@ recipes: List[Recipe] = [
         category="Podcasts",
         overwrite_cover=True,
         tags=["science"],
-        enable_on=True,
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/TPWKY.jpg"
         ),
