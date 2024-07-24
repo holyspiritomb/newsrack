@@ -106,7 +106,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="recipes_custom/logos/advocate.png"
         ),
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=60
+            last_run=recipe.last_run, days=1, drift=0
         ),
     ),
     CustomOptionsRecipe(
@@ -121,7 +121,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://www.aiweirdness.com/content/images/2021/03/ai_weirdness_with_neural_net_box.png"
         ),
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=3, drift=60
+            last_run=recipe.last_run, days=3, drift=0
         ),
     ),
     # CustomOptionsRecipe(
@@ -164,9 +164,7 @@ recipes: List[Recipe] = [
             # logo_path_or_url="recipes_custom/logos/Assigned.jpg"
             logo_path_or_url="https://images.squarespace-cdn.com/content/v1/633303d5ccf756402b93f25c/72772a0c-8d81-4f03-8f39-fed9eebd769a/Assigned+Media+Logo+flat.png"
         ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        enable_on=True,
     ),
     CustomOptionsRecipe(
         recipe="conspirituality",
@@ -179,7 +177,7 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/conspirituality.jpg"
         ),
-        enable_on=True
+        enable_on=True,
     ),
     # CustomOptionsRecipe(
     #     recipe="duolingo-blog",
@@ -208,6 +206,7 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Transgender_Pride_flag.svg/1024px-Transgender_Pride_flag.svg.png"
         ),
+        enable_on=True
     ),
     CustomOptionsRecipe(
         recipe="the-forward",
@@ -232,9 +231,7 @@ recipes: List[Recipe] = [
         category="Blogs",
         overwrite_cover=True,
         tags=["science", "trans", "lgbtq", "news"],
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        enable_on=True,
         cover_options=CustomCoverOptions(
             # logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Transgender_Pride_flag.svg/1024px-Transgender_Pride_flag.svg.png"
             logo_path_or_url="https://genderanalysis.net/wp-content/uploads/2017/05/newgabanner.png"
@@ -248,7 +245,9 @@ recipes: List[Recipe] = [
         category="Jewish",
         tags=["news", "jewish", "commentary", "politics", "editorial"],
         overwrite_cover=True,
-        cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/jewish-currents.png"),
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="recipes_custom/logos/jewish-currents.png"
+        ),
         enable_on=lambda recipe: every_x_days(
             last_run=recipe.last_run, days=1, drift=0
         ),
@@ -322,7 +321,7 @@ recipes: List[Recipe] = [
         tags=["science"],
         overwrite_cover=True,
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
+            last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Live_Science_logo.svg/1024px-Live_Science_logo.svg.png"
@@ -340,7 +339,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://maximumfun.org/wp-content/uploads/2019/02/cropped-favicon-512x512.png"
         ),
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
+            last_run=recipe.last_run, hours=12, drift=0
         ),
     ),
     # CustomOptionsRecipe(
@@ -555,7 +554,7 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         category="Blogs",
         overwrite_cover=True,
-        tags=["news", "food", "commentary"],
+        tags=["politics", "food", "commentary"],
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/sword-sandwich-logo.jpeg"
         ),
@@ -598,9 +597,7 @@ recipes: List[Recipe] = [
         category="Podcasts",
         overwrite_cover=True,
         tags=["science"],
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=7, drift=0
-        ),
+        enable_on=True,
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/TPWKY.jpg"
         ),
@@ -616,9 +613,7 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/voxpods.png"
         ),
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=24, drift=15
-        ),
+        enable_on=True,
     ),
     # CustomMonthlyRecipe(
     #     recipe="wired",
@@ -650,6 +645,17 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
+    ),
+    CustomOptionsRecipe(
+        recipe="wtfjht",
+        slug="wtfjht",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="News",
+        tags=["news", "politics"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(),
+        enable_on=True
     ),
     # Recipe(
     #     recipe="example",
