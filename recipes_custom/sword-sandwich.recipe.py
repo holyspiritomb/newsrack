@@ -9,7 +9,7 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 from calibre.utils.date import datetime
 # from calibre.web.feeds import Feed
 
-_name = "The Sword and thw Sandwich"
+_name = "The Sword and the Sandwich"
 
 
 class Sword(BasicNewsrackRecipe, BasicNewsRecipe):
