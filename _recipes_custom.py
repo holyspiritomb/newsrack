@@ -548,6 +548,18 @@ recipes: List[Recipe] = [
     #     category="Arts & Culture",
     #     tags=["literature", "arts", "weekly"],
     # ),
+    CustomOptionsRecipe(
+        recipe="sword-sandwich",
+        slug="sword-sandwich",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Blogs",
+        overwrite_cover=True,
+        tags=["news", "food", "commentary"],
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="recipes_custom/logos/sword-sandwich-logo.jpeg"
+        ),
+    ),
     # CustomOptionsRecipe(
     #     recipe="teen-vogue",
     #     slug="teen-vogue",
