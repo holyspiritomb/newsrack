@@ -7,8 +7,9 @@ import os.path
 import re
 import sys
 from collections import OrderedDict
-from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from urllib.parse import urlparse
+from calibre.utils.date import datetime
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -33,6 +34,9 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
     publication_type = "magazine"
     language = "en"
     encoding = "utf-8"
+    remove_javascript = True
+    no_stylesheets = True
+    auto_cleanup = False
     ignore_duplicate_articles = {"url"}
     compress_news_images = False
     scale_news_images = (800, 1200)
@@ -64,18 +68,54 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
     div.o-mediaEnclosure .o-mediaEnclosure-metadata { font-size: 0.8rem; margin-top: 0.2rem; }
     div.c-feature-bd { margin-bottom: 2rem; }
     div.c-auxContent { color: #222; font-size: 0.85rem; margin-top: 2rem; }
+    #article_date{font-size:0.8rem;text-transform:uppercase;}
+    #article_source{font-size:0.8rem;}
     """
 
     def preprocess_html(self, soup):
         for img in soup.select("div.o-mediaEnclosure img"):
             if not img.get("srcset"):
                 continue
+            self.log(img)
             img["src"] = self.extract_from_img_srcset(img["srcset"], max_width=1000)
         return soup
 
+    def populate_article_metadata(self, article, soup, _):
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt = datetime.astimezone(datetime.now(), nyc)
+        nyc_now_str = datetime.strftime(nyc_dt, "%b %-d, %Y at %-I:%M %p %Z")
+
+        date_el = soup.new_tag("div")
+        date_el["id"] = "article_date"
+        nyc_article_dt = datetime.astimezone(article.utctime, nyc)
+        datestamp = datetime.strftime(nyc_article_dt, "%b %-d, %Y, %-I:%M %p %Z")
+        headlink = soup.new_tag("a")
+        headlink["href"] = article.url
+        headlink.string = "View on Website"
+        date_el.string = f"{article.author} | {datestamp} | "
+        date_el.append(headlink)
+        headline = soup.find("h1")
+        headline.insert_before(date_el)
+
+        source_link_div = soup.new_tag("div")
+        source_link_div["id"] = "article_source"
+        source_link = soup.new_tag("a")
+        source_link["href"] = article.url
+        source_link.string = article.url
+        source_link_div.append("This article was downloaded from ")
+        source_link_div.append(source_link)
+        source_link_div.append(" at ")
+        source_link_div.append(nyc_now_str)
+        source_link_div.append(".")
+        hr = soup.new_tag("hr")
+        article_container = soup.find("article")
+        article_container.append(hr)
+        article_container.append(source_link_div)
+
     def parse_index(self):
-        nr_soup = self.index_to_soup("https://holyspiritomb.github.io/newsrack/")
-        nr_issue_date = nr_soup.find("li", id="poetry").find("span", class_="title").string[8:]
+        # commented out bc this doesn't work when there's an issue spanning two months
+        # nr_soup = self.index_to_soup("https://holyspiritomb.github.io/newsrack/")
+        # nr_issue_date = nr_soup.find("li", id="poetry").find("span", class_="title").string[8:]
         if _issue_url:
             soup = self.index_to_soup(_issue_url)
         else:
@@ -88,9 +128,9 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
         issue_edition = self.tag_to_string(soup.find("h1"))
         # self.log(issue_edition)
         # Setting verbose will force a regeneration
-        if self.verbose is not True:
-            if issue_edition == nr_issue_date:
-                self.abort_recipe_processing("We have this issue already.")
+        # if self.verbose is not True:
+        #     if issue_edition == nr_issue_date:
+        #         self.abort_recipe_processing("We have this issue already.")
         self.title = f"{_name}: {issue_edition}"
         try:
             self.pub_date = self.parse_date(issue_edition)
