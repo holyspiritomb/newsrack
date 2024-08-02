@@ -484,7 +484,7 @@ recipes: List[Recipe] = [
         overwrite_cover=False,
         category="Arts & Culture",
         # enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
-        enable_on=False,
+        enable_on=True,
         tags=["literature", "arts", "monthly"],
     ),
     CustomOptionsRecipe(
