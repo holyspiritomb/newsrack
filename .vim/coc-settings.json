@@ -1,15 +1,15 @@
 {
-    "python.pythonPath": "calibre-debug",
-    "python.analysis.useLibraryCodeForTypes": true,
-    "pyright.completion.importSupport": true,
-    "python.analysis.typeCheckingMode": "basic",
     "coc.preferences.bracketEnterImprove": true,
-    "python.analysis.diagnosticMode": "openFilesOnly",
-    "pyright.inlayHints.functionReturnTypes": false,
-    "pyright.inlayHints.variableTypes": false,
-    "pyright.inlayHints.parameterTypes": false,
-    "suggest.maxCompleteItemCount": 50,
     "diagnostic.format": "%message (%source%code)",
+    "pyright.completion.importSupport": true,
+    "pyright.inlayHints.functionReturnTypes": false,
+    "pyright.inlayHints.parameterTypes": false,
+    "pyright.inlayHints.variableTypes": false,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.extraPaths": ["recipes/includes"],
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.useLibraryCodeForTypes": true,
     "python.analysis.diagnosticSeverityOverrides": {
         "reportDuplicateImport": "information",
         "reportMissingImports": "information",
@@ -17,5 +17,5 @@
         "reportUnusedImport": "information",
         "reportUnusedVariable": "information",
     },
-    "python.analysis.extraPaths": ["recipes/includes"]
+    "suggest.maxCompleteItemCount": 50,
 }
