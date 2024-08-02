@@ -8,9 +8,9 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
 from zoneinfo import ZoneInfo
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
+from calibre.utils.date import datetime
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -35,12 +35,13 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     description = 'Ars Technica: Serving the technologist for 1.2 decades'
     publisher = 'Conde Nast Publications'
     masthead_url = _masthead
-    oldest_article = 3
+    oldest_article = 2
     max_articles_per_feed = 100
     no_stylesheets = True
     encoding = 'utf-8'
     use_embedded_content = False
     remove_empty_feeds = True
+    recursions = 0
     conversion_options = {
         'tags': 'Technology, Science, Periodical, Ars Technica',
     }
@@ -50,13 +51,15 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
     .byline{font-weight: bold; line-height: 1em; font-size: 0.625em; text-decoration: none}
     img{display: block; max-width:98vw}
     .caption-text{font-size:small; font-style:italic}
-    .caption-byline{font-size:small; font-style:italic; font-weight:bold}
+    .caption-byline, .caption-credit{font-size:small; font-style:italic; font-weight:bold}
     .video, .page-numbers, .story-sidebar { display: none }
     .image { display: block }
+    #article_date{font-size:0.8rem;text-transform:uppercase;}
     #article_source{font-size:0.8rem;}
     '''
 
     keep_only_tags = [
+        dict(attrs={"id": "archive-head"}),
         dict(itemprop=['headline', 'description']),
         classes('post-meta article-guts standalone'),
     ]
@@ -94,11 +97,22 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
-        # nyc_dt = datetime.astimezone(article.utctime, nyc)
-        # datestring = datetime.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
         nyc = ZoneInfo("America/New_York")
-        nyc_dt_now = datetime.astimezone(datetime.now(), nyc)
-        curr_datestring = datetime.strftime(nyc_dt_now, "%b %-d, %Y at %-I:%M %p %Z")
+        nyc_dt = datetime.astimezone(datetime.now(), nyc)
+        nyc_now_str = datetime.strftime(nyc_dt, "%b %-d, %Y at %-I:%M %p %Z")
+
+        date_el = soup.new_tag("div")
+        date_el["id"] = "article_date"
+        nyc_article_dt = datetime.astimezone(article.utctime, nyc)
+        datestamp = datetime.strftime(nyc_article_dt, "%b %-d, %Y, %-I:%M %p %Z")
+        headlink = soup.new_tag("a")
+        headlink["href"] = article.url
+        headlink.string = "View on Website"
+        date_el.string = f"{article.author} | {datestamp} | "
+        date_el.append(headlink)
+        headline = soup.find(attrs={"itemprop": "headline"})
+        headline.insert_before(date_el)
+
         source_link_div = soup.new_tag("div")
         source_link_div["id"] = "article_source"
         source_link = soup.new_tag("a")
@@ -106,19 +120,19 @@ class ArsTechnica(BasicNewsRecipe, BasicNewsrackRecipe):
         source_link.string = article.url
         source_link_div.append("This article was downloaded from ")
         source_link_div.append(source_link)
-        source_link_div.append(" on ")
-        source_link_div.append(curr_datestring)
+        source_link_div.append(" at ")
+        source_link_div.append(nyc_now_str)
         source_link_div.append(".")
         hr = soup.new_tag("hr")
         soup.append(hr)
         soup.append(source_link_div)
+
         thumb = soup.find("img", attrs={"id": "toc_image"})
         if thumb:
             thumb_src = thumb["src"]
             self.add_toc_thumbnail(article, thumb_src)
             thumb.extract()
 
-    recursions = 1
 
     def is_link_wanted(self, url, tag):
         return re.search(r'/[0-9]/$', url) is not None
