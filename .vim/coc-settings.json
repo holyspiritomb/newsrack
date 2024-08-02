@@ -5,7 +5,9 @@
     "python.analysis.typeCheckingMode": "basic",
     "coc.preferences.bracketEnterImprove": true,
     "python.analysis.diagnosticMode": "openFilesOnly",
-    "pyright.inlayHints.functionReturnTypes": true,
+    "pyright.inlayHints.functionReturnTypes": false,
+    "pyright.inlayHints.variableTypes": false,
+    "pyright.inlayHints.parameterTypes": false,
     "suggest.maxCompleteItemCount": 50,
     "diagnostic.format": "%message (%source%code)",
     "python.analysis.diagnosticSeverityOverrides": {
