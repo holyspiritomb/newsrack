@@ -76,7 +76,6 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
         for img in soup.select("div.o-mediaEnclosure img"):
             if not img.get("srcset"):
                 continue
-            self.log(img)
             img["src"] = self.extract_from_img_srcset(img["srcset"], max_width=1000)
         return soup
 
@@ -108,9 +107,8 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
         source_link_div.append(nyc_now_str)
         source_link_div.append(".")
         hr = soup.new_tag("hr")
-        article_container = soup.find("article")
-        article_container.append(hr)
-        article_container.append(source_link_div)
+        soup.append(hr)
+        soup.append(source_link_div)
 
     def parse_index(self):
         # commented out bc this doesn't work when there's an issue spanning two months
