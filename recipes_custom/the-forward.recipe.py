@@ -3,14 +3,14 @@ import re
 import json
 import sys
 from collections import OrderedDict
-from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 from calibre.web.feeds.news import BasicNewsRecipe
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
-from calibre.utils.date import utcnow, parse_date, strftime, strptime
+from calibre.utils.date import utcnow, parse_date, datetime
 
 
 # convenience switches for when I'm developing
@@ -99,10 +99,19 @@ class TheForward(BasicNewsRecipe, BasicNewsrackRecipe):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
+        nyc = ZoneInfo("America/New_York")
+        nyc_dt = datetime.astimezone(datetime.now(), nyc)
+        nyc_now_str = datetime.strftime(nyc_dt, "%b %-d, %Y at %-I:%M %p %Z")
         article_img_div = soup.find("div", attrs={"class": "featured-image"})
         if article_img_div:
             toc_img = article_img_div.find("img")
             self.add_toc_thumbnail(article, toc_img["src"])
+        tinyheader = soup.find("div", attrs={"id": "tinyheader"})
+        tinyheader.append(" | ")
+        headlink = soup.new_tag("a")
+        headlink["href"] = article.url
+        headlink.string = "View on Website"
+        tinyheader.append(headlink)
         end_byline = soup.find("div", attrs={"class": "ending-byline"})
         source_p = soup.new_tag("p")
         source_p["id"] = "source_link"
@@ -111,9 +120,10 @@ class TheForward(BasicNewsRecipe, BasicNewsrackRecipe):
         source_a.string = article.url
         source_p.append("This article was downloaded from ")
         source_p.append(source_a)
+        source_p.append(" at ")
+        source_p.append(nyc_now_str)
         source_p.append(".")
         end_byline.append(source_p)
-        self.log.debug(article)
 
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html, from_encoding='utf-8')
@@ -147,14 +157,17 @@ class TheForward(BasicNewsRecipe, BasicNewsrackRecipe):
         datestamp = soup.new_tag("span")
         datestamp["id"] = "pub_date"
         datestamp["title"] = "published"
-        datestamp_str = datetime.strftime(pubdate_dt, "%b %-d, %Y, %-I:%M %p")
+        nyc = ZoneInfo("America/New_York")
+        nyc_article_dt = datetime.astimezone(pubdate_dt, nyc)
+        datestamp_str = datetime.strftime(nyc_article_dt, "%b %-d, %Y, %-I:%M %p %Z")
         datestamp.string = datestamp_str
         tinyheader.append(datestamp)
         if moddate_dt != pubdate_dt:
             modstamp = soup.new_tag("span")
             modstamp["id"] = "mod_date"
             modstamp["title"] = "modified"
-            modstamp_str = datetime.strftime(moddate_dt, "%b %-d, %Y, %-I:%M %p")
+            moddate_nyc_dt = datetime.astimezone(moddate_dt, nyc)
+            modstamp_str = datetime.strftime(moddate_nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
             modstamp.string = modstamp_str
             datestamp.insert_after(modstamp)
             datestamp.insert_after(" | updated ")
