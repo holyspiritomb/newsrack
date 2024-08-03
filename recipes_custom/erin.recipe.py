@@ -1,8 +1,8 @@
 import os
 import sys
 from calibre.web.feeds.news import BasicNewsRecipe, classes
-from datetime import datetime
 from zoneinfo import ZoneInfo
+from calibre.utils.date import datetime
 
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
