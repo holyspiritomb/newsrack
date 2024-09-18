@@ -40,9 +40,12 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
     ignore_duplicate_articles = {"url"}
     compress_news_images = False
     scale_news_images = (800, 1200)
+    simultaneous_downloads = 1
 
-    remove_attributes = ["style", "font"]
-    keep_only_tags = [dict(name="article")]
+    remove_attributes = ["font"]
+    keep_only_tags = [
+        dict(name="article"),
+    ]
 
     remove_tags = [
         dict(name="button"),
@@ -58,18 +61,25 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
                 ]
             }
         ),
+        dict(
+            attrs={
+                "data-dl_module_type": ["Appears In Magazine"]
+            }
+        ),
+        dict(
+            attrs={
+                "data-dl_element_location": ["sidebar"]
+            }
+        )
     ]
 
     extra_css = """
     h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-    .o-titleBar-summary { font-size: 1.2rem; font-style: italic; margin-bottom: 1rem; }
-    div.o-titleBar-meta, div.c-feature-sub { font-weight: bold; color: #444; margin-bottom: 1.5rem; }
-    div.pcms_media img, div.o-mediaEnclosure img { max-width: 100%; height: auto; }
-    div.o-mediaEnclosure .o-mediaEnclosure-metadata { font-size: 0.8rem; margin-top: 0.2rem; }
-    div.c-feature-bd { margin-bottom: 2rem; }
-    div.c-auxContent { color: #222; font-size: 0.85rem; margin-top: 2rem; }
+    .leading-snug.text-xl { font-size: 1.2rem; font-style: italic; margin-bottom: 1rem; }
+    div.type-kappa { font-weight: bold; color: #444; margin-bottom: 1.5rem; }
+    div.rich-text.copy-large { margin-bottom: 2rem; }
     #article_date{font-size:0.8rem;text-transform:uppercase;}
-    #article_source{font-size:0.8rem;}
+    #article_source, .leading-[.7], .text-sm{font-size:0.8rem;}
     """
 
     def preprocess_html(self, soup):
@@ -93,7 +103,14 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
         headlink.string = "View on Website"
         date_el.string = f"{article.author} | {datestamp} | "
         date_el.append(headlink)
-        headline = soup.find("h1")
+        if soup.find("span", attrs={"class": "leading-[.7]"}):
+            hl = soup.find("span", attrs={"class": "leading-[.7]"})
+            if hl.parent:
+                headline = hl.parent
+            else:
+                headline = hl
+        else:
+            headline = soup.find("h1")
         headline.insert_before(date_el)
 
         source_link_div = soup.new_tag("div")
@@ -118,13 +135,14 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
             soup = self.index_to_soup(_issue_url)
         else:
             soup = self.index_to_soup("https://www.poetryfoundation.org/poetrymagazine")
-            current_issue = soup.select("div.c-cover-media a")
+            current_issue = soup.select("a[href*='issue']")
+            # self.log(current_issue[0])
             if not current_issue:
                 self.abort_recipe_processing("Unable to find latest issue")
             current_issue = current_issue[0]
-            soup = self.index_to_soup(current_issue["href"])
+            current_issue_link = "https://www.poetryfoundation.com" + current_issue["href"]
+            soup = self.index_to_soup(current_issue_link)
         issue_edition = self.tag_to_string(soup.find("h1"))
-        # self.log(issue_edition)
         # Setting verbose will force a regeneration
         # if self.verbose is not True:
         #     if issue_edition == nr_issue_date:
@@ -147,32 +165,36 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
                 # f'{mobj.group("mth")} {mobj.group("yr")}', "%B %Y"
             # ).replace(tzinfo=timezone.utc)
 
-        cover_image = soup.select("div.c-issueBillboard-cover-media img")[0]
+        # cover_image = soup.select("img[alt*='poetry cover']")
+        cover_image = soup.select("meta[property='og:image']")[0]
         parsed_cover_url = urlparse(
-            cover_image["srcset"].split(",")[-1].strip().split(" ")[0]
+            cover_image["content"].split("?")[0]
         )
         self.cover_url = f"{parsed_cover_url.scheme}://{parsed_cover_url.netloc}{parsed_cover_url.path}"
+        # bod = soup.select("div#mainContent")[0]
+        # self.log(bod.prettify())
 
         sectioned_feeds = OrderedDict()
 
-        tabs = soup.find_all("div", attrs={"class": "c-tier_tabbed"})
+        # tabs = soup.find_all("div", attrs={"class": "c-tier_tabbed"})
+        tabs = soup.find_all("div", attrs={"class": "print:hidden"})
         for tab in tabs:
-            tab_title = tab.find("div", attrs={"class": "c-tier-tab"})
-            tab_content = tab.find("div", attrs={"class": "c-tier-content"})
+            tab_title = tab.find("span", attrs={"class": "md:leading-loose"})
+            tab_content = tab.find("div")
             if not (tab_title and tab_content):
                 continue
             tab_title = self.tag_to_string(tab_title)
             sectioned_feeds[tab_title] = []
-            for li in tab_content.select("ul.o-blocks > li"):
+            for li in tab_content.select("ul > li.col-span-full"):
                 author = self.tag_to_string(
-                    li.find("span", attrs={"class": "c-txt_attribution"})
+                    li.find("span", attrs={"class": "type-attribution"})
                 )
-                for link in li.find_all("a", attrs={"class": "c-txt_abstract"}):
+                for link in li.find_all("a"):
                     self.log("Found article:", self.tag_to_string(link))
                     sectioned_feeds[tab_title].append(
                         {
                             "title": self.tag_to_string(link),
-                            "url": link["href"],
+                            "url": "https://www.poetryfoundation.com" + link["href"],
                             "author": author,
                             "description": author,
                         }
