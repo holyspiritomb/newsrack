@@ -166,19 +166,6 @@ recipes: List[Recipe] = [
         ),
         enable_on=True,
     ),
-    CustomOptionsRecipe(
-        recipe="conspirituality",
-        slug="conspirituality",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Podcasts",
-        tags=["science"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/conspirituality.jpg"
-        ),
-        enable_on=True,
-    ),
     # CustomOptionsRecipe(
     #     recipe="duolingo-blog",
     #     slug="duolingo-blog",
