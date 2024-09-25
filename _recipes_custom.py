@@ -607,19 +607,6 @@ recipes: List[Recipe] = [
             logo_path_or_url="recipes_custom/logos/TPWKY.jpg"
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="vox-podcasts",
-        slug="vox-podcasts",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Podcasts",
-        tags=["science"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/voxpods.png"
-        ),
-        enable_on=True,
-    ),
     # CustomMonthlyRecipe(
     #     recipe="wired",
     #     slug="wired",
