@@ -165,14 +165,15 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
                 # f'{mobj.group("mth")} {mobj.group("yr")}', "%B %Y"
             # ).replace(tzinfo=timezone.utc)
 
-        # cover_image = soup.select("img[alt*='poetry cover']")
         cover_image = soup.select("meta[property='og:image']")[0]
-        parsed_cover_url = urlparse(
-            cover_image["content"].split("?")[0]
-        )
-        self.cover_url = f"{parsed_cover_url.scheme}://{parsed_cover_url.netloc}{parsed_cover_url.path}"
-        # bod = soup.select("div#mainContent")[0]
-        # self.log(bod.prettify())
+        # https://cdn-test.poetryfoundation.org/cdn-cgi/image/w=1470,q=80/content/images/sep2024-poetry-cover.jpg
+        cover_image_path = cover_image["content"].split("?")[0].split("/")[-1]
+        # parsed_cover_url = urlparse(
+        #     cover_image["content"].split("?")[0]
+        # )
+        # self.cover_url = f"{parsed_cover_url.scheme}://{parsed_cover_url.netloc}{parsed_cover_url.path}"
+        self.cover_url = f"https://cdn-test.poetryfoundation.org/cdn-cgi/image/w=1470,q=80/content/images/{cover_image_path}"
+        self.log("Cover: ", self.cover_url)
 
         sectioned_feeds = OrderedDict()
 
