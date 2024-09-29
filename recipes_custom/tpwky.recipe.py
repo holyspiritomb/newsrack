@@ -49,7 +49,7 @@ class TPWKY(WordPressNewsrackRecipe, BasicNewsRecipe):
         p{font-size:1rem}
         #article_source{font-size:0.8rem;}
         '''
-    
+
     def populate_article_metadata(self, article, soup: BeautifulSoup, _):
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
