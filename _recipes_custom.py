@@ -137,21 +137,21 @@ recipes: List[Recipe] = [
     #         logo_path_or_url="recipes_custom/logos/archlinux.png"
     #     ),
     # ),
-    CustomOptionsRecipe(
-        recipe="ars-technica",
-        slug="ars-technica",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="News",
-        tags=["science", "tech", "commentary"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ars_Technica_logo_(2016).svg/1024px-Ars_Technica_logo_(2016).svg.png"
-        ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="ars-technica",
+    #     slug="ars-technica",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="News",
+    #     tags=["science", "tech", "commentary"],
+    #     overwrite_cover=True,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ars_Technica_logo_(2016).svg/1024px-Ars_Technica_logo_(2016).svg.png"
+    #     ),
+    #     enable_on=lambda recipe: every_x_days(
+    #         last_run=recipe.last_run, days=1, drift=0
+    #     ),
+    # ),
     CustomOptionsRecipe(
         recipe="assigned-media",
         slug="assigned-media",
