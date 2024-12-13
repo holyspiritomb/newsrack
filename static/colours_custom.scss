@@ -1,10 +1,22 @@
 // Define your own custom colours css here
-$dark-base-bg-color: #1f1d2e;
-$dark-base-color: #e0def4;
-$dark-base-disabled-color: #6e6a86;
-$dark-link-color: #9ccfd8;
-$dark-link-hover-color: #f6c177;
-$dark-link-visited-color: #c4a7e7;
-$dark-book-bg-color: #26233a;
-$dark-error-color: #eb6f92;
-$dark-tags-color: #908caa;
+@use "sass:color";
+@use 'colours';
+colours.$dark-base-bg-color: #1f1d2e;
+colours.$dark-base-color: #e0def4;
+colours.$dark-base-disabled-color: #6e6a86;
+colours.$dark-link-color: #9ccfd8;
+colours.$dark-link-hover-color: #f6c177;
+colours.$dark-link-visited-color: #c4a7e7;
+colours.$dark-book-bg-color: #26233a;
+colours.$dark-error-color: #eb6f92;
+colours.$dark-tags-color: #908caa;
+
+colours.$base-bg-color: #f2e9e1;
+colours.$base-color: #1f1d2e;
+colours.$base-disabled-color: #9893a5;
+colours.$link-color: #286983;
+colours.$link-hover-color: #56949f;
+colours.$link-visited-color:#907aa9 ;
+colours.$book-bg-color: #faf4ed;
+colours.$error-color: #b90404;
+colours.$tags-color: #575279;
