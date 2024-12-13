@@ -133,15 +133,16 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         soup = BeautifulSoup(raw_html)
         if soup.find('meta', {'property': 'og:type', 'content': 'video'}) or soup.find("div", attrs={"class": "ArticleVideo"}):
             self.abort_article("Video article aborted.")
-        header = soup.find(attrs={"class": "ArticleHeader"})
+        # header = soup.find(attrs={"class": "ArticleHeader"})
         headline = soup.find(attrs={"class": "ArticleHeader__Heading"})
-        article_body = soup.find(attrs={"class": "ArticleContent"})
+        # article_body = soup.find(attrs={"class": "ArticleContent"})
         if soup.find(name="meta", attrs={"name": "ob_page_type", "content": "paywall"}):
-            self.log.warn("Paywall encountered but that's fine.")
-            article_body.clear()
-            article_body.append("This article is paywalled.")
-            if headline:
-                headline["data-paywall"] = "paywall"
+            self.log.warn("Paywall encountered.")
+            # article_body.clear()
+            # article_body.append("This article is paywalled.")
+            # if headline:
+            #     headline["data-paywall"] = "paywall"
+            self.abort_article("Aborting paywalled article.")
         else:
             if headline:
                 headline["data-paywall"] = "free"
