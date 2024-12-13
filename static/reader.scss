@@ -5,11 +5,13 @@ This software is released under the GNU General Public License v3.0
 https://opensource.org/licenses/GPL-3.0
 */
 
-@import 'colours';
+@use "sass:color";
+@use "sass:meta";
+@use 'colours';
 
 body {
-  background-color: grayscale(darken($base-bg-color, 3%));
-  color: $base-color;
+  background-color: color.grayscale(color.adjust(colours.$base-bg-color, $lightness: -3%));
+  color: colours.$base-color;
 }
 
 main.container-fluid {
@@ -17,14 +19,14 @@ main.container-fluid {
 }
 a {
   text-decoration: none;
-  color: $link-color;
+  color: colours.$link-color;
 
   &:hover {
-    color: $link-hover-color;
+    color: colours.$link-hover-color;
   }
 
   &:visited {
-    color: $link-visited-color;
+    color: colours.$link-visited-color;
   }
 }
 
@@ -45,9 +47,9 @@ a.home svg {
 }
 
 #toc {
-  color: $base-color;
-  background-color: $base-bg-color;
-  border: 1px solid lighten($base-disabled-color, 20%);
+  color: colours.$base-color;
+  background-color: colours.$base-bg-color;
+  border: 1px solid color.adjust(colours.$base-disabled-color, $lightness: 20%);
   border-radius: 0.25rem;
 }
 
@@ -69,7 +71,7 @@ a.home svg {
   text-decoration: none;
 
   &:hover {
-    background-color: $base-bg-color;
+    background-color: colours.$base-bg-color;
   }
 
   svg {
@@ -91,7 +93,7 @@ a.home svg {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: $base-disabled-color;
+  color: colours.$base-disabled-color;
 }
 
 @media (max-width: 575px) {
@@ -116,7 +118,7 @@ a.home svg {
   #epub-viewer:after {
     position: absolute;
     width: 1px;
-    border-right: 1px $base-disabled-color solid;
+    border-right: 1px colours.$base-disabled-color solid;
     height: 85vh;
     z-index: 1;
     left: 50%;
@@ -131,39 +133,39 @@ a.home svg {
 
 [data-theme="dark"] {
   body {
-    color: $dark-base-color;
-    background-color: lighten($dark-base-bg-color, 3%);
+    color: colours.$dark-base-color;
+    background-color: color.adjust(colours.$dark-base-bg-color, $lightness: 3%);
   }
   a {
-    color: $dark-link-color;
+    color: colours.$dark-link-color;
 
     &:hover {
-      color: $dark-link-hover-color;
+      color: colours.$dark-link-hover-color;
     }
 
     &:visited {
-      color: $dark-link-visited-color;
+      color: colours.$dark-link-visited-color;
     }
   }
   #prev, #next, #prev-chapter, #next-chapter {
     &:hover {
-      background-color: $dark-base-bg-color;
+      background-color: colours.$dark-base-bg-color;
     }
   }
   #epub-viewer:after {
-    border-right-color: $dark-base-disabled-color;
+    border-right-color: colours.$dark-base-disabled-color;
   }
   #toc {
-    color: $dark-base-color;
-    background-color: $dark-base-bg-color;
-    border-color: darken($dark-base-disabled-color, 20%);
+    color: colours.$dark-base-color;
+    background-color: colours.$dark-base-bg-color;
+    border-color: color.adjust(colours.$dark-base-disabled-color, $lightness: -20%);
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e7e9f2' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
   }
   #epub-title {
     font-size: 0.8rem;
-    color: $dark-base-disabled-color;
+    color: colours.$dark-base-disabled-color;
   }
 
 }
 
-@import 'reader_custom';
+@include meta.load-css('reader_custom');
