@@ -5,6 +5,10 @@ This software is released under the GNU General Public License v3.0
 https://opensource.org/licenses/GPL-3.0
 */
 
+@use "sass:color";
+@use "sass:string";
+@use 'colours_custom';
+
 $base-bg-color: #ffffff;
 $base-color: #000000;
 $base-disabled-color: #444956;
@@ -24,10 +28,6 @@ $dark-link-visited-color: #bbb9ff;
 $dark-book-bg-color: color.adjust($dark-base-bg-color, $lightness: 5%);
 $dark-error-color: #ff6464;
 $dark-tags-color: color.mix($dark-base-disabled-color, $dark-base-color);
-
-@use "sass:color";
-@use "sass:string";
-@use 'colours_custom';
 
 @function url-friendly-colour($colour) {
     @return '%23' + string.slice('#{$colour}', 2, -1)
