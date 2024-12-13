@@ -8,6 +8,7 @@ https://opensource.org/licenses/GPL-3.0
 @use "sass:color";
 @use "sass:meta";
 @use 'colours';
+@use 'colours_custom';
 
 body {
   background-color: color.grayscale(color.adjust(colours.$base-bg-color, $lightness: -3%));
@@ -159,7 +160,7 @@ a.home svg {
     color: colours.$dark-base-color;
     background-color: colours.$dark-base-bg-color;
     border-color: color.adjust(colours.$dark-base-disabled-color, $lightness: -20%);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e7e9f2' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#{colours.url-friendly-colour(colours.$dark-base-color)}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m2 5 6 6 6-6"/></svg>');
   }
   #epub-title {
     font-size: 0.8rem;
