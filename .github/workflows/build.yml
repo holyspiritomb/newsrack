@@ -38,7 +38,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.ref_name == github.event.repository.default_branch
     # Customise: Total job run time limit
     timeout-minutes: 30
@@ -71,7 +71,7 @@ jobs:
 
       - name: Install calibre's and other dependencies
         timeout-minutes: 1
-        run: sudo apt-fast update -y && sudo apt-fast install --no-install-recommends -y libegl1 libopengl0 imagemagick
+        run: sudo apt-get update -y && sudo apt-get install --no-install-recommends -y libegl1 libopengl0 imagemagick
 
       - name: Get latest calibre version
         id: calibrelatest
