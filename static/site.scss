@@ -5,27 +5,30 @@ This software is released under the GNU General Public License v3.0
 https://opensource.org/licenses/GPL-3.0
 */
 
-@import 'colours';
+@use "sass:color";
+@use "sass:meta";
+@use 'colours';
+@use "colours_custom";
 
 body {
   font-size: 10pt; /* Use pt instead of px because px is odd on the Kindle browser */
   font-family: system-ui, sans-serif;
   margin-left: 1em;
   margin-right: 1em;
-  color: $base-color;
-  background-color: $base-bg-color;
+  color: colours.$base-color;
+  background-color: colours.$base-bg-color;
 }
 
 a {
   text-decoration: none;
-  color: $link-color;
+  color: colours.$link-color;
 
   &:hover {
-    color: $link-hover-color;
+    color: colours.$link-hover-color;
   }
 
   &:visited {
-    color: $link-visited-color;
+    color: colours.$link-visited-color;
   }
 }
 
@@ -35,7 +38,7 @@ h1 {
   margin-bottom: 0.2em;
 
   &:before {
-    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="#{url-friendly-colour($base-color)}" stroke-linejoin="round" stroke-width="32" d="M368 415.86V72a24.07 24.07 0 00-24-24H72a24.07 24.07 0 00-24 24v352a40.12 40.12 0 0040 40h328"></path><path fill="none" stroke="#{url-friendly-colour($base-color)}" stroke-linejoin="round" stroke-width="32" d="M416 464h0a48 48 0 01-48-48V128h72a24 24 0 0124 24v264a48 48 0 01-48 48z"></path><path fill="none" stroke="#{url-friendly-colour($base-color)}" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M240 128h64M240 192h64M112 256h192M112 320h192M112 384h192"></path><path fill="#{url-friendly-colour($base-color)}" stroke="none" d="M176 208h-64a16 16 0 01-16-16v-64a16 16 0 0116-16h64a16 16 0 0116 16v64a16 16 0 01-16 16z"></path></svg>');
+    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="#{colours.url-friendly-colour(colours.$base-color)}" stroke-linejoin="round" stroke-width="32" d="M368 415.86V72a24.07 24.07 0 00-24-24H72a24.07 24.07 0 00-24 24v352a40.12 40.12 0 0040 40h328"></path><path fill="none" stroke="#{colours.url-friendly-colour(colours.$base-color)}" stroke-linejoin="round" stroke-width="32" d="M416 464h0a48 48 0 01-48-48V128h72a24 24 0 0124 24v264a48 48 0 01-48 48z"></path><path fill="none" stroke="#{colours.url-friendly-colour(colours.$base-color)}" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M240 128h64M240 192h64M112 256h192M112 320h192M112 384h192"></path><path fill="#{colours.url-friendly-colour(colours.$base-color)}" stroke="none" d="M176 208h-64a16 16 0 01-16-16v-64a16 16 0 0116-16h64a16 16 0 0116 16v64a16 16 0 01-16 16z"></path></svg>');
     display: inline-block;
     width: 1em;
     height: 1em;
@@ -58,7 +61,7 @@ h1 {
   font-size: 0.8em;
   text-align: center;
   margin-bottom: 1em;
-  color: $base-disabled-color;
+  color: colours.$base-disabled-color;
 }
 
 // search form
@@ -73,13 +76,13 @@ h1 {
 }
 
 #search-text, #search-button {
-  color: $base-color;
-  background-color: $base-bg-color;
-  border: 1px solid lighten($base-disabled-color, 20%);
+  color: colours.$base-color;
+  background-color: colours.$base-bg-color;
+  border: 1px solid color.adjust(colours.$base-disabled-color, $lightness: 20%);
   border-radius: 0.25rem;
 
   &:disabled {
-    background-color: $book-bg-color;
+    background-color: colours.$book-bg-color;
   }
 }
 
@@ -104,8 +107,8 @@ h1 {
   cursor: pointer;
   outline: inherit;
   font: inherit;
-  color: $base-disabled-color;
-  background: $book-bg-color;
+  color: colours.$base-disabled-color;
+  background: colours.$book-bg-color;
   position: absolute;
   right: 0.25em;
   top: 0.2em;
@@ -123,11 +126,11 @@ h1 {
   padding: 0.25em 1em;
   min-width: 4em;
   cursor: pointer;
-  border-color: $base-disabled-color;
+  border-color: colours.$base-disabled-color;
 
   &:hover {
-    background-color: grayscale(darken($base-bg-color, 3%));
-    border-color: $base-color;
+    background-color: color.grayscale(color.adjust(colours.$base-bg-color, $lightness: -3%));
+    border-color: colours.$base-color;
   }
 }
 
@@ -136,7 +139,7 @@ h1 {
   font-size: 0.75em;
   margin-top: 0.35em;
   margin-bottom: 0.25em;
-  color: $error-color;
+  color: colours.$error-color;
 
   a {
     margin-right: 0.3rem;
@@ -154,12 +157,12 @@ h1 {
     cursor: pointer;
 
     svg {
-      color: $link-hover-color;
+      color: colours.$link-hover-color;
     }
   }
 
   svg {
-    color: $base-color;
+    color: colours.$base-color;
     width: 1rem;
     height: 1rem;
     vertical-align: middle;
@@ -168,8 +171,8 @@ h1 {
 }
 
 .category-container {
-  background-color: $base-bg-color;
-  border: 1px solid lighten($base-disabled-color, 20%);
+  background-color: colours.$base-bg-color;
+  border: 1px solid color.adjust(colours.$base-disabled-color, $lightness: 20%);
   border-radius: 0.25em;
   padding: 0.35rem 0.7em;
   margin-bottom: 0.5em;
@@ -223,7 +226,7 @@ h2.category {
   }
 
   &:before {
-    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{url-friendly-colour($base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path> <polyline points="9 6 15 12 9 18"></polyline></svg>');
+    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{colours.url-friendly-colour(colours.$base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path> <polyline points="9 6 15 12 9 18"></polyline></svg>');
     display: inline-block;
     margin-right: 0.25em;
     width: 1em;
@@ -234,7 +237,7 @@ h2.category {
 
 .is-open h2.category {
   &:before {
-    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{url-friendly-colour($base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{colours.url-friendly-colour(colours.$base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 9 12 15 18 9"></polyline></svg>');
   }
 }
 
@@ -254,8 +257,8 @@ h2.category {
     }
 
     &:target .title {
-      border-bottom: 1px dotted $base-disabled-color;
-      color: $link-hover-color;
+      border-bottom: 1px dotted colours.$base-disabled-color;
+      color: colours.$link-hover-color;
     }
 
     .pub-date {
@@ -263,7 +266,7 @@ h2.category {
       margin-top: 0.3em;
       margin-bottom: 0.2em;
       font-size: 0.8em;
-      color: $base-disabled-color;
+      color: colours.$base-disabled-color;
 
       &:hover {
         cursor: pointer;
@@ -291,7 +294,7 @@ h2.category {
       font-size: 0.8em;
       font-weight: bold;
       margin-left: 0.5em;
-      color: $tags-color;
+      color: colours.$tags-color;
       display: inline;
 
       .tag {
@@ -304,21 +307,21 @@ h2.category {
 
         &:hover {
           cursor: pointer;
-          color: $link-hover-color;
+          color: colours.$link-hover-color;
         }
       }
     }
 
     .contents {
       margin: 0.5rem 0 1.5rem 0;
-      color: $base-color;
+      color: colours.$base-color;
       font-size: 0.8em;
       line-height: 1.1;
 
       p.cover img {
         width: 100%;
         max-width: 20rem;
-        border: 1px solid $base-disabled-color;
+        border: 1px solid colours.$base-disabled-color;
       }
 
       ul {
@@ -347,8 +350,8 @@ h2.category {
 .book {
   margin-left: 0.5em;
   font-family: monospace;
-  background-color: $book-bg-color;
-  border: 1px solid $base-disabled-color;
+  background-color: colours.$book-bg-color;
+  border: 1px solid colours.$base-disabled-color;
   padding: 1pt 4pt;
   border-radius: 3pt;
   display: inline-block;
@@ -356,7 +359,7 @@ h2.category {
   .file-size {
     margin-left: 0.3em;
     font-size: 0.7em;
-    color: $base-disabled-color;
+    color: colours.$base-disabled-color;
   }
 }
 
@@ -382,7 +385,7 @@ footer {
       margin-right: 0.5rem;
 
       &:before {
-        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path fill="#{url-friendly-colour($base-color)}" d="M13 21v2.5l-3-2-3 2V21h-.5A3.5 3.5 0 0 1 3 17.5V5a3 3 0 0 1 3-3h14a1 1 0 0 1 1 1v17a1 1 0 0 1-1 1h-7zm0-2h6v-3H6.5a1.5 1.5 0 0 0 0 3H7v-2h6v2zm6-5V4H6v10.035A3.53 3.53 0 0 1 6.5 14H19zM7 5h2v2H7V5zm0 3h2v2H7V8zm0 3h2v2H7v-2z"/></svg>');
+        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path fill="#{colours.url-friendly-colour(colours.$base-color)}" d="M13 21v2.5l-3-2-3 2V21h-.5A3.5 3.5 0 0 1 3 17.5V5a3 3 0 0 1 3-3h14a1 1 0 0 1 1 1v17a1 1 0 0 1-1 1h-7zm0-2h6v-3H6.5a1.5 1.5 0 0 0 0 3H7v-2h6v2zm6-5V4H6v10.035A3.53 3.53 0 0 1 6.5 14H19zM7 5h2v2H7V5zm0 3h2v2H7V8zm0 3h2v2H7v-2z"/></svg>');
         display: inline-block;
         width: 1em;
         height: 1em;
@@ -394,7 +397,7 @@ footer {
       margin-right: 0.5rem;
 
       &:before {
-        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{url-friendly-colour($base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path><path d="M10 9v6l5 -3z"></path></svg>');
+        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{colours.url-friendly-colour(colours.$base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path><path d="M10 9v6l5 -3z"></path></svg>');
         display: inline-block;
         width: 1em;
         height: 1em;
@@ -410,75 +413,75 @@ footer {
 
 [data-theme="dark"] {
   body {
-    background: $dark-base-bg-color;
-    color: $dark-base-color;
+    background: colours_custom.$dark-base-bg-color;
+    color: colours_custom.$dark-base-color;
   }
   a {
-    color: $dark-link-color;
+    color: colours_custom.$dark-link-color;
 
     &:hover {
-      color: $dark-link-hover-color;
+      color: colours_custom.$dark-link-hover-color;
     }
 
     &:visited {
-      color: $dark-link-visited-color;
+      color: colours_custom.$dark-link-visited-color;
     }
   }
   h1 {
     &:before {
-      content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path stroke="#{url-friendly-colour($dark-base-color)}" fill="none" stroke-linejoin="round" stroke-width="32" d="M368 415.86V72a24.07 24.07 0 00-24-24H72a24.07 24.07 0 00-24 24v352a40.12 40.12 0 0040 40h328"></path><path stroke="#{url-friendly-colour($dark-base-color)}" fill="none" stroke-linejoin="round" stroke-width="32" d="M416 464h0a48 48 0 01-48-48V128h72a24 24 0 0124 24v264a48 48 0 01-48 48z"></path><path stroke="#{url-friendly-colour($dark-base-color)}" fill="none" stroke-linejoin="round" stroke-width="32" stroke-linecap="round" d="M240 128h64M240 192h64M112 256h192M112 320h192M112 384h192"></path><path fill="#{url-friendly-colour($dark-base-color)}" stroke="none"  d="M176 208h-64a16 16 0 01-16-16v-64a16 16 0 0116-16h64a16 16 0 0116 16v64a16 16 0 01-16 16z"></path></svg>');
+      content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path stroke="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" fill="none" stroke-linejoin="round" stroke-width="32" d="M368 415.86V72a24.07 24.07 0 00-24-24H72a24.07 24.07 0 00-24 24v352a40.12 40.12 0 0040 40h328"></path><path stroke="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" fill="none" stroke-linejoin="round" stroke-width="32" d="M416 464h0a48 48 0 01-48-48V128h72a24 24 0 0124 24v264a48 48 0 01-48 48z"></path><path stroke="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" fill="none" stroke-linejoin="round" stroke-width="32" stroke-linecap="round" d="M240 128h64M240 192h64M112 256h192M112 320h192M112 384h192"></path><path fill="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" stroke="none"  d="M176 208h-64a16 16 0 01-16-16v-64a16 16 0 0116-16h64a16 16 0 0116 16v64a16 16 0 01-16 16z"></path></svg>');
     }
   }
   #refreshed-info-top {
-    color: $dark-base-disabled-color;
+    color: colours_custom.$dark-base-disabled-color;
   }
 
   #search-info {
-    color: $dark-error-color;
+    color: colours_custom.$dark-error-color;
   }
   #search-text, #search-button {
-    color: $dark-base-color;
-    background-color: $dark-base-bg-color;
-    border: 1px solid darken($dark-base-disabled-color, 20%);
+    color: colours_custom.$dark-base-color;
+    background-color: colours_custom.$dark-base-bg-color;
+    border: 1px solid color.adjust(colours_custom.$dark-base-disabled-color, $lightness: -20%);
 
     &:disabled {
-      background-color: $dark-book-bg-color;
+      background-color: colours_custom.$dark-book-bg-color;
     }
   }
   #search-text-clear-btn {
-    color: $dark-base-disabled-color;
-    background-color: $dark-book-bg-color;
+    color: colours_custom.$dark-base-disabled-color;
+    background-color: colours_custom.$dark-book-bg-color;
   }
 
   #search-button {
-    border-color: $dark-base-disabled-color;
+    border-color: colours_custom.$dark-base-disabled-color;
 
     &:hover {
-      background-color: lighten($dark-base-bg-color, 3%);
-      border-color: $dark-base-color;
+      background-color: color.adjust(colours_custom.$dark-base-bg-color, $lightness: 3%);
+      border-color: colours_custom.$dark-base-color;
     }
   }
   #toggle-theme {
 
     svg {
-      color: $dark-base-color;
+      color: colours_custom.$dark-base-color;
     }
 
     &:hover {
       svg {
-        color: $dark-link-hover-color;
+        color: colours_custom.$dark-link-hover-color;
       }
     }
   }
 
   .category-container {
-    background-color: $dark-base-bg-color;
-    border-color: darken($dark-base-disabled-color, 20%);
+    background-color: colours_custom.$dark-base-bg-color;
+    border-color: color.adjust(colours_custom.$dark-base-disabled-color, $lightness: -20%);
 
     .close-cat-container {
       .close-cat-shortcut {
         &:before {
-          content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#{url-friendly-colour($dark-base-color)}" stroke="none" d="M9.036 7.976a.75.75 0 00-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 101.06 1.06L12 13.06l2.963 2.964a.75.75 0 001.061-1.06L13.061 12l2.963-2.964a.75.75 0 10-1.06-1.06L12 10.939 9.036 7.976z"></path><path fill="#{url-friendly-colour($dark-base-color)}" fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"></path></svg>');
+          content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" stroke="none" d="M9.036 7.976a.75.75 0 00-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 101.06 1.06L12 13.06l2.963 2.964a.75.75 0 001.061-1.06L13.061 12l2.963-2.964a.75.75 0 10-1.06-1.06L12 10.939 9.036 7.976z"></path><path fill="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"></path></svg>');
         }
       }
     }
@@ -486,62 +489,62 @@ footer {
 
   h2.category {
     &:before {
-      content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{url-friendly-colour($dark-base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path> <polyline points="9 6 15 12 9 18"></polyline></svg>');
+      content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path> <polyline points="9 6 15 12 9 18"></polyline></svg>');
     }
 
   }
 
   .is-open h2.category {
     &:before {
-      content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{url-friendly-colour($dark-base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 9 12 15 18 9"></polyline></svg>');
+      content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 9 12 15 18 9"></polyline></svg>');
     }
   }
 
   .books {
     li {
       &:target .title {
-        border-color: $dark-base-disabled-color;
-        color: $dark-link-hover-color;
+        border-color: colours_custom.$dark-base-disabled-color;
+        color: colours_custom.$dark-link-hover-color;
       }
 
       .pub-date {
-        color: $dark-base-disabled-color;
+        color: colours_custom.$dark-base-disabled-color;
       }
 
       .contents {
-        color: $dark-base-color;
+        color: colours_custom.$dark-base-color;
 
         p.cover img {
-          border-color: $dark-base-disabled-color;
+          border-color: colours_custom.$dark-base-disabled-color;
         }
       }
 
       .tags {
-        color: $dark-tags-color;
+        color: colours_custom.$dark-tags-color;
 
         .tag:hover {
-          color: $dark-link-hover-color;
+          color: colours_custom.$dark-link-hover-color;
         }
       }
     }
   }
 
   .book {
-    border-color: $dark-base-disabled-color;
-    background-color: $dark-book-bg-color;
+    border-color: colours_custom.$dark-base-disabled-color;
+    background-color: colours_custom.$dark-book-bg-color;
 
     .file-size {
-      color: $dark-base-disabled-color;
+      color: colours_custom.$dark-base-disabled-color;
     }
   }
 
   footer {
     .meta {
       .git:before {
-        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path fill="#{url-friendly-colour($dark-base-color)}" d="M13 21v2.5l-3-2-3 2V21h-.5A3.5 3.5 0 0 1 3 17.5V5a3 3 0 0 1 3-3h14a1 1 0 0 1 1 1v17a1 1 0 0 1-1 1h-7zm0-2h6v-3H6.5a1.5 1.5 0 0 0 0 3H7v-2h6v2zm6-5V4H6v10.035A3.53 3.53 0 0 1 6.5 14H19zM7 5h2v2H7V5zm0 3h2v2H7V8zm0 3h2v2H7v-2z"/></svg>');
+        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path fill="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" d="M13 21v2.5l-3-2-3 2V21h-.5A3.5 3.5 0 0 1 3 17.5V5a3 3 0 0 1 3-3h14a1 1 0 0 1 1 1v17a1 1 0 0 1-1 1h-7zm0-2h6v-3H6.5a1.5 1.5 0 0 0 0 3H7v-2h6v2zm6-5V4H6v10.035A3.53 3.53 0 0 1 6.5 14H19zM7 5h2v2H7V5zm0 3h2v2H7V8zm0 3h2v2H7v-2z"/></svg>');
       }
       .ci-run:before {
-        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{url-friendly-colour($dark-base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path><path d="M10 9v6l5 -3z"></path></svg>');
+        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="#{colours.url-friendly-colour(colours_custom.$dark-base-color)}" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path><path d="M10 9v6l5 -3z"></path></svg>');
       }
     }
   }
@@ -553,7 +556,7 @@ body.nonkindle {
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
-  background-color: grayscale(darken($base-bg-color, 3%));
+  background-color: color.grayscale(color.adjust(colours.$base-bg-color, $lightness: -3%));
 
   .not-for-kindle {
     display: unset;
@@ -571,12 +574,12 @@ body.nonkindle {
     a.reader {
       margin-left: 0.45rem;
       padding-left: 4pt;
-      border-left: solid 1px $base-disabled-color;
+      border-left: solid 1px colours.$base-disabled-color;
 
-      color: $base-color;
+      color: colours.$base-color;
 
       &:hover {
-        color: $link-hover-color;
+        color: colours.$link-hover-color;
       }
 
       svg {
@@ -656,19 +659,19 @@ body.nonkindle {
 
 [data-theme="dark"] {
   body.nonkindle {
-    background-color: lighten($dark-base-bg-color, 3%);
+    background-color: color.adjust(colours_custom.$dark-base-bg-color, $lightness: 3%);
 
     .category-container {
-      background-color: $dark-base-bg-color;
+      background-color: colours_custom.$dark-base-bg-color;
     }
 
     .book {
       a.reader {
-        color: $dark-base-color;
-        border-color: $dark-base-disabled-color;
+        color: colours_custom.$dark-base-color;
+        border-color: colours_custom.$dark-base-disabled-color;
 
         &:hover {
-          color: $dark-link-hover-color;
+          color: colours_custom.$dark-link-hover-color;
         }
       }
     }
@@ -686,4 +689,4 @@ body.nonkindle {
     animation-timing-function: linear;
 }
 
-@import 'site_custom';
+@include meta.load-css('site_custom');

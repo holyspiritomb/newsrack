@@ -9,24 +9,26 @@ $base-bg-color: #ffffff;
 $base-color: #000000;
 $base-disabled-color: #444956;
 $link-color: #0000e6;
-$link-hover-color: darken($link-color, 20%);
+$link-hover-color: color.adjust($link-color, $lightness: -20%);
 $link-visited-color: #551a8a;
 $book-bg-color: #eaeaea;
 $error-color: #b90404;
-$tags-color: mix($base-disabled-color, $base-color);
+$tags-color: color.mix($base-disabled-color, $base-color);
 
 $dark-base-bg-color: #1e2228;
 $dark-base-color: #e7e9f2;
 $dark-base-disabled-color: #a2a5af;
 $dark-link-color: #5ccaec;
-$dark-link-hover-color: lighten($dark-link-color, 20%);
+$dark-link-hover-color: color.adjust($dark-link-color, $lightness: 20%);
 $dark-link-visited-color: #bbb9ff;
-$dark-book-bg-color: lighten($dark-base-bg-color, 5%);
+$dark-book-bg-color: color.adjust($dark-base-bg-color, $lightness: 5%);
 $dark-error-color: #ff6464;
-$dark-tags-color: mix($dark-base-disabled-color, $dark-base-color);
+$dark-tags-color: color.mix($dark-base-disabled-color, $dark-base-color);
 
-@import 'colours_custom';
+@use "sass:color";
+@use "sass:string";
+@use 'colours_custom';
 
 @function url-friendly-colour($colour) {
-    @return '%23' + str-slice('#{$colour}', 2, -1)
+    @return '%23' + string.slice('#{$colour}', 2, -1)
 }
