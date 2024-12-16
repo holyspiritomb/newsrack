@@ -1,4 +1,8 @@
 // Define your own custom reader viewer css here
+@use "sass:color";
+@use 'colours';
+@use 'colours_custom';
+
 @media (max-width: 991px) {
   #display-container {
     height: 85vh;
@@ -6,4 +10,8 @@
 }
 main.vh-100.container-fluid {
   height: 93vh !important;
+}
+body {
+  background-color: color.adjust(colours.$base-bg-color, $lightness: -3%);
+  color: colours.$base-color;
 }
