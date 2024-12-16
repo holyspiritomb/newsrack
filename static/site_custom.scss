@@ -40,8 +40,8 @@ body.nonkindle {
 [data-theme="dark"] {
   body.nonkindle {
     background-color: color.adjust(colours.$dark-base-bg-color, $lightness: 3%);
-  }
-  .book {
-    background-color: colours.$dark-book-bg-color;
+    .book {
+      background-color: colours.$dark-book-bg-color;
+    }
   }
 }
