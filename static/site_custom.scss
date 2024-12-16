@@ -25,10 +25,15 @@ body {
 
 .book {
   font-family: 'Victor Mono', monospace;
+  background-color: #ffffff;
 }
+
 body.nonkindle {
   background-color: color.adjust(colours.$base-bg-color, $lightness: -3%);
   .category-container {
     background-color: colours.$base-bg-color;
+  }
+  .book {
+    background-color: color.adjust(colours.$base-bg-color, $lightness: 3%);
   }
 }
