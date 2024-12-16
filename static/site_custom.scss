@@ -1,7 +1,11 @@
 // Define your own custom site css here
 //
+@use "sass:color";
+@use 'colours';
+
 body {
   font-family: 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  background-color: #ffffff;
 }
 
 .books {
@@ -17,4 +21,7 @@ body {
 
 .book {
   font-family: 'Victor Mono', monospace;
+}
+body.nonkindle {
+  background-color: color.adjust(colours.$base-bg-color, $lightness: -3%);
 }
