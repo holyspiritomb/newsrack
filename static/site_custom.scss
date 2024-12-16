@@ -37,3 +37,11 @@ body.nonkindle {
     background-color: color.adjust(colours.$base-bg-color, $lightness: 3%);
   }
 }
+[data-theme="dark"] {
+  body.nonkindle {
+    background-color: color.adjust(colours.$dark-base-bg-color, $lightness: 3%);
+  }
+  .book {
+    background-color: colours.$dark-book-bg-color;
+  }
+}
