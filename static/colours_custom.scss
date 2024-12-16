@@ -1,6 +1,18 @@
 // Define your own custom colours css here
 @use "sass:color";
 @use 'colours';
+
+// colours.$base-bg-color: #faf4ed;
+colours.$base-bg-color: #f4edfa;
+colours.$base-color: #575279;
+colours.$base-disabled-color: #9893a5;
+colours.$link-color:  #eb6fa2;
+colours.$link-hover-color: color.adjust(colours.$link-color, colours.$lightness: -20%);
+colours.$link-visited-color:#907aa9;
+colours.$book-bg-color: #f4edfa;
+colours.$error-color: #ff6464;
+colours.$tags-color: color.mix(colours.$base-disabled-color, colours.$base-color);
+
 colours.$dark-base-bg-color: #1f1d2e;
 colours.$dark-base-color: #e0def4;
 colours.$dark-base-disabled-color: #6e6a86;
@@ -10,13 +22,3 @@ colours.$dark-link-visited-color: #c4a7e7;
 colours.$dark-book-bg-color: #26233a;
 colours.$dark-error-color: #eb6f92;
 colours.$dark-tags-color: #908caa;
-
-colours.$base-bg-color: #faf4ed;
-colours.$base-color: #575279;
-colours.$base-disabled-color: #9893a5;
-colours.$link-color: #286983;
-colours.$link-hover-color: #56949f;
-colours.$link-visited-color:#907aa9 ;
-colours.$book-bg-color: #faf4ed;
-colours.$error-color: #b90404;
-colours.$tags-color: #575279;
