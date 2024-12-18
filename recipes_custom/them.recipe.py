@@ -61,12 +61,20 @@ class Them(BasicNewsrackRecipe, BasicNewsRecipe):
     ]
 
     extra_css = '''
-        #article_date{font-size:0.8rem;text-transform:uppercase;}
-        #article_desc{font-style:italic;font-size:1.2rem}
+        #article_headmeta,.rubric__link,.rubric__name,.byline__name-link{
+            font-size:0.8rem;text-transform:uppercase;
+        }
+        h1 + div[class*="BaseText-"],#article_desc, [class*="ContentHeaderDek"]{
+            font-style:italic;font-size:1.2rem;padding-bottom:1.2rem;padding-top:1.2rem;
+        }
         p{font-size:1rem}
         img {max-width: 98vw;}
-        .image-caption,.kg-card-hascaption>div{
-                font-size:0.8rem;font-style:italic;padding-top:1rem;padding-bottom:1rem;}
+        .caption,.image-caption,.kg-card-hascaption>div,.caption__credit{
+            font-size:0.8rem;font-style:italic;padding-top:1rem;padding-bottom:1rem;
+        }
+        .caption__credit:before{
+            content:"Image Credit: "; display: inline;
+        }
         #article_source > a{word-wrap: break-word}
         '''
 
@@ -92,8 +100,15 @@ class Them(BasicNewsrackRecipe, BasicNewsRecipe):
         hr = soup.new_tag("hr")
         soup.append(hr)
         soup.append(source_link_div)
-        date_el = soup.find(attrs={"id": "article_date"})
-        date_el.string = f"{article.author} | {datestring}"
+        date_el = soup.find(attrs={"id": "article_headmeta"})
+        # date_el.append(" | ")
+        # date_el.append(article.author)
+        date_el.append(datestring)
+        date_el.append(" | ")
+        headerlink = soup.new_tag("a")
+        headerlink["href"] = article.url
+        headerlink.append("View on website")
+        date_el.append(headerlink)
         # desc_el = soup.find(attrs={"id": "article_desc"})
         # desc_el.string = article.summary
         # article_img = soup.find("img", attrs={"alt": True})
@@ -152,13 +167,24 @@ class Them(BasicNewsrackRecipe, BasicNewsRecipe):
         return new_feeds
 
     def preprocess_html(self, soup):
-        headline = soup.find("h1")
-        a_date = soup.new_tag("div")
+        header = soup.find("div", attrs={"data-testid": "ContentHeaderRubric"})
+        categ_link = header.find("a", attrs={"class": "rubric__link"})
+        author_link = soup.find("a", attrs={"class": "byline__name-link"})
+        a_date = soup.new_tag("span")
         # a_desc = soup.new_tag("h3")
         # a_desc["id"] = "article_desc"
-        a_date["id"] = "article_date"
-        # headline.insert_after(a_desc)
-        headline.insert_after(a_date)
+        a_date["id"] = "article_headmeta"
+        a_date.append(categ_link)
+        a_date.append(" | ")
+        if author_link:
+            a_date.append(author_link)
+            a_date.append(" | ")
+            bylinewrapper = soup.find(attrs={"data-testid": "BylinesWrapper"})
+            bylinewrapper.extract()
+        timetag = soup.find("time", attrs={"data-testid": "ContentHeaderPublishDate"})
+        if timetag:
+            timetag.extract()
+        header.insert_before(a_date)
         return soup
 
     def postprocess_html(self, soup, _):
