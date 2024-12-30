@@ -14,7 +14,7 @@ sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 
 from calibre import browser
-from calibre.web.feeds.news import BasicNewsRecipe, classes
+from calibre.web.feeds.news import BasicNewsRecipe, classes, prefixed_classes
 from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.utils.date import datetime
 
@@ -80,6 +80,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         dict(name='button', attrs={'aria-label': 'Save'}),
         dict(name=['meta', 'link', 'aside']),
         dict(id=['sharing', 'social', 'article-tags', 'sidebar']),
+        # prefixed_classes('BylinePreamble- byline__preamble')
     ]
     keep_only_tags = [
         dict(name='article', attrs={'class': 'article main-content'}),
@@ -184,10 +185,15 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         a_soup = soup.find(class_='article main-content')
         if a_soup:
             # self.log(a_soup.prettify())
+            cat_time = soup.new_tag("div")
+            cat_time["id"] = "categ_date"
+
             headline = a_soup.find(attrs={'data-testid': "ContentHeaderHed"})
             subhead = a_soup.find(attrs={'data-testid': 'ContentHeaderAccreditation'})
             category = a_soup.find("a", class_='rubric__link')
             category["class"] = 'rubric__link'
+            cat_time.append(category)
+            cat_time.append(" | ")
             if subhead:
                 subhead["id"] = "subhead"
                 subhead.name = "h2"
@@ -195,9 +201,11 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
                 subhead.clear()
                 subhead.append(subhead_text)
 
-            author = a_soup.find(attrs={'itemprop': 'author'})
+            author = a_soup.find(attrs={'class': 'byline__name-link'})
             if author:
-                author["class"] = 'byline bylines__byline'
+                author.extract()
+                cat_time.append(author)
+                cat_time.append(" | ")
 
             lead_pic = a_soup.find("div", class_='lead-asset')
             if lead_pic:
@@ -209,12 +217,6 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
 
             a_date = a_soup.find("time")
             a_date["id"] = "article_date"
-            # self.log.warn(headline, "\n", a_date)
-
-            cat_time = soup.new_tag("div")
-            cat_time["id"] = "categ_date"
-            cat_time.append(category)
-            cat_time.append(" | ")
             cat_time.append(a_date)
             cat_time.append(" | ")
             srclink_span = soup.new_tag("span")
@@ -229,8 +231,6 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
             new_soup = soup.new_tag("div")
             new_soup.append(cat_time)
             new_soup.append(headline)
-            if author:
-                new_soup.append(author)
 
             if subhead:
                 new_soup.append(subhead)
