@@ -86,7 +86,7 @@ recipes: List[Recipe] = [
         slug="972",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Jewish",
+        category="News",
         tags=["news", "jewish", "commentary", "politics", "editorial"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/972-logo.png"),
@@ -157,7 +157,7 @@ recipes: List[Recipe] = [
         slug="assigned-media",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Blogs",
+        category="News",
         tags=["lgbtq", "trans", "news"],
         overwrite_cover=True,
         cover_options=CustomCoverOptions(
@@ -314,22 +314,22 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Live_Science_logo.svg/1024px-Live_Science_logo.svg.png"
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="maxfun-pods",
-        slug="maxfun-pods",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Podcasts",
-        tags=["science"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://maximumfun.org/wp-content/uploads/2019/02/cropped-favicon-512x512.png"
-        ),
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=12, drift=0
-        ),
-    ),
     # CustomOptionsRecipe(
+    #     recipe="maxfun-pods",
+    #     slug="maxfun-pods",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Podcasts",
+    #     tags=["science"],
+    #     overwrite_cover=True,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://maximumfun.org/wp-content/uploads/2019/02/cropped-favicon-512x512.png"
+    #     ),
+    #     enable_on=lambda recipe: every_x_hours(
+    #         last_run=recipe.last_run, hours=12, drift=0
+    #     ),
+    # ),
+    # # CustomOptionsRecipe(
     #     recipe="mother-jones",
     #     slug="mother-jones",
     #     src_ext="mobi",
