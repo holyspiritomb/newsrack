@@ -33,7 +33,7 @@ class Them(BasicNewsrackRecipe, BasicNewsRecipe):
     __author__ = 'holyspiritomb'
     category = 'rss'
     oldest_article = 14
-    max_articles_per_feed = 40
+    max_articles_per_feed = 100
     remove_empty_feeds = False
     resolve_internal_links = False
     use_embedded_content = False
@@ -154,7 +154,7 @@ class Them(BasicNewsrackRecipe, BasicNewsRecipe):
                     sectioned_feeds[section].append(article)
         new_feeds = []
         for key in sectioned_feeds.keys():
-            if "Astrology" in key or "Celebrity" in key:
+            if "Astrology" in key or "Celebrity" in key or "TV" in key:
                 self.log("skipping articles in:", key)
                 continue
             else:
@@ -169,6 +169,9 @@ class Them(BasicNewsrackRecipe, BasicNewsRecipe):
     def preprocess_html(self, soup):
         header = soup.find("div", attrs={"data-testid": "ContentHeaderRubric"})
         categ_link = header.find("a", attrs={"class": "rubric__link"})
+        categ_text = self.tag_to_string(categ_link)
+        if "MOVIES" in categ_text.upper() or "SEX" in categ_text.upper():
+            self.abort_article("Not interested in this category")
         author_link = soup.find("a", attrs={"class": "byline__name-link"})
         a_date = soup.new_tag("span")
         # a_desc = soup.new_tag("h3")

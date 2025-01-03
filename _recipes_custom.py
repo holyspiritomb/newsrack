@@ -572,8 +572,8 @@ recipes: List[Recipe] = [
         category="News",
         overwrite_cover=True,
         tags=["trans", "lgbtq", "news"],
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=2, drift=0
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=3, drift=0
         ),
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Them_wordmark.svg/1024px-Them_wordmark.svg.png"
