@@ -105,8 +105,8 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/advocate.png"
         ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=12, drift=0
         ),
     ),
     CustomOptionsRecipe(
@@ -272,7 +272,9 @@ recipes: List[Recipe] = [
             logo_path_or_url="recipes_custom/logos/life.png"
         ),
         # enable_on=True,
-        enable_on=onlyon_weekdays([0, 2], -4),
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=12, drift=0
+        ),
         tags=["religion", "jewish"],
     ),
     # CustomOptionsRecipe(
@@ -499,7 +501,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="recipes_custom/logos/science-daily.png"
         ),
         enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=12, drift=0
+            last_run=recipe.last_run, hours=6, drift=0
         ),
     ),
     CustomMonthlyRecipe(
