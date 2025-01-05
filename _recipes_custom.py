@@ -105,9 +105,10 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/advocate.png"
         ),
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=12, drift=0
-        ),
+        enable_on=False,
+        # enable_on=lambda recipe: every_x_hours(
+        #     last_run=recipe.last_run, hours=12, drift=0
+        # ),
     ),
     CustomOptionsRecipe(
         recipe="aiweirdness",
