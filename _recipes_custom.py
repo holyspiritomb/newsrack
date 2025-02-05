@@ -620,10 +620,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         category="Science",
         tags=["science", "tech", "daily"],
-        # enable_on=onlyat_hours(list(range(10, 18))),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        enable_on=True,
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),

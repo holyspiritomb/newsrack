@@ -100,6 +100,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
 
     # https://www.wired.com/about/rss-feeds/
     feeds = [
+        (u'Top Stories', u'https://www.wired.com/feed/rss'),
         (u'AI', u'https://www.wired.com/feed/tag/ai/latest/rss'),
         (u'Business', u'https://www.wired.com/feed/category/business/latest/rss'),
         (u'Culture', u'https://www.wired.com/feed/category/culture/latest/rss'),
@@ -115,9 +116,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
             u'Backchannel',
             u'https://www.wired.com/feed/category/backchannel/latest/rss'
         ),
-        (u'Top Stories', u'https://www.wired.com/feed/rss'),
         (u'WIRED Guides', u'https://www.wired.com/feed/tag/wired-guide/latest/rss'),
-        #    (u'Photo', u'https://www.wired.com/feed/category/photo/latest/rss'),
     ]
 
     def parse_feeds(self):
