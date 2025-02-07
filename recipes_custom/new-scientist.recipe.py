@@ -100,6 +100,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                                  div[data-method='caption-shortcode'] ~ div div > p:first-of-type{font-size: 1.2rem;font-weight:bold}
                                  div[data-method='caption-shortcode'] img{max-width:95%;margin-left:auto;margin-right:auto;}
                                  #article_meta{text-transform:uppercase;font-size:0.8rem}
+                                 [data-paywall="paywall"]::after {content: " (paid)"}
                                 """
 
     keep_only_tags = [
@@ -140,9 +141,10 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
             self.log.warn("Paywall encountered.")
             # article_body.clear()
             # article_body.append("This article is paywalled.")
-            # if headline:
-            #     headline["data-paywall"] = "paywall"
-            self.abort_article("Aborting paywalled article.")
+            if headline:
+                headline["data-paywall"] = "paywall"
+                # headline.append(" [paid]")
+            # self.abort_article("Aborting paywalled article.")
         else:
             if headline:
                 headline["data-paywall"] = "free"
