@@ -91,7 +91,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/972-logo.png"),
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
+            last_run=recipe.last_run, days=2, drift=0
         ),
     ),
     CustomOptionsRecipe(
@@ -188,7 +188,7 @@ recipes: List[Recipe] = [
         slug="erin",
         src_ext="mobi",
         target_ext=["epub"],
-        category="Blogs",
+        category="News",
         overwrite_cover=True,
         tags=["news", "trans", "lgbtq"],
         cover_options=CustomCoverOptions(
@@ -398,7 +398,7 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://assets.nautil.us/13891_bb83b72bf545e376f3ff9443bda39421.png"
         ),
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=3, drift=60
+            last_run=recipe.last_run, days=3, drift=0
         ),
     ),
     # CustomOptionsRecipe(
@@ -426,19 +426,19 @@ recipes: List[Recipe] = [
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png"
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="newvoices",
-        slug="newvoices",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Jewish",
-        tags=["news", "arts", "jewish", "commentary", "editorial"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/newvoices-logo.png"),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=3, drift=0
-        ),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="newvoices",
+    #     slug="newvoices",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Jewish",
+    #     tags=["news", "arts", "jewish", "commentary", "editorial"],
+    #     overwrite_cover=True,
+    #     cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/newvoices-logo.png"),
+    #     enable_on=lambda recipe: every_x_days(
+    #         last_run=recipe.last_run, days=3, drift=0
+    #     ),
+    # ),
     CustomOptionsRecipe(
         recipe="npr",
         slug="npr",
@@ -501,9 +501,7 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/science-daily.png"
         ),
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=6, drift=0
-        ),
+        enable_on=True,
     ),
     CustomMonthlyRecipe(
         recipe="sci-am",
@@ -575,9 +573,7 @@ recipes: List[Recipe] = [
         category="News",
         overwrite_cover=True,
         tags=["trans", "lgbtq", "news"],
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=3, drift=0
-        ),
+        enable_on=True,
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Them_wordmark.svg/1024px-Them_wordmark.svg.png"
         ),
