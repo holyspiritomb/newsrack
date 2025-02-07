@@ -134,13 +134,13 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
         if _issue_url:
             soup = self.index_to_soup(_issue_url)
         else:
-            soup = self.index_to_soup("https://www.poetryfoundation.org/poetrymagazine")
+            soup = self.index_to_soup("https://poetryfoundation.org/poetrymagazine")
             current_issue = soup.select("a[href*='issue']")
             # self.log(current_issue[0])
             if not current_issue:
                 self.abort_recipe_processing("Unable to find latest issue")
             current_issue = current_issue[0]
-            current_issue_link = "https://www.poetryfoundation.com" + current_issue["href"]
+            current_issue_link = "https://poetryfoundation.com" + current_issue["href"]
             soup = self.index_to_soup(current_issue_link)
         issue_edition = self.tag_to_string(soup.find("h1"))
         # Setting verbose will force a regeneration
@@ -195,7 +195,7 @@ class Poetry(BasicNewsrackRecipe, BasicNewsRecipe):
                     sectioned_feeds[tab_title].append(
                         {
                             "title": self.tag_to_string(link),
-                            "url": "https://www.poetryfoundation.com" + link["href"],
+                            "url": "https://poetryfoundation.com" + link["href"],
                             "author": author,
                             "description": author,
                         }
