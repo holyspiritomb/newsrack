@@ -143,7 +143,6 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
             # article_body.append("This article is paywalled.")
             if headline:
                 headline["data-paywall"] = "paywall"
-                # headline.append(" [paid]")
             # self.abort_article("Aborting paywalled article.")
         else:
             if headline:
@@ -302,6 +301,10 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
             if len(auths) > 1:
                 for x in range(1, len(auths) - 1):
                     article.author = article.author + " & " + auths[x]
+        headline = soup.find(attrs={"class": "ArticleHeader__Heading"})
+        if headline:
+            if headline["data-paywall"] == "paywall":
+                article.title = article.title + " (paid)"
         article.title = format_title(article.title, article.utctime)
         headline = soup.find("h1")
         article.description = headline["data-desc"]
