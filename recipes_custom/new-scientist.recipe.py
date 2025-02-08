@@ -58,7 +58,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     publisher = 'Reed Business Information Ltd.'
     category = 'science news, science articles, science jobs, drugs, cancer, depression, computer software'
     oldest_article = 7
-    max_articles_per_feed = 15
+    max_articles_per_feed = 20
     no_stylesheets = True
     use_embedded_content = False
     encoding = 'utf-8'
@@ -86,21 +86,27 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                                  h4 > a + span{font-weight:normal; text-transform: uppercase;font-family:sans-serif}
                                  h1 + p{font-size:1.5rem;font-style:italic;}
                                  h1 + p + p {font-size:1rem;border-bottom:1px dashed black;padding-bottom:0.7rem}
-                                 div[data-method='caption-shortcode'] p{font-size: 0.8rem; line-height:0.7rem;font-style:italic}
-                                 div[data-method='caption-shortcode'] p:last-of-type{border-bottom:1px dashed black; padding-bottom:0.5rem}
+                                 .ArticleImageCaption__CaptionWrapper p{font-size: 0.8rem; line-height:0.7rem;font-style:italic}
+                                 .ArticleImageCaption__CaptionWrapper p:last-of-type{border-bottom:1px dashed black; padding-bottom:0.5rem}
                                  h4{font-size: 0.8rem;}
-                                 div[data-method='caption-shortcode'] ~ p{font-size:1rem;text-align:left}
+                                 .ArticleImage ~ p{font-size:1rem;text-align:left}
                                  .quotebx{font-size: x-large; font-weight: bold; margin-right: 2em; margin-left: 2em}
                                  .article-title,h2,h3{font-family: "Lato Black", sans-serif}
                                  .strap{font-family: "Lato Light", sans-serif}
                                  .quote{font-family: "Lato Black", sans-serif}
                                  .box-out{font-family: "Lato Regular", sans-serif}
                                  .wp-caption-text{font-family: "Lato Bold", sans-serif; font-size:x-small;}
-                                 div[data-method='caption-shortcode'] ~ div{border-top:1px dashed black;}
                                  div[data-method='caption-shortcode'] ~ div div > p:first-of-type{font-size: 1.2rem;font-weight:bold}
-                                 div[data-method='caption-shortcode'] img{max-width:95%;margin-left:auto;margin-right:auto;}
+                                 .Image__Wrapper img{max-width:95%;margin-left:auto;margin-right:auto;}
                                  #article_meta{text-transform:uppercase;font-size:0.8rem}
                                  [data-paywall="paywall"]::after {content: " (paid)"}
+                                 .ArticleImage .ArticleImageCaption {
+                                 font-size: 0.8rem;
+                                 }
+                                 .ArticleImage .ArticleImageCaption .ArticleImageCaption__Credit {
+                                 font-style: italic
+                                 }
+                                 .JournalReference__TypeHeading{font-size:1.2rem}
                                 """
 
     keep_only_tags = [
@@ -133,17 +139,24 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
         if soup.find('meta', {'property': 'og:type', 'content': 'video'}) or soup.find("div", attrs={"class": "ArticleVideo"}):
-            self.abort_article("Video article aborted.")
-        # header = soup.find(attrs={"class": "ArticleHeader"})
+            for iframe in soup.find_all("iframe", {'src': True}):
+                if "youtube" in iframe["src"]:
+                    fsrc = iframe["src"]
+                    fsrc_split = fsrc.split("?")[0]
+                    href = fsrc_split.replace("embed/", "watch?v=")
+                    link = soup.new_tag("a")
+                    link["href"] = href
+                    link.append(href)
+                    linkdiv = soup.new_tag("p")
+                    linkdiv["class"] = "youtube_link"
+                    linkdiv.append("Link to video: ")
+                    linkdiv.append(link)
+                    iframe.insert_after(linkdiv)
+                    iframe.extract()
         headline = soup.find(attrs={"class": "ArticleHeader__Heading"})
-        # article_body = soup.find(attrs={"class": "ArticleContent"})
         if soup.find(name="meta", attrs={"name": "ob_page_type", "content": "paywall"}):
-            self.log.warn("Paywall encountered.")
-            # article_body.clear()
-            # article_body.append("This article is paywalled.")
             if headline:
                 headline["data-paywall"] = "paywall"
-            # self.abort_article("Aborting paywalled article.")
         else:
             if headline:
                 headline["data-paywall"] = "free"
@@ -165,25 +178,36 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
 
     def preprocess_html(self, soup):
         header = soup.find("section", attrs={"class": "ArticleHeader"})
-        # headline = soup.find(attrs={"class": "ArticleHeader__Heading"})
+        headline = soup.find(attrs={"class": "ArticleHeader__Heading"})
         # article_body = soup.find(attrs={"class": "ArticleContent"})
-        categ = header.find("a", attrs={"class": "ArticleHeader__CategoryLink"})
+        metadiv = soup.new_tag("div")
+        metadiv["id"] = "article_meta"
+        for categ in header.find_all("a", attrs={"class": "ArticleHeader__CategoryLink"}):
+            categ.extract()
+            metadiv.append(categ)
+            if categ.string == "Analysis" or categ.string == "Leader":
+                metadiv.append(": ")
+            else:
+                metadiv.append(" ")
+        for i in header.find_all(attrs={"class": "ArticleHeader__Category"}):
+            i.extract()
+        metadiv.append(" | ")
         article_date = header.find("p", attrs={"class": "ArticleHeader__Date"})
         article_date.name = "span"
         date_elem = article_date.extract()
-        categ.insert_after(date_elem)
-        categ.insert_after(" | ")
+        metadiv.append(date_elem)
+        headline.insert_before(metadiv)
         for img in soup.findAll('img', attrs={'srcset': True}):
             # img['src'] = img['srcset'].split(',')[-1].strip().split()[0].partition('?')[0]
             # self.log(img['alt'])
             del img['srcset']
             del img['data-src']
             del img['sizes']
-            alt_txt = img["alt"]
-            if alt_txt:
-                alt_div = soup.new_tag("div", attrs={"class": "img-alt-text"})
-                alt_div.append(alt_txt)
-                img.insert_after(alt_div)
+            # alt_txt = img["alt"]
+            # if alt_txt:
+            #     alt_div = soup.new_tag("div", attrs={"class": "img-alt-text"})
+            #     alt_div.append(alt_txt)
+            #     img.insert_after(alt_div)
         topics = soup.find(attrs={"class": "ArticleTopics"})
         if topics:
             hr = soup.new_tag("hr")
@@ -282,8 +306,7 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         nyc = ZoneInfo("America/New_York")
         nyc_dt = datetime.astimezone(article.utctime, nyc)
         datestring = datetime.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
-        header_category = soup.find(attrs={"class": "ArticleHeader__Category"})
-        header_category["id"] = "article_meta"
+        header_category = soup.find(attrs={"id": "article_meta"})
         article_date = header_category.find(attrs={"class": "ArticleHeader__Date"})
         article_date.string = datestring
         meta_src = soup.new_tag("a")
