@@ -16,7 +16,7 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
     # most of this is borrowed from ping's lithub recipe
     title = _name
     language = 'en'
-    description = u'News and discussion on trans legislation and life. https://www.erininthemorning.com/feed'
+    description = u'News and discussion on trans legislation and life. https://www.erininthemorning.com'
     __author__ = 'holyspiritomb'
     category = 'trans, news, rss'
     oldest_article = 14
