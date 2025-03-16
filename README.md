@@ -1,4 +1,5 @@
-[![Build](https://github.com/holyspiritomb/newsrack/actions/workflows/build.yml/badge.svg)](https://github.com/holyspiritomb/newsrack/actions/workflows/build.yml)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/holyspiritomb/newsrack/build.yml?branch=spiritomb&style=for-the-badge&logo=python&logoSize=auto)
+
 
 # newsrack
 
