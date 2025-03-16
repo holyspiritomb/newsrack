@@ -153,7 +153,15 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                     linkdiv.append(link)
                     iframe.insert_after(linkdiv)
                     iframe.extract()
+        # <meta name="thumbnail" content="https://images.newscientist.com/wp-content/uploads/2025/02/25113208/SEI_241378670.jpg">
         headline = soup.find(attrs={"class": "ArticleHeader__Heading"})
+        meta_thumb = soup.find("meta", attrs={"name": "thumbnail"})
+        if meta_thumb:
+            self.log(meta_thumb["content"])
+            thumb = soup.new_tag("img")
+            thumb["src"] = meta_thumb["content"]
+            thumb["id"] = "thumbnail_from_meta_tag"
+            headline.insert_after(thumb)
         if soup.find(name="meta", attrs={"name": "ob_page_type", "content": "paywall"}):
             if headline:
                 headline["data-paywall"] = "paywall"
@@ -331,9 +339,11 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         article.title = format_title(article.title, article.utctime)
         headline = soup.find("h1")
         article.description = headline["data-desc"]
-        toc_img = soup.find("img", attrs={"class": "image"})
+        # toc_img = soup.find("img", attrs={"class": "image"})
+        toc_img = soup.find("img", attrs={"id": "thumbnail_from_meta_tag"})
         if toc_img:
             self.add_toc_thumbnail(article, toc_img['src'])
+            toc_img.extract()
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
