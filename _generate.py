@@ -982,6 +982,12 @@ def run(
         site_js = f"var RECIPE_DESCRIPTIONS = {json.dumps(recipe_descriptions)};"
         site_js += f"var RECIPE_COVERS = {json.dumps(recipe_covers)};"
         site_js += f_site_js.read()
+        print(f_in)
+        print(listing)
+        print(f_site_css)
+        print(site_js)
+        print(f_theme_js)
+        print(publish_site)
         html_output = f_in.read().format(
             listing=listing,
             css=f_site_css.read(),

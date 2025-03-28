@@ -23,11 +23,15 @@ mkdir -p public meta \
 && cp -p static/*.svg public/ \
 && cp -p static/*.ttf public/ \
 && cp -p static/opds.xsl public/ \
+&& echo "asset files copied to public/" \
 && npx babel static/site.js --out-file static/site.compiled.js \
 && npx babel static/reader.js --out-file static/reader.compiled.js \
 && npx babel static/theme.js --out-file static/theme.compiled.js \
+&& echo "babel steps completed" \
 && cp -p static/theme.compiled.js public/theme.min.js \
+&& echo "theme.min.js copied to public/" \
 && npx sass -s compressed --no-source-map static/site.scss:static/site.css static/reader.scss:static/reader.css static/viewer-theme-light.scss:public/viewer-theme-light.css static/viewer-theme-dark.scss:public/viewer-theme-dark.css static/opds.scss:public/opds.css \
+&& echo "sass compiled and compressed" \
 && python3 _generate.py "$CI_PAGES_URL" "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/" "$GITHUB_SHA" "https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}" "${GITHUB_RUN_ID}" "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
 && echo "_generate.py done" \
 && node build-index.js < public/lunr_docs.json > public/lunr.json \
