@@ -4,7 +4,7 @@
 @use 'colours';
 
 body {
-  font-family: 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  font-family: 'InterVariable', 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
   background-color: #ffffff;
 }
 
@@ -15,7 +15,7 @@ body {
 .books {
   li {
     .title {
-      font-family: 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+      font-family: 'InterVariable', 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
     }
     .tags {
       font-family: 'Victor Mono', monospace;
@@ -28,7 +28,7 @@ body {
   background-color: #ffffff;
 }
 
-body.nonkindle {
+body.nonkindle:not(.kobotouch) {
   background-color: color.adjust(colours.$base-bg-color, $lightness: -3%);
   .category-container {
     background-color: colours.$base-bg-color;
