@@ -28,7 +28,7 @@ body {
   background-color: #ffffff;
 }
 
-body.nonkindle:not(.kobotouch) {
+body.nonkindle {
   background-color: color.adjust(colours.$base-bg-color, $lightness: -3%);
   .category-container {
     background-color: colours.$base-bg-color;
