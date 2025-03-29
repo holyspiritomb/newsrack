@@ -8,5 +8,9 @@
     "lunr": "^2.3.9",
     "sass": "^1.60.0",
     "terser": "^5.16.6"
+  },
+  "dependencies": {
+    "inter-ui": "^4.1.0",
+    "victormono": "^1.5.6"
   }
 }
