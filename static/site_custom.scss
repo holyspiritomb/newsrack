@@ -3,8 +3,12 @@
 @use "sass:color";
 @use 'colours';
 
+$inter-features:'cv01' on, 'cv02' on, 'cv03' on, 'cv04' on, 'cv05' on, 'cv07' on, 'cv08' on, 'cv09' on, 'cv10' on;
+$victor-features:'ss06' on, 'ss01' off, 'ss07' on;
+
 body {
   font-family: 'InterVariable', 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  font-feature-settings: $inter-features;
   background-color: #ffffff;
 }
 
@@ -16,15 +20,18 @@ body {
   li {
     .title {
       font-family: 'InterVariable', 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+      font-feature-settings: $inter-features;
     }
     .tags {
       font-family: 'Victor Mono', monospace;
+      font-feature-settings: $victor-features;
     }
   }
 }
 
 .book {
   font-family: 'Victor Mono', monospace;
+  font-feature-settings: $victor-features;
   background-color: #ffffff;
 }
 
