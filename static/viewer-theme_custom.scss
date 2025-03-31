@@ -31,7 +31,7 @@
     font-style: italic;
 }
 .viewer-theme {
-  font-family: 'InterVariable', 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  font-family: InterVariable, 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
   font-feature-settings: site_custom.$inter-features;
   hr + p > span {
       line-height: normal;

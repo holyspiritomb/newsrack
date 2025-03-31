@@ -2,7 +2,7 @@
 @use "sass:color";
 @use 'colours';
 @use 'colours_custom';
-@use 'site_custom' as site;
+@use 'site_custom';
 
 @media (max-width: 991px) {
   #display-container {
@@ -15,6 +15,9 @@ main.vh-100.container-fluid {
 body {
   background-color: color.adjust(colours.$base-bg-color, $lightness: -3%);
   font-family: 'InterVariable', 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
-  font-feature-settings: site.$inter-features;
+  font-feature-settings: site_custom.$inter-features;
   color: colours.$base-color;
+}
+#epub-title {
+  font-family: 'InterVariable', 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
 }
