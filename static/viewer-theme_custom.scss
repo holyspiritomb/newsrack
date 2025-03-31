@@ -1,5 +1,5 @@
 // Define your own custom viewer theme css here
-@use 'site_custom' as 'site';
+@use 'site_custom';
 
 @font-face {
     font-display: swap;
@@ -32,7 +32,7 @@
 }
 .viewer-theme {
   font-family: 'InterVariable', 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
-  font-feature-settings: site.$inter-features;
+  font-feature-settings: site_custom.$inter-features;
   hr + p > span {
       line-height: normal;
   }
