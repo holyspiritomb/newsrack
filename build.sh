@@ -25,10 +25,12 @@ mkdir -p public/variable public/woff public/woff2 meta \
 && cp -p static/opds.xsl public/ \
 && echo "asset files copied to public/" \
 && cp -p node_modules/inter-ui/variable/*.woff2 public/variable/ \
+&& cp -p node_modules/inter-ui/inter-variable.css static/ \
 && cp -p node_modules/inter-ui/inter-variable.css public/ \
 && cp -p node_modules/victormono/dist/woff/*.woff public/woff/ \
 && cp -p node_modules/victormono/dist/woff2/*.woff2 public/woff2/ \
 && cp -p node_modules/victormono/dist/index.css public/victor.css \
+&& cp -p node_modules/victormono/dist/index.css static/victor.css \
 && echo "font asset files copied from node_modules to public/" \
 && npx babel static/site.js --out-file static/site.compiled.js \
 && npx babel static/reader.js --out-file static/reader.compiled.js \
