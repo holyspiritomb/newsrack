@@ -4,7 +4,7 @@ from typing import List
 from _recipe_utils import Recipe, CoverOptions, onlyon_weekdays, onlyon_days, onlyat_hours, last_n_days_of_month, first_n_days_of_month, every_x_days, every_x_hours, get_local_now
 
 # Define the categories display order, optional
-categories_sort: List[str] = ["Science", "Blogs", "Arts & Culture", "News", "Magazines", "Politics", "Podcasts", "Jewish"]
+categories_sort: List[str] = ["Science", "Jewish", "News", "Blogs", "Arts & Culture", "Magazines", "Politics", "Podcasts"]
 
 # Define your custom recipes list here
 # Example: https://github.com/ping/newsrack-fork-test/blob/custom/_recipes_custom.py
@@ -94,22 +94,22 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=2, drift=0
         ),
     ),
-    CustomOptionsRecipe(
-        recipe="advocate",
-        slug="advocate",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="News",
-        tags=["lgbtq", "news"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/advocate.png"
-        ),
-        enable_on=False,
-        # enable_on=lambda recipe: every_x_hours(
-        #     last_run=recipe.last_run, hours=12, drift=0
-        # ),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="advocate",
+    #     slug="advocate",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="News",
+    #     tags=["lgbtq", "news"],
+    #     overwrite_cover=True,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="recipes_custom/logos/advocate.png"
+    #     ),
+    #     enable_on=False,
+    #     enable_on=lambda recipe: every_x_hours(
+    #         last_run=recipe.last_run, hours=12, drift=0
+    #     ),
+    # ),
     CustomOptionsRecipe(
         recipe="aiweirdness",
         slug="aiweirdness",
