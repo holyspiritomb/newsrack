@@ -79,11 +79,11 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
         'series_index': ''
     }
     extra_css = """
-                                 body{font-family: "Lato", "Roboto", sans-serif}
+                                 body{font-family: InterVariable, "Lato", "Roboto", sans-serif}
                                  img{margin-bottom: 0.8em; display: block}
                                  h1{font-size:1.75rem;text-align:left}
                                  #url_div{padding-top:5px; font-size:0.8em;}
-                                 h4 > a + span{font-weight:normal; text-transform: uppercase;font-family:sans-serif}
+                                 h4 > a + span{font-weight:normal; text-transform: uppercase;font-family:InterVariable, sans-serif}
                                  h1 + p{font-size:1.5rem;font-style:italic;}
                                  h1 + p + p {font-size:1rem;border-bottom:1px dashed black;padding-bottom:0.7rem}
                                  .ArticleImageCaption__CaptionWrapper p{font-size: 0.8rem; line-height:0.7rem;font-style:italic}
@@ -91,11 +91,11 @@ class NewScientist(BasicNewsRecipe, BasicNewsrackRecipe):
                                  h4{font-size: 0.8rem;}
                                  .ArticleImage ~ p{font-size:1rem;text-align:left}
                                  .quotebx{font-size: x-large; font-weight: bold; margin-right: 2em; margin-left: 2em}
-                                 .article-title,h2,h3{font-family: "Lato Black", sans-serif}
-                                 .strap{font-family: "Lato Light", sans-serif}
-                                 .quote{font-family: "Lato Black", sans-serif}
-                                 .box-out{font-family: "Lato Regular", sans-serif}
-                                 .wp-caption-text{font-family: "Lato Bold", sans-serif; font-size:x-small;}
+                                 .article-title,h2,h3{font-family: InterVariable, "Lato Black", sans-serif}
+                                 .strap{font-family: InterVariable, "Lato Light", sans-serif}
+                                 .quote{font-family: InterVariable, "Lato Black", sans-serif}
+                                 .box-out{font-family: InterVariable, "Lato Regular", sans-serif}
+                                 .wp-caption-text{font-family: InterVariable, "Lato Bold", sans-serif; font-size:x-small;}
                                  div[data-method='caption-shortcode'] ~ div div > p:first-of-type{font-size: 1.2rem;font-weight:bold}
                                  .Image__Wrapper img{max-width:95%;margin-left:auto;margin-right:auto;}
                                  #article_meta{text-transform:uppercase;font-size:0.8rem}
