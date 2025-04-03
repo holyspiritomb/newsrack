@@ -47,12 +47,26 @@ body.nonkindle {
   }
 }
 body.kobotouch {
-  background-color: #ffffff;
+  background-color: #eeeeee !important;
   .category-container {
-    background-color: #ffffff;
+    background-color: #ffffff !important;
   }
   .book {
-    background-color: #ffffff;
+    background-color: #ffffff !important;
+  }
+  h2.category {
+    color: #000000;
+  }
+  .books li {
+    .title {
+      color: #000000;
+    }
+    .contents {
+      color: #111111;
+    }
+  }
+  .not-for-kindle {
+    display: unset;
   }
 }
 [data-theme="dark"] {
