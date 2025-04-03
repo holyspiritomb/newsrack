@@ -2,6 +2,8 @@
 //
 @use "sass:color";
 @use 'colours';
+@use "inter-variable";
+@use "victor";
 
 $inter-features:'cv01' on, 'cv02' on, 'cv03' on, 'cv04' on, 'cv05' on, 'cv07' on, 'cv08' on, 'cv09' on, 'cv10' on;
 $victor-features:'ss06' on, 'ss01' off, 'ss07' on;
@@ -42,6 +44,15 @@ body.nonkindle {
   }
   .book {
     background-color: color.adjust(colours.$base-bg-color, $lightness: 3%);
+  }
+}
+body.kobotouch {
+  background-color: #ffffff;
+  .category-container {
+    background-color: #ffffff;
+  }
+  .book {
+    background-color: #ffffff;
   }
 }
 [data-theme="dark"] {

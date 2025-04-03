@@ -20,15 +20,17 @@ https://opensource.org/licenses/GPL-3.0
     </style>
     <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" type="application/javascript" defer
         integrity="sha256-DFDZACuFeAqEKv/7Vnu1Tt5ALa58bcWZegGGFNgET8g=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="inter-variable.css">
-    <link rel="stylesheet" href="victor.css">
 </head>
 <body>
     <script type="application/javascript">
     // stupid workaround instead of relying on screen size
     // to increase font size for non-kindle devices
-    if (navigator.userAgent.indexOf("Mozilla/5.0 (X11") < 0 && navigator.userAgent.indexOf("Kobo Touch") < 0)
+    if (navigator.userAgent.indexOf("Mozilla/5.0 (X11") < 0)
         document.body.classList.add("nonkindle");
+    </script>
+    <script type="application/javascript">
+    if (navigator.userAgent.indexOf("Kobo Touch") > 0)
+        document.body.classList.add("kobotouch");
     </script>
     <script type="application/javascript">
     {theme_js}

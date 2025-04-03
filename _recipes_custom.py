@@ -37,9 +37,9 @@ class CustomOptionsRecipe(Recipe):
                 "--change-justification=left"
             ],
             "epub": [
-                "--output-profile=tablet",
+                "--output-profile=kobo",
                 # to fix the problem of images having a fixed height after conversion
-                "--extra-css=img{height:auto !important;}",
+                "--extra-css=body{font-family:InterVar,Lato,sans-serif;}img{height:auto !important;}",
             ]
         }
 
@@ -61,8 +61,8 @@ class CustomMonthlyRecipe(Recipe):
     def __post_init__(self):
         self.title_date_format = "%b %Y"
         self.conv_options = {
-            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'", "--change-justification=left"]
-            # "epub": ["--embed-font-family=Lato"]
+            "mobi": ["--output-profile=kindle_pw3", "--mobi-file-type=old", "--authors=newsrack", "--publisher='https://holyspiritomb.github.io/newsrack/'", "--change-justification=left"],
+            "epub": ["--output-profile=kobo"]
         }
 
 
@@ -219,7 +219,7 @@ recipes: List[Recipe] = [
         category="Blogs",
         overwrite_cover=True,
         tags=["science", "trans", "lgbtq", "news"],
-        enable_on=True,
+        enable_on=False,
         cover_options=CustomCoverOptions(
             # logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Transgender_Pride_flag.svg/1024px-Transgender_Pride_flag.svg.png"
             logo_path_or_url="https://genderanalysis.net/wp-content/uploads/2017/05/newgabanner.png"
@@ -236,9 +236,7 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/jewish-currents.png"
         ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=1, drift=0
-        ),
+        enable_on=False,
     ),
     # CustomOptionsRecipe(
     #     recipe="jta",
@@ -538,18 +536,18 @@ recipes: List[Recipe] = [
     #     category="Arts & Culture",
     #     tags=["literature", "arts", "weekly"],
     # ),
-    CustomOptionsRecipe(
-        recipe="sword-sandwich",
-        slug="sword-sandwich",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Blogs",
-        overwrite_cover=True,
-        tags=["politics", "food", "commentary"],
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="recipes_custom/logos/sword-sandwich-logo.jpeg"
-        ),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="sword-sandwich",
+    #     slug="sword-sandwich",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Blogs",
+    #     overwrite_cover=True,
+    #     tags=["politics", "food", "commentary"],
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="recipes_custom/logos/sword-sandwich-logo.jpeg"
+    #     ),
+    # ),
     # CustomOptionsRecipe(
     #     recipe="teen-vogue",
     #     slug="teen-vogue",

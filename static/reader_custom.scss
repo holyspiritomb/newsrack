@@ -1,6 +1,8 @@
 // Define your own custom reader viewer css here
 @use "sass:color";
+@use 'sass:meta';
 @use 'colours';
+@use 'inter-variable';
 @use 'colours_custom';
 @use 'site_custom';
 
@@ -14,7 +16,7 @@ main.vh-100.container-fluid {
 }
 body {
   background-color: color.adjust(colours.$base-bg-color, $lightness: -3%);
-  font-family: 'InterVariable', 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  font-family: InterVariable, 'Inter', 'Lato', system-ui, 'Segoe UI', Roboto, Oxygen, sans-serif;
   font-feature-settings: site_custom.$inter-features;
   color: colours.$base-color;
 }
