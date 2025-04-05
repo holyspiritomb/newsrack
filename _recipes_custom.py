@@ -591,16 +591,6 @@ recipes: List[Recipe] = [
         ),
     ),
     CustomOptionsRecipe(
-        recipe="thirdpole",
-        slug="thirdpole",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Arts & Culture",
-        enable_on=onlyat_hours(list(range(5, 20)), 5.5),
-        tags=["asia", "climate"],
-        cover_options=CustomCoverOptions(logo_path_or_url="recipes/logos/thirdpole.png"),
-    ),
-    CustomOptionsRecipe(
         recipe="tpwky",
         slug="tpwky",
         src_ext="mobi",
