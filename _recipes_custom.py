@@ -39,6 +39,7 @@ class CustomOptionsRecipe(Recipe):
             "epub": [
                 "--output-profile=kobo",
                 # to fix the problem of images having a fixed height after conversion
+                # and use my preferred fonts
                 "--extra-css=body{font-family:InterVar,Lato,sans-serif;}img{height:auto !important;}",
             ]
         }
@@ -91,7 +92,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         cover_options=CustomCoverOptions(logo_path_or_url="recipes_custom/logos/972-logo.png"),
         enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=2, drift=0
+            last_run=recipe.last_run, days=1, drift=0
         ),
     ),
     # CustomOptionsRecipe(
@@ -110,21 +111,21 @@ recipes: List[Recipe] = [
     #         last_run=recipe.last_run, hours=12, drift=0
     #     ),
     # ),
-    CustomOptionsRecipe(
-        recipe="aiweirdness",
-        slug="aiweirdness",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="Blogs",
-        tags=["science", "tech"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(
-            logo_path_or_url="https://www.aiweirdness.com/content/images/2021/03/ai_weirdness_with_neural_net_box.png"
-        ),
-        enable_on=lambda recipe: every_x_days(
-            last_run=recipe.last_run, days=3, drift=0
-        ),
-    ),
+    # CustomOptionsRecipe(
+    #     recipe="aiweirdness",
+    #     slug="aiweirdness",
+    #     src_ext="mobi",
+    #     target_ext=["epub"],
+    #     category="Blogs",
+    #     tags=["science", "tech"],
+    #     overwrite_cover=True,
+    #     cover_options=CustomCoverOptions(
+    #         logo_path_or_url="https://www.aiweirdness.com/content/images/2021/03/ai_weirdness_with_neural_net_box.png"
+    #     ),
+    #     enable_on=lambda recipe: every_x_days(
+    #         last_run=recipe.last_run, days=3, drift=0
+    #     ),
+    # ),
     # CustomOptionsRecipe(
     #     recipe="archlinux",
     #     slug="archlinux",
@@ -164,6 +165,19 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             # logo_path_or_url="recipes_custom/logos/Assigned.jpg"
             logo_path_or_url="https://images.squarespace-cdn.com/content/v1/633303d5ccf756402b93f25c/72772a0c-8d81-4f03-8f39-fed9eebd769a/Assigned+Media+Logo+flat.png"
+        ),
+        enable_on=True,
+    ),
+    CustomOptionsRecipe(
+        recipe="badtransday",
+        slug="badtransday",
+        src_ext="epub",
+        target_ext=["epub"],
+        category="Blogs",
+        tags=["lgbtq", "trans", "news", "commentary"],
+        overwrite_cover=True,
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="https://trans.cx/wp-content/uploads/2025/03/zbtd-preview-default-1.png"
         ),
         enable_on=True,
     ),
@@ -471,8 +485,8 @@ recipes: List[Recipe] = [
         target_ext=["epub"],
         overwrite_cover=False,
         category="Arts & Culture",
-        # enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
-        enable_on=True,
+        enable_on=first_n_days_of_month(7, -6) or last_n_days_of_month(7, -5),
+        # enable_on=True,
         tags=["literature", "arts", "monthly"],
     ),
     CustomOptionsRecipe(
@@ -575,6 +589,16 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Them_wordmark.svg/1024px-Them_wordmark.svg.png"
         ),
+    ),
+    CustomOptionsRecipe(
+        recipe="thirdpole",
+        slug="thirdpole",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Arts & Culture",
+        enable_on=onlyat_hours(list(range(5, 20)), 5.5),
+        tags=["asia", "climate"],
+        cover_options=CustomCoverOptions(logo_path_or_url="recipes/logos/thirdpole.png"),
     ),
     CustomOptionsRecipe(
         recipe="tpwky",

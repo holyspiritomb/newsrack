@@ -9,8 +9,10 @@ public/
 debug/
 static/*.css
 job_summary.md
+calibre/
 
 # Node #
+package-lock.json
 # Dependency directories
 node_modules/
 jspm_packages/
