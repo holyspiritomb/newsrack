@@ -171,8 +171,8 @@ recipes: List[Recipe] = [
     CustomOptionsRecipe(
         recipe="badtransday",
         slug="badtransday",
-        src_ext="epub",
-        # target_ext=["epub"],
+        src_ext="mobi",
+        target_ext=["epub"],
         category="Blogs",
         tags=["lgbtq", "trans", "news", "commentary"],
         overwrite_cover=True,
