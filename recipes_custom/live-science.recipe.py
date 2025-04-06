@@ -15,6 +15,7 @@ from calibre.ebooks.BeautifulSoup import BeautifulSoup
 from calibre.web.feeds import Feed
 from calibre.web.feeds.news import BasicNewsRecipe, classes
 # from calibre.utils.date import utcnow, parse_date
+from calibre.utils.date import datetime
 
 # custom include to share code between recipes
 sys.path.append(os.environ["recipes_includes"])
@@ -49,13 +50,13 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         dict(attrs={"id": "article-body"}),
     ]
     remove_tags_before = [
-        dict(name="div", class_="news-article")
+        dict(attrs={"id": "hero"})
     ]
     remove_tags = [
         dict(name="source", attrs={"type": "image/webp"}),
         dict(attrs={"id": re.compile("taboola")}),
+        dict(attrs={"id": "affiliate-disclaimer"}),
         dict(attrs={"class": re.compile("jwplayer")}),
-        dict(attrs={"aria-label": "Breadcrumbs"}),
         classes("newsletter-form__wrapper newsletter-inbodyContent-slice ad-unit socialite-widget fancy-box hawk-nest"),
     ]
     remove_attributes = [
@@ -72,7 +73,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
 
     extra_css = """
         div.gallery-el{max-width:90vw;}
-        img{max-width:90vw;}
+        img{max-width:90vw;margin-left:auto;margin-right:auto;}
         .gallery-el img{max-width:90vw;}
         .image-caption,
         .caption-text,
@@ -85,6 +86,8 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         h2{font-size:1.5rem;}
         .strapline{font-size:1.25rem;font-style:italic;}
         #tiny_header{text-transform: uppercase;}
+        .info-block {border-width:1px;border-style:solid;border-color:currentColor;border-radius:1rem;margin-top:1rem;padding:1rem;width:30vw}
+        .info-block h5{display:inline;padding-left:1rem}
     """
 
     def populate_article_metadata(self, article, soup, _):
@@ -93,11 +96,14 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
             self.title = format_title(_name, article.utctime)
         nyc = ZoneInfo("America/New_York")
         nyc_dt = dt.astimezone(article.utctime, nyc)
+        nyc_dt_now = datetime.astimezone(datetime.now(), nyc)
+        nyc_now_str = datetime.strftime(nyc_dt_now, "%b %-d, %Y at %-I:%M %p %Z")
         datestring = dt.strftime(nyc_dt, "%b %-d, %Y, %-I:%M %p %Z")
 
         article_date = soup.find(class_="author-byline__date")
-        article_date.clear()
-        article_date.string = datestring
+        if article_date:
+            article_date.clear()
+            article_date.string = datestring
 
         article_body = soup.find("div", attrs={"id": "article-body"})
         source_link_div = soup.new_tag("div")
@@ -107,6 +113,8 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         source_link.string = article.url
         source_link_div.append("This article was downloaded from ")
         source_link_div.append(source_link)
+        source_link_div.append(" at ")
+        source_link_div.append(nyc_now_str)
         source_link_div.append(".")
         hr = soup.new_tag("hr")
         article_body.append(hr)
@@ -162,6 +170,10 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
                 new_feeds.append(curr_feed)
         for feed in new_feeds:
             for article in feed.articles[:]:
+                if "/health/obesity/" in article.url:
+                    self.log.warn(f"\t\tremoving \"{article.title}\" from _{feed.title}_ feed:\n\t\t{article.url}")
+                    feed.articles.remove(article)
+                    continue
                 for word in self.filter_out:
                     if word.upper() in article.title.upper() or word.upper() in article.summary.upper():
                         self.log.warn(f"\t\tremoving \"{article.title}\" from _{feed.title}_ feed (keyword: {word})")
@@ -170,6 +182,11 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
                     else:
                         continue
         new_feeds = [f for f in new_feeds if len(f.articles[:]) > 0]
+        self.log.debug("Will download:")
+        for feed in new_feeds:
+            self.log.debug(f"\t{feed.title}\n")
+            for article in feed.articles[:]:
+                self.log.debug(f"\t\t{article.title}\n\t\t{article.url}\n\n")
         return new_feeds
 
     def preprocess_html(self, soup):
@@ -185,6 +202,8 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         parsely_tags = soup.find(attrs={"name": "parsely-tags"})
         if "type_deal" in parsely_tags["content"]:
             self.abort_article("Aborting product review article.")
+        if "Buying-guide" in parsely_tags["content"]:
+            self.abort_article("Aborting buying guide article.")
 
         article_headline = soup.find("h1")
 
@@ -192,9 +211,28 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
 
         new_header_div = soup.new_tag("div", attrs={"id": "tiny_header"})
 
-        if section:
+        crumbs = soup.find(attrs={"aria-label": "Breadcrumbs"})
+        crumbs.name = "span"
+        crumblist = crumbs.find("ol")
+        crumbitems = crumblist.findAll("li")
+        if crumbitems:
+            self.log(crumbitems)
+            for crumb in crumbitems:
+                crumb.name = "span"
+            if len(crumbitems) > 1:
+                crumbs.append(crumbitems[0])
+                for c in crumbitems[1:]:
+                    crumbs.append(" > ")
+                    crumbs.append(c)
+            else:
+                crumbs.append(crumbitems[0])
+            crumblist.extract()
             section_div = soup.new_tag("div", attrs={"id": "article_section"})
-            section_div.string = section
+            section_div.append(crumbs)
+            new_header_div.append(section_div)
+        else:
+            section_div = soup.new_tag("div", attrs={"id": "article_section"})
+            section_div.append(section)
             new_header_div.append(section_div)
 
         section_type = soup.find("a", class_="byline-article-type")
@@ -203,7 +241,8 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
             new_header_div.append(section_type)
             new_header_div.append(" | ")
 
-        authors = soup.findAll(class_="author-byline__author-name")
+        authors = soup.findAll("a", attrs={"rel": "author", "href": re.compile("author")})
+        # authors = soup.findAll(class_="author-byline__author-name")
         if authors:
             if len(authors) > 1:
                 new_header_div.append(authors[0])
@@ -217,6 +256,12 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         article_date = soup.find(class_="author-byline__date")
         if article_date:
             article_date.extract()
+            new_header_div.append(article_date)
+            new_header_div.append(" | ")
+        else:
+            article_date = soup.new_tag("span")
+            article_date["class"] = "author-byline__date"
+            article_date.string = "Article Date Placeholder"
             new_header_div.append(article_date)
             new_header_div.append(" | ")
 
