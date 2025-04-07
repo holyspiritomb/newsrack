@@ -27,11 +27,11 @@ _name = "404 Media"
 class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
     title = _name
     language = 'en'
-    description = u'Life is a Sacred Text is about truth & transformation, with ancient stories serving as mirrors & lights. Collective liberation. Everybody-celebratory. https://lifeisasacredtext.com/'
+    description = u'404 Media is a journalist-founded digital media company exploring the ways technology is shaping–and is shaped by–our world. https://404media.co'
     __author__ = 'holyspiritomb'
     category = 'rss'
-    oldest_article = 30
-    max_articles_per_feed = 20
+    oldest_article = 15
+    max_articles_per_feed = 50
     remove_empty_feeds = True
     resolve_internal_links = False
     use_embedded_content = False
@@ -43,13 +43,15 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
         #article_source,#tiny_header,.calibre-nuked-tag-figure{
             font-size:0.8rem;
         }
-        img{max-width:90vw;margin-left:auto;margin-right:auto;}
+        img{max-width:90vw;margin-left:auto;margin-right:auto;height:auto;}
         #tiny_header{text-transform: uppercase;}
         h1{font-size:1.75rem;}
         h2{font-size:1.5rem;}
         .post-hero__excerpt{font-style:italic;font-size:1.25rem;margin-bottom:1rem}
-        .post-author,.alt-text{font-size:0.8rem;margin-top:1em;margin-bottom:1em}
+        .post-author,.alt-text,.calibre-nuked-tag-figcaption{font-size:0.8rem;margin-top:1em;margin-bottom:1em}
         .post-author__bio-heading{font-size:1.15rem;font-weight:bold}
+        .kg-card{border-width:1px;border-color:currentColor;padding:1.5rem;margin-top:1rem;margin-bottom:1rem;border-style:solid;border-radius:1.5rem}
+        .kg-card span{display:block;margin-top:1rem;margin-bottom:1rem}
         p {font-size:1rem;}
     """
 
@@ -59,7 +61,7 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
     ]
 
     remove_tags = [
-        classes("byline__author-image byline__date byline__details-separator post-author__image-container post-hero__ad post-author__bio-cta")
+        classes("byline__author-image byline__date byline__details-separator post-author__image-container post-hero__ad post-author__bio-cta subscribe kg-bookmark-icon")
     ]
 
     def populate_article_metadata(self, article, soup, _):
@@ -98,6 +100,10 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
             toc_img = hero_img.find("img")
             if toc_img:
                 self.add_toc_thumbnail(article, toc_img['src'])
+        hero = soup.find(attrs={'class': 'post-hero'})
+        article_headline = hero.find("h1")
+        if article_headline["data-paid"]:
+            article_headline.append(f" ({article_headline['data-paid']})")
 
     def parse_feeds(self):
         parsed_feeds = BasicNewsRecipe.parse_feeds(self)
@@ -173,11 +179,11 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
         new_header_div = soup.new_tag("div", attrs={"id": "tiny_header"})
 
         hero = soup.find(attrs={'class': 'post-hero'})
+        article_headline = hero.find("h1")
         section = hero.find(attrs={"class": "post-hero__tag"})
         if section:
             new_header_div.append(section)
             new_header_div.append(" | ")
-        article_headline = hero.find("h1")
 
         authors = hero.findAll("a", attrs={"href": re.compile("author")})
         if authors:
@@ -203,10 +209,26 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
         new_header_div.append(article_link)
 
         article_headline.insert_before(new_header_div)
+        if soup.find("h2", string="This post is for paid members only"):
+            self.log.warn("paywalled article")
+            article_headline["data-paid"] = "paid"
+        else:
+            article_headline["data-paid"] = "free"
+        # for h in soup.findAll("h2"):
+        #     if h.string == "This post is for paid members only":
+        #         article_headline["data-paid"] = "paid"
+        #         break
+        #     else:
+        #         continue
+
         for img in soup.find_all("img", attrs={"data-srcset": True}):
             dsrcset = img["data-srcset"]
             newsrc = dsrcset.split(",")[-1].strip().split()[0]
             img["src"] = newsrc
+            del img["srcset"]
+            del img["data-srcset"]
+            del img["data-src"]
+            del img["data-sizes"]
             if img["alt"]:
                 if img["alt"] != article_headline.string:
                     alttxt = soup.new_tag("div")
