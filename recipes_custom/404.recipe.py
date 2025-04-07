@@ -104,6 +104,8 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
         article_headline = hero.find("h1")
         if article_headline["data-paid"]:
             article_headline.append(f" ({article_headline['data-paid']})")
+            if article_headline["data-paid"] == "paid":
+                article.title = f"{article.title} (paid)"
 
     def parse_feeds(self):
         parsed_feeds = BasicNewsRecipe.parse_feeds(self)
