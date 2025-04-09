@@ -30,7 +30,7 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
     description = u'404 Media is a journalist-founded digital media company exploring the ways technology is shaping–and is shaped by–our world. https://404media.co'
     __author__ = 'holyspiritomb'
     category = 'rss'
-    oldest_article = 15
+    oldest_article = 30
     max_articles_per_feed = 50
     remove_empty_feeds = True
     resolve_internal_links = False
