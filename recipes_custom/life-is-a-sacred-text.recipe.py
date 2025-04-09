@@ -90,12 +90,10 @@ class LifeIsASacredText(BasicNewsrackRecipe, BasicNewsRecipe):
         paid_link = soup.find("a", attrs={"id": "paid_link"})
         if paid_link:
             paid_link["href"] = article.url
-            self.log(soup)
         else:
             desc = soup.find(attrs={"id": "article_desc"})
             if desc:
                 desc.string = article.summary
-                self.log(desc)
 
     def parse_feeds(self):
         feeds = BasicNewsRecipe.parse_feeds(self)
@@ -104,6 +102,7 @@ class LifeIsASacredText(BasicNewsrackRecipe, BasicNewsRecipe):
                 if not article.content:
                     self.log.warn(f"{article.title} is subscriber-only, but that's okay")
                     # feed.articles.remove(article)
+                    article.title = f"{article.title} (subscriber only)"
         new_feeds = [f for f in feeds if len(f.articles[:]) > 0]
         return new_feeds
 
