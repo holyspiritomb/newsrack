@@ -33,10 +33,10 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
     __author__ = "holyspiritomb"
     language = "en"
     publication_type = 'magazine'
-    oldest_article = 60
+    oldest_article = 90
     request_as_gbot = True
     masthead_url = "https://jewishcurrents.org/img/jewish-currents.svg"
-    resolve_internal_links = True
+    resolve_internal_links = False
     use_embedded_content = False
     remove_empty_feeds = True
     remove_javascript: False
