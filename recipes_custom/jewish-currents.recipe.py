@@ -164,7 +164,7 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
                 date_el.parent.insert_after(mod_span)
             url_el = soup.new_tag("a")
             url_el.string = "View on Website"
-            url_el["href"] = article_url
+            url_el["href"] = article.url
             date_el.parent.append(" | ")
             date_el.parent.append(url_el)
         bioblock = soup.findAll(attrs={"class": "bioblock"})[-1]
