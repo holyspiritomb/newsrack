@@ -163,16 +163,16 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
                 mod_span.string = date.strftime(mod_dt, "Updated %-d %b %Y, %-I:%M %p %Z")
                 date_el.parent.insert_after(mod_span)
             url_el = soup.new_tag("a")
-            url_el.string = "View on Website"
             url_el["href"] = article.url
+            url_el.string = "View on Website"
             date_el.parent.append(" | ")
             date_el.parent.append(url_el)
         bioblock = soup.findAll(attrs={"class": "bioblock"})[-1]
         source_div = soup.new_tag("div")
         source_div["id"] = "downloaded_from"
         article_link = soup.new_tag("a")
-        article_link["href"] = article_url
-        article_link.string = article_url
+        article_link["href"] = article.url
+        article_link.string = article.url
         current_dt = datetime.now(tz=timezone.utc)
         current_dt_str = date.strftime(current_dt, "%-d %B %Y, %-I:%M %p %Z")
         source_div.append("This article was downloaded from ")
