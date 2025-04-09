@@ -265,7 +265,7 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/jewish-currents.png"
         ),
-        enable_on=False,
+        enable_on=True,
     ),
     # CustomOptionsRecipe(
     #     recipe="jta",
