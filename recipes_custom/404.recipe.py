@@ -2,6 +2,7 @@
 import os
 import sys
 import re
+import json
 from datetime import timezone, timedelta
 from datetime import datetime as dt
 from zoneinfo import ZoneInfo
@@ -18,8 +19,13 @@ from calibre.ebooks.BeautifulSoup import BeautifulSoup
 # convenience switches for when I'm developing
 if "runner" in os.environ["recipes_includes"]:
     _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
+    _secret_feeds_str = str(os.environ["FEEDS"])
+    _secret_feeds_info = json.loads(_secret_feeds_str)
+    _secret_feed = _secret_feeds_info.get("404", {})
+    _feed_url = _secret_feed.get("feed")
 else:
     _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
+    _feed_url = "https://www.404media.co/rss"
 _masthead = f"{_masthead_prefix}/404.svg"
 _name = "404 Media"
 
@@ -37,7 +43,9 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     masthead_url = _masthead
 
-    feeds = [("404 All", "https://www.404media.co/rss")]
+    feeds = [
+        ("404 Media", _feed_url)
+    ]
 
     extra_css = """
         #article_source,#tiny_header,.calibre-nuked-tag-figure{

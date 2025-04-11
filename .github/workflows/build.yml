@@ -115,6 +115,7 @@ jobs:
           skip: ${{ github.event.inputs.skip }}
           verbose: ${{ github.event.inputs.verbose }}
           accounts: ${{ secrets.accounts }}
+          FEEDS: ${{ secrets.FEEDS }}
         run: |
           sh build.sh
           if [[ -f 'job_summary.md' ]]; then cat 'job_summary.md' >> $GITHUB_STEP_SUMMARY; fi
