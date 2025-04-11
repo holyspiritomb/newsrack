@@ -19,13 +19,16 @@ from calibre.ebooks.BeautifulSoup import BeautifulSoup
 # convenience switches for when I'm developing
 if "runner" in os.environ["recipes_includes"]:
     _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
-    _secret_feeds_str = str(os.environ["FEEDS"])
-    _secret_feeds_info = json.loads(_secret_feeds_str)
-    _secret_feed = _secret_feeds_info.get("404", {})
-    _feed_url = _secret_feed.get("feed")
+    _feed_url = "https://www.404media.co/rss"
+    _embedded = False
 else:
     _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
-    _feed_url = "https://www.404media.co/rss"
+    try:
+        _feed_url = str(os.environ['FEED404'])
+        _embedded = True
+    except:
+        _feed_url = "https://www.404media.co/rss"
+        _embedded = False
 _masthead = f"{_masthead_prefix}/404.svg"
 _name = "404 Media"
 
@@ -40,7 +43,7 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
     max_articles_per_feed = 50
     remove_empty_feeds = True
     resolve_internal_links = False
-    use_embedded_content = False
+    use_embedded_content = _embedded
     masthead_url = _masthead
 
     feeds = [
@@ -63,10 +66,11 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
         p {font-size:1rem;}
     """
 
-    keep_only_tags = [
-        dict(attrs={'class': 'post-hero'}),
-        dict(name="article", attrs={'class': 'post'}),
-    ]
+    if not use_embedded_content:
+        keep_only_tags = [
+            dict(attrs={'class': 'post-hero'}),
+            dict(name="article", attrs={'class': 'post'}),
+        ]
 
     remove_tags = [
         classes("byline__author-image byline__date byline__details-separator post-author__image-container post-hero__ad post-author__bio-cta subscribe kg-bookmark-icon")
@@ -86,7 +90,6 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
         if article_date:
             article_date.clear()
             article_date.string = datestring
-
         source_link_div = soup.new_tag("div")
         source_link_div["id"] = "article_source"
         source_link = soup.new_tag("a")
@@ -108,12 +111,13 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
             toc_img = hero_img.find("img")
             if toc_img:
                 self.add_toc_thumbnail(article, toc_img['src'])
-        hero = soup.find(attrs={'class': 'post-hero'})
-        article_headline = hero.find("h1")
-        if article_headline["data-paid"]:
-            article_headline.append(f" ({article_headline['data-paid']})")
-            if article_headline["data-paid"] == "paid":
-                article.title = f"{article.title} (paid)"
+        if not self.use_embedded_content:
+            hero = soup.find(attrs={'class': 'post-hero'})
+            article_headline = hero.find("h1")
+            if article_headline["data-paid"]:
+                article_headline.append(f" ({article_headline['data-paid']})")
+                if article_headline["data-paid"] == "paid":
+                    article.title = f"{article.title} (paid)"
 
     def parse_feeds(self):
         parsed_feeds = BasicNewsRecipe.parse_feeds(self)
@@ -175,74 +179,93 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
         return new_feeds
 
     def preprocess_html(self, soup):
-        byline = soup.find(class_="byline")
-        byline.extract()
-        kgs = soup.findAll(attrs={"class": "kg-card"})
-        for kg in kgs:
-            if kg.find(attrs={"class": "kg-cta-sponsor-label-wrapper"}):
-                kg.decompose()
+        if not self.use_embedded_content:
+            byline = soup.find(class_="byline")
+            byline.extract()
+            kgs = soup.findAll(attrs={"class": "kg-card"})
+            for kg in kgs:
+                if kg.find(attrs={"class": "kg-cta-sponsor-label-wrapper"}):
+                    kg.decompose()
         return soup
 
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
-
-        new_header_div = soup.new_tag("div", attrs={"id": "tiny_header"})
-
-        hero = soup.find(attrs={'class': 'post-hero'})
-        article_headline = hero.find("h1")
-        section = hero.find(attrs={"class": "post-hero__tag"})
-        if section:
-            new_header_div.append(section)
+        if self.use_embedded_content:
+            self.log.debug(soup)
+            new_header_div = soup.new_tag("div", attrs={"id": "tiny_header"})
+            article_headline = soup.find("h2")
+            article_headline.name = "h1"
+            article_date = soup.new_tag("span")
+            article_date["class"] = "author-byline__date"
+            article_date.string = "Article Date Placeholder"
+            new_header_div.append(article_date)
             new_header_div.append(" | ")
 
-        authors = hero.findAll("a", attrs={"href": re.compile("author")})
-        if authors:
-            if len(authors) > 1:
-                new_header_div.append(authors[0])
-                for a in authors[1:]:
-                    new_header_div.append(", ")
-                    new_header_div.append(a)
+            article_link = soup.new_tag("a")
+            article_link["id"] = "headlink"
+            article_link["href"] = "#"
+            article_link.string = "View on Website"
+            new_header_div.append(article_link)
+
+            article_headline.insert_before(new_header_div)
+        if not self.use_embedded_content:
+            new_header_div = soup.new_tag("div", attrs={"id": "tiny_header"})
+
+            hero = soup.find(attrs={'class': 'post-hero'})
+            article_headline = hero.find("h1")
+            section = hero.find(attrs={"class": "post-hero__tag"})
+            if section:
+                new_header_div.append(section)
+                new_header_div.append(" | ")
+
+            authors = hero.findAll("a", attrs={"href": re.compile("author")})
+            if authors:
+                if len(authors) > 1:
+                    new_header_div.append(authors[0])
+                    for a in authors[1:]:
+                        new_header_div.append(", ")
+                        new_header_div.append(a)
+                else:
+                    new_header_div.append(authors[0])
+                new_header_div.append(" | ")
+
+            article_date = soup.new_tag("span")
+            article_date["class"] = "author-byline__date"
+            article_date.string = "Article Date Placeholder"
+            new_header_div.append(article_date)
+            new_header_div.append(" | ")
+
+            article_link = soup.new_tag("a")
+            article_link["id"] = "headlink"
+            article_link["href"] = "#"
+            article_link.string = "View on Website"
+            new_header_div.append(article_link)
+
+            article_headline.insert_before(new_header_div)
+            if soup.find("h2", string="This post is for paid members only"):
+                self.log.warn("paywalled article")
+                article_headline["data-paid"] = "paid"
             else:
-                new_header_div.append(authors[0])
-            new_header_div.append(" | ")
+                article_headline["data-paid"] = "free"
+            # for h in soup.findAll("h2"):
+            #     if h.string == "This post is for paid members only":
+            #         article_headline["data-paid"] = "paid"
+            #         break
+            #     else:
+            #         continue
 
-        article_date = soup.new_tag("span")
-        article_date["class"] = "author-byline__date"
-        article_date.string = "Article Date Placeholder"
-        new_header_div.append(article_date)
-        new_header_div.append(" | ")
-
-        article_link = soup.new_tag("a")
-        article_link["id"] = "headlink"
-        article_link["href"] = "#"
-        article_link.string = "View on Website"
-        new_header_div.append(article_link)
-
-        article_headline.insert_before(new_header_div)
-        if soup.find("h2", string="This post is for paid members only"):
-            self.log.warn("paywalled article")
-            article_headline["data-paid"] = "paid"
-        else:
-            article_headline["data-paid"] = "free"
-        # for h in soup.findAll("h2"):
-        #     if h.string == "This post is for paid members only":
-        #         article_headline["data-paid"] = "paid"
-        #         break
-        #     else:
-        #         continue
-
-        for img in soup.find_all("img", attrs={"data-srcset": True}):
-            dsrcset = img["data-srcset"]
-            newsrc = dsrcset.split(",")[-1].strip().split()[0]
-            img["src"] = newsrc
-            del img["srcset"]
-            del img["data-srcset"]
-            del img["data-src"]
-            del img["data-sizes"]
-            if img["alt"]:
-                if img["alt"] != article_headline.string:
-                    alttxt = soup.new_tag("div")
-                    alttxt["class"] = "alt-text"
-                    alttxt.string = f"Alt text: {img['alt']}"
-                    img.insert_after(alttxt)
+            for img in soup.find_all("img", attrs={"data-srcset": True}):
+                dsrcset = img["data-srcset"]
+                newsrc = dsrcset.split(",")[-1].strip().split()[0]
+                img["src"] = newsrc
+                del img["srcset"]
+                del img["data-srcset"]
+                del img["data-src"]
+                del img["data-sizes"]
+                if img["alt"]:
+                    if img["alt"] != article_headline.string:
+                        alttxt = soup.new_tag("div")
+                        alttxt["class"] = "alt-text"
+                        alttxt.string = f"Alt text: {img['alt']}"
+                        img.insert_after(alttxt)
         return str(soup)
