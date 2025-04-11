@@ -90,6 +90,7 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
         if article_date:
             article_date.clear()
             article_date.string = datestring
+            article_date.insert_before(f"{article.author} | ")
         source_link_div = soup.new_tag("div")
         source_link_div["id"] = "article_source"
         source_link = soup.new_tag("a")
@@ -191,10 +192,8 @@ class FourOhFour(BasicNewsrackRecipe, BasicNewsRecipe):
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
         if self.use_embedded_content:
-            self.log.debug(soup)
             new_header_div = soup.new_tag("div", attrs={"id": "tiny_header"})
             article_headline = soup.find("h2")
-            article_headline.name = "h1"
             article_date = soup.new_tag("span")
             article_date["class"] = "author-byline__date"
             article_date.string = "Article Date Placeholder"
