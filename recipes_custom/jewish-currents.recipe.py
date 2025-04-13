@@ -134,6 +134,16 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
         return ungoogled_uri
 
     def populate_article_metadata(self, article, soup, _):
+        if " -" in article.title:
+            _title = article.title
+            new_title = _title.split(" -")[0]
+            if "- " in article.title:
+                summary = _title.split("- ")[1]
+                article.text_summary = summary
+                article.summary = summary
+                article.description = summary
+            article.title = format_title(new_title, article.utctime)
+            self.log.warn(f"{_title}\nchanged to\n{new_title}\n\n{article}")
         toc_thumb = soup.find("img", attrs={"id": "toc_thumb"})
         if toc_thumb:
             thumb_src = toc_thumb["src"]
@@ -150,10 +160,6 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
         subhead = soup.find(attrs={"id": "article_subhead"})
         if subhead:
             article.description = self.tag_to_string(subhead)
-        if "googleusercontent" in article.url:
-            article_url = self.ungoogle_uri(article.url)
-        else:
-            article_url = article.url
         date_el = soup.find(attrs={"id": "article_date"})
         if date_el:
             date_el.string = date.strftime(pub_dt, "%-d %b %Y, %-I:%M %p %Z")
@@ -284,17 +290,33 @@ class JewishCurrents(BasicNewsrackRecipe, BasicNewsRecipe):
             category_link.string = "Comic"
             category_link.extract()
             tinyheader.append(category_link)
-            head_authors = headline.parent.findAll("a", href=re.compile(r"\/author"))
-            for auth in head_authors:
-                auth["class"] = "header-author"
+        else:
+            category_link.wrap(tinyheader)
+        auths = soup.new_tag("span")
+        auths["id"] = "tinyhead_authors"
+        # lockup = content.find("div", attrs={"class": "lockup"})
+        # if lockup:
+        #     for auth in lockup.findAll("a", href=re.compile(r"\/author")):
+        #         auth["class"] = "header-author"
+        #         authspan = soup.new_tag("span")
+        #         authspan["class"] = "authspan"
+        #         authspan.append(auth)
+        #         auths.append(authspan)
+        #     tinyheader.append(" | ")
+        #     tinyheader.append(auths)
+        # if len(head_authors) > 0:
+        #     head_authors[0].extract()
+        #     auths.append(head_authors[0])
+        #     tinyheader.append(" | ")
+        #     tinyheader.append(auths)
+
             # old_date = headline.parent.find("span", string=re.compile(r"^[A-Z][a-z]* [0-9]+\, [0-9]{4}$"))
             # if old_date:
             #     self.log("found old date", old_date)
             #     old_date.extract()
-        else:
-            category_link.wrap(tinyheader)
-        category_link.insert_after(date_el)
-        category_link.insert_after(" | ")
+        tinyheader.append(" | ")
+        tinyheader.append(date_el)
+        # category_link.insert_after(" | ")
         content.insert(0, tinyheader)
         toc_thumb = content.find("img")
         toc_thumb["id"] = "toc_thumb"
