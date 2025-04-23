@@ -93,9 +93,10 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/404.png"
         ),
-        enable_on=lambda recipe: every_x_hours(
-            last_run=recipe.last_run, hours=6, drift=0
-        ),
+        enable_on=False,
+        # enable_on=lambda recipe: every_x_hours(
+        #     last_run=recipe.last_run, hours=6, drift=0
+        # ),
     ),
     CustomOptionsRecipe(
         recipe="972",
@@ -647,17 +648,6 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
         ),
-    ),
-    CustomOptionsRecipe(
-        recipe="wtfjht",
-        slug="wtfjht",
-        src_ext="mobi",
-        target_ext=["epub"],
-        category="News",
-        tags=["news", "politics"],
-        overwrite_cover=True,
-        cover_options=CustomCoverOptions(),
-        enable_on=True
     ),
     # Recipe(
     #     recipe="example",
