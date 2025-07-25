@@ -37,6 +37,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
     auto_cleanup = False
     use_embedded_content = False
     resolve_internal_links = False
+    scale_news_images = (800, 1200)
 
     conversion_options = {
         'tags' : 'Science, News, Live Science, Periodical',
@@ -57,6 +58,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         dict(attrs={"id": re.compile("taboola")}),
         dict(attrs={"id": "affiliate-disclaimer"}),
         dict(attrs={"class": re.compile("jwplayer")}),
+        dict(name="li", attrs={"analytics-label": "adviser:related"}),
         classes("newsletter-form__wrapper newsletter-inbodyContent-slice ad-unit socialite-widget fancy-box hawk-nest"),
     ]
     remove_attributes = [
@@ -66,6 +68,10 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         "data-skip",
         "referrerpolicy",
         "style",
+        "data-analytics-id",
+        "data-block-type",
+        "data-render-type",
+        "data-widget-type",
         "target",
     ]
 
