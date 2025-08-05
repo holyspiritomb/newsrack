@@ -30,8 +30,8 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
     description = "Live Science is a science news website that publishes stories in a wide variety of topics such as Space, Animals, Health, Archaeology, Human behavior and Planet Earth. Sourced from https://www.livescience.com/feeds/all"
     __author__ = 'yodha8'
     language = 'en'
-    oldest_article = 7
-    max_articles_per_feed = 100
+    oldest_article = 4
+    max_articles_per_feed = 40
     no_stylesheets = True
     remove_javascript = False
     auto_cleanup = False
