@@ -202,14 +202,15 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         soup = BeautifulSoup(raw_html)
 
         ld_json = self.get_ld_json(soup, str)
-        if ld_json["@type"] == "Product":
+        if "Product" in ld_json["@type"]:
             self.abort_article("Aborting product review article.")
 
-        parsely_tags = soup.find(attrs={"name": "parsely-tags"})
-        if "type_deal" in parsely_tags["content"]:
-            self.abort_article("Aborting product review article.")
-        if "Buying-guide" in parsely_tags["content"]:
-            self.abort_article("Aborting buying guide article.")
+        # mrf_tags = soup.find(attrs={"property": "mrf:tags"})
+        # mrf_tag_list = mrf_tags["content"]
+        # if "type_deal" in mrf_tags["content"]:
+        #     self.abort_article("Aborting product review article.")
+        # if "Buying-guide" in mrf_tags["content"]:
+        #     self.abort_article("Aborting buying guide article.")
 
         article_headline = soup.find("h1")
 
