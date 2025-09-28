@@ -56,7 +56,7 @@ jobs:
           node-version: 'lts/*'
 
       - name: Install npm dependencies
-        timeout-minutes: 1
+        timeout-minutes: 2
         run: |
           npm install --no-fund
 
