@@ -17,7 +17,7 @@ from recipes_shared import BasicNewsrackRecipe
 
 from calibre.web.feeds.news import BasicNewsRecipe
 
-_issue_url = ""
+_issue_url = "https://www.poetryfoundation.org/poetrymagazine/issue/1764046/march-2026"
 _name = "Poetry"
 
 
