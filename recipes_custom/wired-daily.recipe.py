@@ -6,6 +6,7 @@ www.wired.com
 import os
 import re
 import sys
+import json
 # from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -54,21 +55,44 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     recursions = 0
     extra_css = """
         .entry-header{
-                        text-transform: uppercase;
-                        vertical-align: baseline;
-                        display: inline;
-                        }
+            text-transform: uppercase;
+            vertical-align: baseline;
+            display: inline;
+        }
         p {font-size: 1em}
-        #lead-image, #lead-image-caption{
-                        display: block;
-                        }
-        #lead-image-caption, #categ_date, .caption__text, .caption__credit, p.byline, .caption, #article_source{font-size:0.8em;}
-        span.lead-in-text-callout, .caption__text p {font-size: 1.1em;}
+        #lead-image,
+        #lead-image-caption{
+            display: block;
+        }
+        #lead-image-caption,
+        #categ_date,
+        .caption__text,
+        .caption__credit,
+        p.byline,
+        .caption,
+        #article_source{
+            font-size:0.8em;
+        }
+        span.lead-in-text-callout,
+        .caption__text p,
+        .content-header__accreditation,
+        #subhead {
+            font-size: 1.1em;
+        }
         #categ_date{
-                        text-transform: uppercase;
-                        }
+            text-transform: uppercase;
+        }
         img[alt] {max-width: 90vw; height:auto;}
         ul:not(.calibre_feed_list) li{display: inline}
+        .table-container {
+            border-width: 1px;
+            border-style: solid;
+            border-color: currentColor;
+            max-width: 70vw;
+            margin-left: auto;
+            margin-right: auto;
+            padding:10px;
+        }
     """
     conversion_options = {
         'tags' : 'Science, Technology, Wired Daily, Periodical',
@@ -76,17 +100,16 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     }
 
     remove_tags = [
-        classes('related-cne-video-component tags-component podcast_42 storyboard inset-left-component social-icons recirc-most-popular-wrapper'),
+        classes('related-cne-video-component tags-component podcast_42 storyboard inset-left-component social-icons recirc-most-popular-wrapper article-body__footer'),
         dict(name='button', attrs={'aria-label': 'Save'}),
-        dict(name=['meta', 'link', 'aside']),
-        dict(id=['sharing', 'social', 'article-tags', 'sidebar']),
-        # prefixed_classes('BylinePreamble- byline__preamble')
+        dict(name=['aside']),
+        dict(id=['CommentingMainContent']),
     ]
     keep_only_tags = [
-        dict(name='article', attrs={'class': 'article main-content'}),
+        dict(name='main', attrs={'id': 'main-content'}),
     ]
     remove_attributes = ['srcset', 'sizes', 'media', 'data-event-click', 'data-offer-url']
-    filter_out = ["obesity", "weight loss", "best shows", "review:", "best movies", "best deals", "promo code", "discount code", "coupon code", "gifts for"]
+    filter_out = ["obesity", "weight loss", "best shows", "review:", "best movies", "best deals", "promo code", "discount code", "coupon code", "gifts for", "is almost half off"]
     keyword_filter = [
         "deals",
         "product reviews",
@@ -123,9 +146,9 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         feeds = BasicNewsRecipe.parse_feeds(self)
         regex = re.compile(r'[B|b]est.+\([0-9]{4}\)')
         for feed in feeds:
-            # self.log.debug(feed.title)
+            self.log.debug(feed.title)
             for article in feed.articles[:]:
-                # self.log(article.title, "\n", article.url)
+                self.log(article.title, "\n", article.url)
                 if re.search(regex, article.title):
                     self.log.warn(f"removing {article.title} from feed (regex)")
                     feed.articles.remove(article)
@@ -181,14 +204,15 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
         soup.append(source_link_div)
 
     def preprocess_html(self, soup):
-        a_soup = soup.find(class_='article main-content')
+        a_soup = soup.find(attrs={'id': 'main-content'})
         if a_soup:
-            # self.log(a_soup.prettify())
             cat_time = soup.new_tag("div")
             cat_time["id"] = "categ_date"
 
-            headline = a_soup.find(attrs={'data-testid': "ContentHeaderHed"})
-            subhead = a_soup.find(attrs={'data-testid': 'ContentHeaderAccreditation'})
+            headline = a_soup.find("h1", attrs={'data-testid': "ContentHeaderHed"})
+            subhead = a_soup.find(class_="content-header__accreditation")
+            if a_soup.find(attrs={'data-testid': 'SplitScreenContentHeaderWrapper'}):
+                subhead = a_soup.find(class_=re.compile('SplitScreenContentHeaderDek'))
             category = a_soup.find("a", class_='rubric__link')
             category["class"] = 'rubric__link'
             cat_time.append(category)
@@ -200,16 +224,30 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
                 subhead.clear()
                 subhead.append(subhead_text)
 
-            author = a_soup.find(attrs={'class': 'byline__name-link'})
-            if author:
-                author.extract()
-                cat_time.append(author)
+            authors = a_soup.findAll(attrs={'class': 'byline__name-link'})
+            if len(authors) == 1:
+                cat_time.append(authors[0])
+                cat_time.append(" | ")
+            elif len(authors) > 1:
+                for author in authors:
+                    author["class"] = "byline__name-link multiple-authors"
+                    cat_time.append(author)
+                    if author != authors[-1]:
+                        cat_time.append(", ")
                 cat_time.append(" | ")
 
             lead_pic = a_soup.find("div", class_='lead-asset')
             if lead_pic:
                 lead_img = lead_pic.find('img')
                 lead_cap = lead_pic.find(attrs={'class': 'caption__credit'})
+                if lead_img and lead_cap:
+                    lead_img["id"] = "lead-image"
+                    lead_cap["id"] = "lead-image-credit"
+            else:
+                lead_pic = a_soup.find(attrs={'data-testid': 'ContentHeaderLeadAsset'})
+                if lead_pic:
+                    lead_img = lead_pic.find('img')
+                    lead_cap = a_soup.find(attrs={'data-testid': 'caption-wrapper'})
                 if lead_img and lead_cap:
                     lead_img["id"] = "lead-image"
                     lead_cap["id"] = "lead-image-credit"
@@ -254,6 +292,22 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
 
     def preprocess_raw_html(self, raw_html, url):
         soup = BeautifulSoup(raw_html)
+        body = soup.findAll("script", attrs={"type": "application/ld+json"})
+        for s in body:
+            t_json = json.loads(s.string)
+            # self.log(t_json)
+            # if "NewsArticle" in t_json["@type"]:
+                # self.log.debug(t_json["articleSection"])
+                # self.log("Published")
+                # self.log.debug(t_json["datePublished"])
+                # self.log("Modified")
+                # self.log.debug(t_json["dateModified"])
+                # self.log.debug(t_json["headline"])
+                # if t_json["alternativeHeadline"]:
+                    # self.log.debug(t_json["alternativeHeadline"])
+                # self.log.debug(t_json["author"])
+                # self.log.debug(t_json["description"])
+                # self.log.debug(t_json["articleBody"])
         head = soup.find("head")
         t = head.find("title")
         metas = head.findAll("meta", attrs={"name": re.compile("keyword")})
