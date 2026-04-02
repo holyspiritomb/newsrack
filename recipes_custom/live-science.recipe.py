@@ -27,7 +27,7 @@ _name = "Live Science"
 
 class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
     title = _name
-    description = "Live Science is a science news website that publishes stories in a wide variety of topics such as Space, Animals, Health, Archaeology, Human behavior and Planet Earth. Sourced from https://www.livescience.com/feeds/all"
+    description = "Live Science is a science news website that publishes stories in a wide variety of topics such as Space, Animals, Health, Archaeology, Human behavior and Planet Earth. Sourced from https://www.livescience.com"
     __author__ = 'yodha8'
     language = 'en'
     oldest_article = 4
