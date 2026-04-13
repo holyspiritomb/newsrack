@@ -41,7 +41,7 @@ class WiredDailyNews(BasicNewsrackRecipe, BasicNewsRecipe):
     cover_url = _cover
     publisher = 'Conde Nast'
     category = 'news, IT, computers, technology'
-    oldest_article = 3
+    oldest_article = 5
     max_articles_per_feed = 200
     scale_news_images_to_device = True
     no_stylesheets = True

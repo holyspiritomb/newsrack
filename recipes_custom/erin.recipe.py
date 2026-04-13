@@ -19,7 +19,7 @@ class ErinInTheMorning(BasicNewsrackRecipe, BasicNewsRecipe):
     description = u'News and discussion on trans legislation and life. https://www.erininthemorning.com'
     __author__ = 'holyspiritomb'
     category = 'trans, news, rss'
-    oldest_article = 14
+    oldest_article = 7
     max_articles_per_feed = 40
     remove_empty_feeds = True
     resolve_internal_links = False
