@@ -223,7 +223,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         crumblist = crumbs.find("ol")
         crumbitems = crumblist.findAll("li")
         if crumbitems:
-            self.log(crumbitems)
+            # self.log(crumbitems)
             for crumb in crumbitems:
                 crumb.name = "span"
             if len(crumbitems) > 1:
