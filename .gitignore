@@ -98,3 +98,5 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+static/reader_sprites_*
+debug-full.sh
