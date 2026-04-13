@@ -222,7 +222,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         tags=["news", "trans", "lgbtq"],
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Transgender_Pride_flag.svg/1024px-Transgender_Pride_flag.svg.png"
+            logo_path_or_url="recipes_custom/logos/trans.png"
         ),
         enable_on=True
     ),
@@ -238,7 +238,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/The_Forward_logo_2022.svg/1024px-The_Forward_logo_2022.svg.png"
+            logo_path_or_url="recipes_custom/logos/forward-logo.png"
         ),
     ),
     # CustomOptionsRecipe(
@@ -342,7 +342,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Live_Science_logo.svg/1024px-Live_Science_logo.svg.png"
+            logo_path_or_url="recipes_custom/logos/live-science.png"
         ),
     ),
     # CustomOptionsRecipe(
@@ -451,7 +451,7 @@ recipes: List[Recipe] = [
         overwrite_cover=True,
         enable_on=onlyon_weekdays([0, 1, 2, 3, 4], -5),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/New_Scientist_logo.svg/1024px-New_Scientist_logo.svg.png"
+            logo_path_or_url="recipes_custom/logos/new-scientist.png"
         ),
     ),
     # CustomOptionsRecipe(
@@ -479,7 +479,7 @@ recipes: List[Recipe] = [
             last_run=recipe.last_run, days=1, drift=0
         ),
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/National_Public_Radio_logo.svg/1024px-National_Public_Radio_logo.svg.png"
+            logo_path_or_url="recipes_custom/logos/npr-new.png"
         ),
     ),
     CustomMonthlyRecipe(
@@ -515,7 +515,7 @@ recipes: List[Recipe] = [
         and onlyat_hours(list(range(8, 14))),
         tags=["science", "weekly"],
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Quanta_Magazine_Logo_05.2022.svg/640px-Quanta_Magazine_Logo_05.2022.svg.png",
+            logo_path_or_url="recipes_custom/logos/quanta.png",
         ),
     ),
     CustomOptionsRecipe(
@@ -603,7 +603,7 @@ recipes: List[Recipe] = [
         tags=["trans", "lgbtq", "news"],
         enable_on=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Them_wordmark.svg/1024px-Them_wordmark.svg.png"
+            logo_path_or_url="recipes_custom/logos/them-us.png"
         ),
     ),
     # CustomOptionsRecipe(
@@ -646,7 +646,7 @@ recipes: List[Recipe] = [
         tags=["science", "tech", "daily"],
         enable_on=True,
         cover_options=CustomCoverOptions(
-            logo_path_or_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Wired_logo.svg/1024px-Wired_logo.svg.png"
+            logo_path_or_url="recipes_custom/logos/wired.png"
         ),
     ),
     # Recipe(
