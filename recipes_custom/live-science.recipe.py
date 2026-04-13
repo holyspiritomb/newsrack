@@ -57,6 +57,8 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
         dict(name="source", attrs={"type": "image/webp"}),
         dict(attrs={"id": re.compile("taboola")}),
         dict(attrs={"id": "affiliate-disclaimer"}),
+        dict(attrs={"id": "utility-bar"}),
+        dict(attrs={"data-mrf-recirculation": "Trending Bar"}),
         dict(attrs={"class": re.compile("jwplayer")}),
         dict(name="li", attrs={"analytics-label": "adviser:related"}),
         classes("newsletter-form__wrapper newsletter-inbodyContent-slice ad-unit socialite-widget fancy-box hawk-nest"),
