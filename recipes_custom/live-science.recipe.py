@@ -37,7 +37,7 @@ class LiveScience(BasicNewsRecipe, BasicNewsrackRecipe):
     auto_cleanup = False
     use_embedded_content = False
     resolve_internal_links = False
-    scale_news_images = (800, 1200)
+    compress_news_images = True
 
     conversion_options = {
         'tags' : 'Science, News, Live Science, Periodical',
