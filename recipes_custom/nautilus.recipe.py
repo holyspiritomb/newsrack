@@ -3,6 +3,7 @@ nautil.us
 """
 # Original from https://github.com/kovidgoyal/calibre/blob/946ae082e1291f61d88638ff3f3723df591da835/recipes/nautilus.recipe
 import os
+import re
 import sys
 from urllib.parse import urljoin
 
@@ -10,7 +11,7 @@ from urllib.parse import urljoin
 sys.path.append(os.environ["recipes_includes"])
 from recipes_shared import BasicNewsrackRecipe, format_title
 
-from calibre.web.feeds.news import BasicNewsRecipe, classes
+from calibre.web.feeds.news import BasicNewsRecipe, classes, prefixed_classes, BeautifulSoup
 
 # convenience switches for when I'm developing
 if "runner" in os.environ["recipes_includes"]:
@@ -37,18 +38,19 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
     }
     use_embedded_content = False
     masthead_url = _masthead
-    remove_attributes = ["height", "width"]
+    remove_attributes = ["height", "width", "style"]
     ignore_duplicate_articles = {"title", "url"}
     remove_empty_feeds = True
 
     compress_news_images_auto_size = 10
 
-    keep_only_tags = [classes("article-left-col feature-image article-content")]
+    # keep_only_tags = [classes("article-left-col feature-image article-content")]
 
     remove_tags = [
-        classes(
-            "article-action-list article-bottom-newsletter_box main-post-comments-toggle-wrap main-post-comments-wrapper social-share supported-one article-collection_box"
-        )
+        # classes(
+            # "article-action-list article-bottom-newsletter_box main-post-comments-toggle-wrap main-post-comments-wrapper social-share supported-one article-collection_box"
+        # ),
+        prefixed_classes("SiteHeader SiteFooter NewsletterSignup SocialSharing AscendiumAdUnit PostList PostByline_avatar")
     ]
     extra_css = """
     .breadcrumb div { margin-right: 0.5rem; }
@@ -64,16 +66,20 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
     .breadcrumb { font-size:0.8rem; text-transform:uppercase;}
     """
 
-    def get_feeds(self):
-        soup = self.index_to_soup("https://nautil.us/")
-        topics = soup.find_all(
-            name="a",
-            attrs={"data-ev-act": "topics", "data-ev-label": True, "href": True},
-        )
-        if not topics:
-            return self.feeds
-        feeds = [(t["data-ev-label"], urljoin(t["href"], "feed/")) for t in topics]
-        return feeds
+    feeds = [
+        ("https://nautil.us/feed")
+    ]
+
+    # def get_feeds(self):
+    #     soup = self.index_to_soup("https://nautil.us/")
+    #     topics = soup.find_all(
+    #         name="a",
+    #         attrs={"data-ev-act": "topics", "data-ev-label": True, "href": True},
+    #     )
+    #     if not topics:
+    #         return self.feeds
+    #     feeds = [(t["data-ev-label"], urljoin(t["href"], "feed/")) for t in topics]
+    #     return feeds
 
     def parse_feeds(self):
         feeds = BasicNewsRecipe.parse_feeds(self)
@@ -95,7 +101,19 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
         if breadcrumb:
             breadcrumb.append(srclink)
 
+    def preprocess_raw_html(self, raw_html, url):
+        soup = BeautifulSoup(raw_html)
+        for i in soup.findAll("img", attrs={'srcset': True, 'src': True}):
+            del i["srcset"]
+            del i["sizes"]
+            del i["loading"]
+        return str(soup)
+
     def preprocess_html(self, soup):
+        body = soup.find("body")
+        if body.find("script"):
+            for s in body.find_all("script"):
+                s.decompose()
         breadcrumb = soup.find("ul", attrs={"class": "breadcrumb"})
         if breadcrumb:
             for li in breadcrumb.find_all("li"):
@@ -103,16 +121,17 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
                 li.append(" | ")
             breadcrumb.name = "div"
 
-        byline = soup.find("ul", attrs={"class": "article-list_item-byline"})
+        byline = soup.find(attrs={"class": "article-list_item-byline"})
         if byline:
             byline["class"] = "article-meta"
             for li in byline.find_all("li"):
                 li.name = "div"
             byline.name = "div"
 
-        author_names = soup.find_all("h6", attrs={"class": "article-author-name"})
+        author_names = soup.find_all("a", attrs={"class": re.compile("PostByline_author_")})
         for a in author_names:
-            a.name = "div"
+            # a.name = "div"
+            a["class"] = "author-name"
 
         # remove empty p tags
         for p in soup.find_all("p"):
@@ -121,13 +140,5 @@ class Nautilus(BasicNewsrackRecipe, BasicNewsRecipe):
 
         for img in soup.findAll("img", attrs={"data-src": True}):
             img["src"] = img["data-src"].split("?")[0]
-
-        # convert author ul/li
-        for ul in soup.find_all("ul", class_="article-author"):
-            for li in ul.find_all("li", class_="article-author-box"):
-                for p in li.find_all("p"):
-                    p.name = "div"
-                li.name = "div"
-            ul.name = "div"
 
         return soup
