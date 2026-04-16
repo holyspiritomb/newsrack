@@ -52,6 +52,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     publication_type = 'newspaper'
     auto_cleanup = False
     resolve_internal_links = False
+    compress_news_images = True
     recursions = 0
     remove_tags = [
         classes("logo sharing hr-logo fullstory breaking-list sidebar"),
