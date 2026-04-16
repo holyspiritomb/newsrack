@@ -48,11 +48,12 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     language = 'en'
     encoding = 'utf-8'
-    delay = 2
+    delay = 3
     publication_type = 'newspaper'
     auto_cleanup = False
     resolve_internal_links = False
     recursions = 0
+    timeout = 240
     remove_tags = [
         classes("logo sharing hr-logo fullstory breaking-list sidebar"),
         dict(id='related_releases'),
