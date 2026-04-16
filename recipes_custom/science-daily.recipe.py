@@ -21,7 +21,7 @@ from recipes_shared import BasicNewsrackRecipe, format_title
 # convenience switches for when I'm developing
 if "runner" in os.environ["recipes_includes"]:
     _masthead_prefix = "file:///home/runner/work/newsrack/newsrack/recipes_custom/logos"
-    _max_per_feed = 15
+    _max_per_feed = 10
     _oldest = 3
 else:
     _masthead_prefix = f"file://{os.environ['HOME']}/git/newsrack/recipes_custom/logos"
@@ -48,7 +48,7 @@ class ScienceDaily(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = False
     language = 'en'
     encoding = 'utf-8'
-    delay = 3
+    delay = 2
     publication_type = 'newspaper'
     auto_cleanup = False
     resolve_internal_links = False
