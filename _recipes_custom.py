@@ -529,7 +529,9 @@ recipes: List[Recipe] = [
         cover_options=CustomCoverOptions(
             logo_path_or_url="recipes_custom/logos/science-daily.png"
         ),
-        enable_on=True,
+        enable_on=lambda recipe: every_x_hours(
+            last_run=recipe.last_run, hours=6, drift=0
+        ),
     ),
     CustomMonthlyRecipe(
         recipe="sci-am",
@@ -606,21 +608,21 @@ recipes: List[Recipe] = [
             logo_path_or_url="recipes_custom/logos/them-us.png"
         ),
     ),
-    # CustomOptionsRecipe(
-    #     recipe="tpwky",
-    #     slug="tpwky",
-    #     src_ext="mobi",
-    #     target_ext=["epub"],
-    #     category="Podcasts",
-    #     overwrite_cover=True,
-    #     tags=["science"],
-    #     enable_on=lambda recipe: every_x_days(
-    #         last_run=recipe.last_run, days=1, drift=0
-    #     ),
-    #     cover_options=CustomCoverOptions(
-    #         logo_path_or_url="recipes_custom/logos/TPWKY.jpg"
-    #     ),
-    # ),
+    CustomOptionsRecipe(
+        recipe="tpwky",
+        slug="tpwky",
+        src_ext="mobi",
+        target_ext=["epub"],
+        category="Podcasts",
+        overwrite_cover=True,
+        tags=["science"],
+        enable_on=lambda recipe: every_x_days(
+            last_run=recipe.last_run, days=1, drift=0
+        ),
+        cover_options=CustomCoverOptions(
+            logo_path_or_url="recipes_custom/logos/TPWKY.jpg"
+        ),
+    ),
     # CustomMonthlyRecipe(
     #     recipe="wired",
     #     slug="wired",
