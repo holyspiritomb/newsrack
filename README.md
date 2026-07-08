@@ -3,6 +3,8 @@
 
 # newsrack
 
+[![Crafted by Human](https://madebyhuman.iamjarl.com/badges/crafted-black.svg)](https://madebyhuman.iamjarl.com)
+
 Generate an online "newsrack" of periodicals for your ereader.
 
 Features:
@@ -15,7 +17,7 @@ on [GitHub Pages](https://pages.github.com/).
 ![eInk Kindle Screenshot](https://github.com/ping/newsrack/assets/104607/475daa53-f2d5-4469-b88e-7d5463399d73)
 ![Mobile Screenshot](https://github.com/ping/newsrack/assets/104607/76ec3514-8d89-43bc-a68c-909df42971cb)
 
-[![Buy me a coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ping&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/ping)
+[![Buy the original dev (ping) a coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ping&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/ping)
 
 ## Running Your Own Instance
 
