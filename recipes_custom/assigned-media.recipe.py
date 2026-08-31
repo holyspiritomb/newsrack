@@ -17,7 +17,7 @@ class Assigned(BasicNewsrackRecipe, BasicNewsRecipe):
     # most of this is borrowed from ping's lithub recipe
     title = _name
     language = 'en'
-    description = u'Daily coverage of anti-trans propaganda'
+    description = u'Daily coverage of anti-trans propaganda\nhttps://assignedmedia.org'
     __author__ = 'holyspiritomb'
     category = 'trans, news, rss'
     oldest_article = 7
@@ -27,8 +27,7 @@ class Assigned(BasicNewsrackRecipe, BasicNewsRecipe):
     use_embedded_content = True
     scale_news_images_to_device = True
 
-    feeds = [("Breaking News", "https://www.assignedmedia.org/breaking-news?format=rss"),
-             ("Newsletter", "https://www.assignedmedia.org/newsletter?format=rss")]
+    feeds = [("https://assignedmedia.org/feed/")]
 
     conversion_options = {
         'tags' : 'Blog, Trans, LGBTQ, News',
@@ -45,12 +44,13 @@ class Assigned(BasicNewsrackRecipe, BasicNewsRecipe):
     '''
 
     def populate_article_metadata(self, article, soup, _):
+        self.log(article)
         if (not self.pub_date) or article.utctime > self.pub_date:
             self.pub_date = article.utctime
             self.title = format_title(_name, article.utctime)
-        thumb = soup.find(attrs={"class": "sqs-block-image-figure"}).find("img")
-        if thumb:
-            self.add_toc_thumbnail(article, thumb["src"])
+        # thumb = soup.find(attrs={"class": "sqs-block-image-figure"}).find("img")
+        # if thumb:
+            # self.add_toc_thumbnail(article, thumb["src"])
         nyc = ZoneInfo("America/New_York")
         nyc_dt = datetime.astimezone(datetime.now(), nyc)
         nyc_article_dt = datetime.astimezone(article.utctime, nyc)
@@ -64,12 +64,12 @@ class Assigned(BasicNewsrackRecipe, BasicNewsRecipe):
         srctag = soup.new_tag("a")
         srctag.string = "source"
         srctag["href"] = article.url
+        headline = soup.find("h2")
         header.append(datetag)
         header.append(" | ")
         header.append(article.author)
         header.append(" | ")
         header.append(srctag)
-        headline = soup.find("h2")
         headline.insert_before(header)
         source_link_div = soup.new_tag("div")
         source_link_div["id"] = "article_source"
@@ -84,6 +84,7 @@ class Assigned(BasicNewsrackRecipe, BasicNewsRecipe):
         hr = soup.new_tag("hr")
         soup.append(hr)
         soup.append(source_link_div)
+        self.log(soup)
 
     def preprocess_html(self, soup):
         # self.log.warn(soup)
